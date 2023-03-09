@@ -61,7 +61,9 @@ class Character extends FNFSprite
 			healthColor: [255, 255, 255],
 			missColor: [112, 105, 255],
 			adjustPos: !character.startsWith('gf'),
-			icon: null
+			icon: null,
+			multipleI8: false,
+			I8Count: 0
 		};
 
 		if (characterData.icon == null)
@@ -383,7 +385,7 @@ class Character extends FNFSprite
 			// check if a text file exists with the character name exists, if so, it's a spirit-like character;
 			if (FileSystem.exists(textAsset))
 				spriteType = "PackerAtlas";
-			else
+			else 
 				spriteType = "SparrowAtlas";
 		}
 		catch (e)
@@ -406,6 +408,19 @@ class Character extends FNFSprite
 				var sprPacker:String = (overrideFrames == null ? char : overrideFrames);
 				var sprPath:String = (framesPath == null ? 'data/characters/$char' : framesPath);
 				frames = Paths.getPackerAtlas(sprPacker, sprPath);
+			case "JSONI8":
+				var sprI8:String = (overrideFrames == null ? char : overrideFrames);
+				var sprPath:String = (framesPath == null ? 'data/characters/$char' : framesPath);
+				if (characterData.multipleI8) {
+					var sprI8Array:Array<String> = [];
+					
+ 					for (i in 0...json.I8Count) 
+ 						sprI8Array.push(characterData.image + i);
+
+ 					frames = Paths.getJSONI8Array(sprI8Array);
+ 				}else{
+ 					frames = Paths.getJSONI8Data(sprI8, sprPath);
+ 				}
 			default:
 				var sprSparrow:String = (overrideFrames == null ? char : overrideFrames);
 				var sprPath:String = (framesPath == null ? 'data/characters/$char' : framesPath);
@@ -468,6 +483,15 @@ class Character extends FNFSprite
 			return true;
 		});
 
+		setVar('setJSONCount', function(imageCount:Int)
+		{
+			characterData.I8Count = imageCount;
+			
+			if (characterData.I8Count > 1)
+				characterData.multipleI8 = true;
+			else
+				characterData.multipleI8 = false;
+		});
 		setVar('setDeathChar',
 			function(char:String = 'bf-dead', lossSfx:String = 'fnf_loss_sfx', song:String = 'gameOver', confirmSound:String = 'gameOverEnd', bpm:Int)
 			{
@@ -570,6 +594,17 @@ class Character extends FNFSprite
 		{
 			case "PackerAtlas":
 				frames = Paths.getPackerAtlas(json.image.replace('characters/', ''), 'data/characters/$char');
+			case "JSONI8":
+				if (json.multipleI8) {
+ 					var fuckk:Array<String> = [];
+
+ 					for (i in 0...json.I8Count) 
+ 						fuckk.push(json.image.replace('characters/', ''), 'data/characters/$char' + i);
+
+ 					frames = Paths.getJSONI8Array(fuckk);
+ 				}else{
+ 					frames = Paths.getJSONI8Data(json.image.replace('characters/', ''), 'data/characters/$char');
+ 				}
 			default:
 				frames = Paths.getSparrowAtlas(json.image.replace('characters/', ''), 'data/characters/$char');
 		}
