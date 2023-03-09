@@ -1820,13 +1820,6 @@ class PlayState extends MusicBeatState
 		inCutscene = true;
 
 		var filepath:String = Paths.video(name);
-		if(!FileSystem.exists(filepath))
-		{
-			FlxG.log.warn('Couldnt find video file: ' + name);
-			(isEnd ? endSong() : startCountdown());
-			return;
-		}
-
 		var video:VideoHandler = new VideoHandler();
 		video.playVideo(filepath);
 		video.finishCallback = function()
