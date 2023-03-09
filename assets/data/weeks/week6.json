@@ -1,0 +1,42 @@
+{
+	"songs": [
+		{
+			"name": "Senpai",
+			"opponent": "senpai",
+			"colors": [
+				206,
+				106,
+				169
+			]
+		},
+		{
+			"name": "Roses",
+			"opponent": "senpai",
+			"colors": [
+				206,
+				106,
+				169
+			]
+		},
+		{
+			"name": "Thorns",
+			"opponent": "spirit",
+			"colors": [
+				206,
+				106,
+				169
+			]
+		}
+	],
+	"attachedImage": "week6",
+	"storyName": "hating simulator ft. moawling",
+	"characters": [
+		"senpai",
+		"bf",
+		"gf"
+	],
+	"startsLocked": false,
+	"hideOnStory": false,
+	"hideOnFreeplay": false,
+	"hideUntilUnlocked": false
+}

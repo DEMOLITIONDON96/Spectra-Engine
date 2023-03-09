@@ -1,0 +1,1 @@
+As to not clutter the repository with the original Funkin' ``.fla`` files, you can find them [here](https://github.com/ninjamuffin99/Funkin/tree/master/art/flashFiles).

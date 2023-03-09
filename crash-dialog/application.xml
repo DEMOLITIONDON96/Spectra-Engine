@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+    <meta title="Feather Crash Dialog" package="com.gedehari.haxecrashlog" version="1.0.0" company="" />
+    <app main="Main" file="FEF-CrashDialog" path="export" />
+
+    <window background="#FFFFFF" fps="60" resizable="false" />
+    <window width="500" height="440" if="desktop" />
+
+    <!-- classpath, haxe libs -->
+    <source path="src" />
+
+    <haxelib name="openfl" />
+    <haxelib name="actuate" />
+
+    <haxelib name="haxeui-core" />
+    <haxelib name="haxeui-openfl" />
+
+    <icon path="assets/icons/icon16.png" size='16' />
+    <icon path="assets/icons/icon32.png" size='32' />
+    <icon path="assets/icons/icon64.png" size='64' />
+    <icon path="assets/icons/icon128.png" size='128' />
+    <icon path="assets/icons/icon256.png" size='256' />
+    <icon path="assets/icons/icon512.png" size='512' />
+    <icon path="assets/icons/iconOG.png" />
+
+</project>

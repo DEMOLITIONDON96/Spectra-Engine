@@ -1,0 +1,8 @@
+{
+	"recommendations": [
+		"vshaxe.haxe-extension-pack",
+		"openfl.lime-vscode-extension",
+		"redhat.vscode-xml",
+		"redhat.vscode-yaml"
+	]
+}

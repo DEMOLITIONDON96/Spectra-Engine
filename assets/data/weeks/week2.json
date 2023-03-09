@@ -1,0 +1,42 @@
+{
+	"songs": [
+		{
+			"name": "Spookeez",
+			"opponent": "spooky",
+			"colors": [
+				30,
+				45,
+				60
+			]
+		},
+		{
+			"name": "South",
+			"opponent": "spooky",
+			"colors": [
+				30,
+				45,
+				60
+			]
+		},
+		{
+			"name": "Monster",
+			"opponent": "monster",
+			"colors": [
+				30,
+				45,
+				60
+			]
+		}
+	],
+	"attachedImage": "week2",
+	"storyName": "Spooky Month",
+	"characters": [
+		"spooky",
+		"bf",
+		"gf"
+	],
+	"startsLocked": false,
+	"hideOnStory": false,
+	"hideOnFreeplay": false,
+	"hideUntilUnlocked": false
+}

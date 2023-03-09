@@ -1,0 +1,3 @@
+Shaders may have the .frag (fragment) or .vert (vertex) format
+credits for the shader support itself goes to EliteMasterEric
+https://twitter.com/EliteMasterEric

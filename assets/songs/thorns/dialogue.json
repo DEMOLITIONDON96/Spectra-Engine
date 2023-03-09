@@ -1,0 +1,34 @@
+{
+    "box": "dialogueBox-evil",
+    "boxState": "normal",
+    "boxStyle": "pixel",
+
+    "song": "LunchboxScary",
+    "songFadeIn": 1,
+    "songFadeOut": 2.2,
+
+    "dialogue": [
+        {
+            "portrait": "spirit",
+            "expression": "normal",
+            "text": "Direct contact with real humans, \nafter being trapped in here for \nso long...",
+            "speed": 1.2
+        },
+        {
+            "text": "and HER of all people.",
+            "speed": 0.9
+        },
+        {
+            "text": "I'll make her father pay for what \nhe's done to me and all the \nothers,,,,",
+            "speed": 1.3
+        },
+        {
+            "text": "I'll beat you and make you take \nmy place.",
+            "speed": 1.3
+        },
+        {
+            "text": "You don't mind your bodies \nbeing borrowed right? It's only \nfair...",
+            "speed": 1.2
+        }
+    ]
+}

@@ -1,0 +1,14 @@
+{
+	"image": "player/pico",
+	"position": [
+		-65,
+		35
+	],
+	"scale": 0.72,
+	"flipX": true,
+	"idleAnim": [
+		"pico idle",
+		24,
+		true
+	]
+}

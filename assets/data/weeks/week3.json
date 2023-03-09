@@ -1,0 +1,42 @@
+{
+	"songs": [
+		{
+			"name": "Pico",
+			"opponent": "pico",
+			"colors": [
+				111,
+				19,
+				60
+			]
+		},
+		{
+			"name": "Philly-Nice",
+			"opponent": "pico",
+			"colors": [
+				111,
+				19,
+				60
+			]
+		},
+		{
+			"name": "Blammed",
+			"opponent": "pico",
+			"colors": [
+				111,
+				19,
+				60
+			]
+		}
+	],
+	"attachedImage": "week3",
+	"storyName": "PICO",
+	"characters": [
+		"pico",
+		"bf",
+		"gf"
+	],
+	"startsLocked": false,
+	"hideOnStory": false,
+	"hideOnFreeplay": false,
+	"hideUntilUnlocked": false
+}

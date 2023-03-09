@@ -1,0 +1,44 @@
+name: linuxBuild
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+    branches: [master]
+
+  workflow_dispatch:
+
+jobs:
+  buildLinux:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - uses: actions/checkout@main
+      - uses: krdlab/setup-haxe@master
+        with:
+          haxe-version: 4.2.5
+
+      - name: Install Haxelib
+        run: |
+          haxelib setup ~/haxelib
+          haxelib install hxcpp > /dev/null
+          haxelib install lime
+          haxelib install openfl
+          haxelib install flixel
+          haxelib install flixel-ui
+          haxelib install flixel-addons
+          haxelib install hscript
+          haxelib install hxcpp-debug-server
+          haxelib git discord_rpc https://github.com/Aidan63/linc_discord-rpc
+          haxelib git hxCodec https://github.com/polybiusproxy/hxCodec
+          haxelib git polymod https://github.com/MasterEric/polymod
+          haxelib git SScript https://github.com/AltronMaxX/SScript
+
+      - name: Compile
+        run: haxelib run lime build linux -release
+
+      - name: Publish Artifact
+        uses: actions/upload-artifact@main
+        with:
+          name: linuxBuild
+          path: export/release/linux/bin

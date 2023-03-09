@@ -1,0 +1,31 @@
+{
+    "name": "spirit",
+    "expressions": {
+        "normal": "facing forward"
+    },
+    "position": [
+        230,
+        230
+    ],
+    "scale": 5.4,
+    "flipX": true,
+    "antialiasing": false,
+    "loop": false,
+    "sounds": [
+        "pixelText"
+    ],
+    "soundChance": 100,
+    "soundPath": "sounds/dialogue/",
+    "acceptSoundPath": "sounds/dialogue/",
+    "acceptSound": "clickText",
+    "fontColor": [
+        255,
+        255,
+        255
+    ],
+    "borderColor": [
+        0,
+        0,
+        0
+    ]
+}

@@ -1,0 +1,42 @@
+{
+	"songs": [
+		{
+			"name": "Cocoa",
+			"opponent": "parents-christmas",
+			"colors": [
+				141,
+				165,
+				206
+			]
+		},
+		{
+			"name": "Eggnog",
+			"opponent": "parents-christmas",
+			"colors": [
+				141,
+				165,
+				206
+			]
+		},
+		{
+			"name": "Winter-Horrorland",
+			"opponent": "monster-christmas",
+			"colors": [
+				141,
+				165,
+				206
+			]
+		}
+	],
+	"attachedImage": "week5",
+	"storyName": "RED SNOW",
+	"characters": [
+		"parents-christmas",
+		"bf",
+		"gf"
+	],
+	"startsLocked": false,
+	"hideOnStory": false,
+	"hideOnFreeplay": false,
+	"hideUntilUnlocked": false
+}
