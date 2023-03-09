@@ -414,7 +414,7 @@ class Character extends FNFSprite
 				if (characterData.multipleI8) {
 					var sprI8Array:Array<String> = [];
 					
- 					for (i in 0...json.I8Count) 
+ 					for (i in 0...characterData.I8Count) 
  						sprI8Array.push(characterData.image + i);
 
  					frames = Paths.getJSONI8Array(sprI8Array, sprPath);
