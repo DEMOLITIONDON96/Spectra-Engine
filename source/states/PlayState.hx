@@ -37,8 +37,17 @@ import openfl.media.Sound;
 import states.editors.CharacterOffsetEditor;
 import states.menus.*;
 import states.substates.GameOverSubstate;
+
 #if desktop
 import base.dependency.Discord;
+#end
+	
+#if (hxCodec >= "2.6.1")
+import hxcodec.VideoHandler;
+#elseif (hxCodec == "2.6.0")
+import VideoHandler;
+#else
+import vlc.MP4Handler as VideoHandler;
 #end
 
 enum GameMode
@@ -824,9 +833,12 @@ class PlayState extends MusicBeatState
 									// when the note is declared "late", stop this function if it's a mine;
 									if (daNote.ignoreNote || daNote.isMine)
 										return;
-
-									vocals.volume = 0;
-									bf_vocals.volume = 0;
+									
+									if (vocals != null)
+										vocals.volume = 0;
+									
+									if (bf_vocals != null)
+										bf_vocals.volume = 0;
 									
 									missNoteCheck((Init.trueSettings.get('Ghost Tapping')) ? true : false, daNote.noteData, strumline,
 										Init.trueSettings.get("Display Miss Judgement"));
@@ -891,10 +903,28 @@ class PlayState extends MusicBeatState
 		if (!coolNote.wasGoodHit)
 		{
 			coolNote.wasGoodHit = true;
-			vocals.volume = 1;
+			if (vocals != null)
+				vocals.volume = 1;
 			
-			if (strumline == bfStrums) bf_vocals.volume = 1;
-			if (strumline == dadStrums) opp_vocals.volume = 1;
+			// For BF-specific note hit effects, insert modcharts here if you plan on hardcoding it
+			if (strumline == bfStrums) 
+			{
+				if (bf_vocals != null)
+					bf_vocals.volume = 1;
+			}
+			
+			// For Opponent-specific note hit effects, insert code under this if you are hardcoding it
+			if (strumline == dadStrums)
+			{
+				//Example code
+				/*
+					if (health > 0.15)
+						health -= 0.08;
+				*/
+				
+				if (opp_vocals != null)
+					opp_vocals.volume = 1;
+			}
 
 			callFunc(coolNote.mustPress ? 'goodNoteHit' : 'opponentNoteHit', [coolNote, strumline]);
 
@@ -1381,9 +1411,14 @@ class PlayState extends MusicBeatState
 			if (songMusic != null)
 				songMusicNew.play();
 			
-			vocals.play();
-			bf_vocals.play();
-			opp_vocals.play();
+			if (vocals != null)
+				vocals.play();
+			
+			if (bf_vocals != null)
+				bf_vocals.play();
+			
+			if (opp_vocals != null)
+				opp_vocals.play();
 
 			if (SONG.instType == "Legacy" || SONG.instType == null)
 				songMusic.onComplete = finishSong.bind();
@@ -1549,11 +1584,20 @@ class PlayState extends MusicBeatState
 	{
 		if (!endingSong)
 		{
-			songMusic.pause();
-			songMusicNew.pause();
-			vocals.pause();
-			bf_vocals.pause();
-			opp_vocals.pause();
+			if (songMusic != null)
+				songMusic.pause();
+			
+			if (songMusicNew != null)
+				songMusicNew.pause();
+			
+			if (vocals != null)
+				vocals.pause();
+			
+			if (bf_vocals != null)
+				bf_vocals.pause();
+			
+			if (opp_vocals != null)
+				opp_vocals.pause();
 			
 			if (SONG.instType == "Legacy" || SONG.instType == null)
 				Conductor.songPosition = songMusic.time;
@@ -1561,14 +1605,29 @@ class PlayState extends MusicBeatState
 			if (SONG.instType == "New")
 				Conductor.songPosition = songMusicNew.time;
 			
-			vocals.time = Conductor.songPosition;
-			bf_vocals.time = Conductor.songPosition;
-			opp_vocals.time = Conductor.songPosition;
-			songMusic.play();
-			songMusicNew.play();
-			vocals.play();
-			bf_vocals.play();
-			opp_vocals.play();
+			if (songMusic != null)
+				songMusic.play();
+			
+			if (songMusicNew != null)
+				songMusicNew.play();
+			
+			if (vocals != null)
+			{
+				vocals.time = Conductor.songPosition;
+				vocals.play();
+			}
+			
+			if (bf_vocals != null)
+			{
+				bf_vocals.time = Conductor.songPosition;
+				bf_vocals.play();
+			}
+			
+			if (opp_vocals != null)
+			{
+				opp_vocals.time = Conductor.songPosition;
+				opp_vocals.play();
+			}
 		}
 	}
 
@@ -1700,14 +1759,20 @@ class PlayState extends MusicBeatState
 	{
 		if (paused)
 		{
-			if (songMusic != null || songMusicNew != null)
-			{
+			if (songMusic != null)
 				songMusic.pause();
+			
+			if (songMusicNew != null)
 				songMusicNew.pause();
+			
+			if (vocals != null)
 				vocals.pause();
+			
+			if (bf_vocals != null)
 				bf_vocals.pause();
+			
+			if (opp_vocals != null)
 				opp_vocals.pause();
-			}
 		}
 
 		super.openSubState(SubState);
@@ -1747,19 +1812,58 @@ class PlayState extends MusicBeatState
 		Extra functions and stuffs
 	 */
 	// song end function at the end of the playstate lmao ironic I guess
+		
+	public function createVideoCutscene(name:String, isEnd:Bool = false)
+	{
+		callFunc('createVideoCutscene', [name, isEnd]);
+		
+		inCutscene = true;
+
+		var filepath:String = Paths.video(name);
+		if(!FileSystem.exists(filepath))
+		{
+			FlxG.log.warn('Couldnt find video file: ' + name);
+			(isEnd ? endSong() : startCountdown());
+			return;
+		}
+
+		var video:VideoHandler = new VideoHandler();
+		video.playVideo(filepath);
+		video.finishCallback = function()
+		{
+			(isEnd ? endSong() : startCountdown());
+			return;
+		}
+	}
+
 
 	function finishSong(ignoreOffset:Bool = false):Void
 	{
 		var onFinish:Void->Void = endSong;
 
-		songMusic.volume = 0;
-		songMusicNew.volume = 0;
-		vocals.volume = 0;
-		bf_vocals.volume = 0;
-		opp_vocals.volume = 0;
-		vocals.pause();
-		bf_vocals.pause();
-		opp_vocals.pause();
+		if (songMusic != null)
+			songMusic.volume = 0;
+		
+		if (songMusicNew != null)
+			songMusicNew.volume = 0;
+		
+		if (vocals != null)
+		{
+			vocals.volume = 0;
+			vocals.pause();
+		}
+		
+		if (bf_vocals != null)
+		{
+			bf_vocals.volume = 0;
+			bf_vocals.pause();
+		}
+		
+		if (opp_vocals != null)
+		{
+			opp_vocals.volume = 0;
+			opp_vocals.pause();
+		}
 
 		if (ignoreOffset || Init.trueSettings['Offset'] <= 0)
 			onFinish();
