@@ -311,6 +311,11 @@ class Paths
 		var file:Sound = returnSound('music', key, library);
 		return file;
 	}
+	
+	inline static public function video(key:String):String
+	{
+		return 'assets/videos/$key';
+	}
 
 	/*
 	* NEW SONG FILE FORMAT
