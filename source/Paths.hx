@@ -338,7 +338,7 @@ class Paths
 	
 	inline static public function instNew(song:String, diff:String = 'normal'):Any
 	{
-		var songKey:String = '${CoolUtil.swapSpaceDash(song.toLowerCase())}/InstNew' + + (diff == 'easy' || diff == 'normal' || diff == 'hard' ? '' : '-${diff}');
+		var songKey:String = '${CoolUtil.swapSpaceDash(song.toLowerCase())}/InstNew' + (diff == 'easy' || diff == 'normal' || diff == 'hard' ? '' : '-${diff}');
 		var inst = returnSound('songs', songKey);
 		return inst;
 	}
