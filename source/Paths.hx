@@ -403,7 +403,7 @@ class Paths
 		return (FlxAtlasFrames.fromSpriteSheetPacker(image(key, folder, library), file('$folder/$key.txt', library)));
 	}
 	
- 	public static function getJSONI8Atlas(key:String, folder:String = 'images', ?library:String):Null<Dynamic> 
+ 	public static function getJSONI8Data(key:String, folder:String = 'images', ?library:String):Null<Dynamic> 
 	{
  		var graphic:FlxGraphic = FlxG.bitmap.add(returnGraphic(key, folder, library));
 
