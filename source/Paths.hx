@@ -6,6 +6,9 @@ package;
 import flixel.FlxG;
 import flixel.graphics.FlxGraphic;
 import haxe.Json;
+import flixel.math.FlxPoint;
+import openfl.geom.Rectangle;
+import flixel.math.FlxRect;
 import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.graphics.frames.FlxAtlasFrames;
 import lime.utils.Assets;
@@ -410,6 +413,7 @@ class Paths
 	
  	public static function getJSONI8Data(key:String, folder:String = 'images', ?library:String):Null<Dynamic> 
 	{
+		var Description:String = null;
  		var graphic:FlxGraphic = FlxG.bitmap.add(returnGraphic(key, folder, library));
 
  		// No need to parse data again
