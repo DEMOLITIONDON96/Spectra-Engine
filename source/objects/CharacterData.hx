@@ -21,8 +21,6 @@ typedef CharacterData =
 	var adjustPos:Bool;
 	var missColor:Array<Int>; // for fake misses;
 	var icon:String;
-	var multipleI8:Bool; // ONLY check this if you have multiple I8 jsons and images. and if youre using I8.
- 	var I8Count:Int; // If you have multiple I8, please specify their count from 0 to whatever. Like: [Image0, Image1, etc.]
 }
 
 /*
@@ -42,9 +40,6 @@ typedef PsychEngineChar =
 	var flip_x:Bool;
 	var no_antialiasing:Bool;
 	var healthbar_colors:Array<Float>;
-	
-	var multipleI8:Bool; // ONLY check this if you have multiple I8 jsons and images. and if youre using I8.
- 	var I8Count:Int; // If you have multiple I8, please specify their count from 0 to whatever. Like: [Image0, Image1, etc.]
 }
 
 typedef PsychAnimArray =
