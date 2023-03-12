@@ -22,16 +22,6 @@ import openfl.utils.Assets as OpenFlAssets;
 import sys.FileSystem;
 import sys.io.File;
 
-// JSONI8 Format code by luckydog https://www.youtube.com/channel/UCeHXKGpDKo2eqYKVkqCUdaA
- typedef I8frame = {
- 	var frame:{ x:Float, y:Float, w:Float, h:Float }
- 	var rotated:Bool;
- 	var trimmed:Bool;
- 	var spriteSourceSize:{ x:Float, y:Float, w:Float, h:Float }
- 	var sourceSize:{ w:Float, h:Float }
- 	var duration:Float;
- }
-
 class Paths
 {
 	// Here we set up the paths class. This will be used to
@@ -410,51 +400,6 @@ class Paths
 	{
 		return (FlxAtlasFrames.fromSpriteSheetPacker(image(key, folder, library), file('$folder/$key.txt', library)));
 	}
-	
- 	public static function getJSONI8Data(key:String, folder:String = 'images', ?library:String):Null<Dynamic> 
-	{
-		var Description:String = null;
- 		var graphic:FlxGraphic = FlxG.bitmap.add(returnGraphic(key, folder, library));
-
- 		// No need to parse data again
- 		var frames:FlxAtlasFrames = FlxAtlasFrames.findFrame(graphic); // gets it from the cache right away -lucky
- 		if (frames != null)
- 			return frames;
-
- 		frames = new FlxAtlasFrames(graphic);
-
- 		if (Assets.exists(Description))
- 			Description = Assets.getText(Description);
-
- 		var json:{ frames:Dynamic, meta:Dynamic } = Json.parse(Description);
- 		var framelist = Reflect.fields(json.frames);
-
- 		for (framename in framelist)
- 		{
- 			var frame:I8frame = Reflect.field(json.frames, framename);
- 			var rect = FlxRect.get(frame.frame.x, frame.frame.y, frame.frame.w, frame.frame.h);
- 			// var duration:Int = frame.duration; // 100 = 10fps???
-
- 			frames.addAtlasFrame(rect, FlxPoint.get(rect.width, rect.height), FlxPoint.get(), framename);
- 		}
-
- 		return frames;
- 	}
-
- 	public static function getJSONI8Array(array:Array<String>, folder:String = 'images', ?library:String):FlxAtlasFrames {
- 		var i8frames:Array<FlxAtlasFrames> = [];
- 		for (i8 in 0...array.length)
- 			i8frames.push(fromI8(array[i8], folder, library));
-
- 		var parent = i8frames[0];
- 		i8frames.shift();
-
- 		for (frames in i8frames)
- 			for (frame in frames.frames)
- 				parent.pushFrame(frame);
-
- 		return parent;
- 	}
 
 	inline static public function module(key:String, folder:String = 'scripts', ?library:String)
 	{
