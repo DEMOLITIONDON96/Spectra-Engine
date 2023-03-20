@@ -714,8 +714,8 @@ class PlayState extends MusicBeatState
 								psychHUD.autoplayMark.visible = bfStrums.autoplay;
 								psychHUD.scoreBar.visible = !bfStrums.autoplay;
 							case 'demolition':
-								demolitionHUD.autoplayMark.visible = bfStrums.autoplay;
-								demolitionHUD.scoreBar.visible = !bfStrums.autoplay;
+								demoHUD.autoplayMark.visible = bfStrums.autoplay;
+								demoHUD.scoreBar.visible = !bfStrums.autoplay;
 							default:
 								uiHUD.autoplayMark.visible = bfStrums.autoplay;
 								uiHUD.scoreBar.visible = !bfStrums.autoplay;
@@ -2095,7 +2095,7 @@ class PlayState extends MusicBeatState
 				FlxTween.tween(psychHUD, {alpha: 1}, (Conductor.crochet * 2) / 1000, {startDelay: (Conductor.crochet / 1000)});
 
 			case 'demolition': // demoliton HUD
-				FlxTween.tween(demolitionHUD, {alpha: 1}, (Conductor.crochet * 2) / 1000, {startDelay: (Conductor.crochet / 1000)});
+				FlxTween.tween(demoHUD, {alpha: 1}, (Conductor.crochet * 2) / 1000, {startDelay: (Conductor.crochet / 1000)});
 
 			default: // forever HUD
 				FlxTween.tween(uiHUD, {alpha: 1}, (Conductor.crochet * 2) / 1000, {startDelay: (Conductor.crochet / 1000)});
