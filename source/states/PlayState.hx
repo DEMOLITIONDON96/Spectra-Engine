@@ -238,6 +238,9 @@ class PlayState extends MusicBeatState
 		// add characters
 		if (stageBuild.spawnGirlfriend)
 			add(gf);
+			
+		if (stageBuild.hideBoyfriend)
+			boyfriend.alpha = 0.001;
 
 		add(stageBuild.layers);
 
@@ -435,6 +438,26 @@ class PlayState extends MusicBeatState
 		uiHUD.alpha = 0;
 		add(uiHUD);
 		uiHUD.cameras = [camHUD];
+
+		psychHUD = new PsychHUD();
+		psychHUD.alpha = 0;
+		add(psychHUD);
+		psychHUD.cameras = [camHUD];
+
+		demoHUD = new DemolitionHUD();
+		demoHUD.alpha = 0;
+		add(demoHUD);
+		demoHUD.cameras = [camHUD];
+
+		baseHUD = new VanillaHUD();
+		baseHUD.alpha = 0;
+		add(baseHUD);
+		baseHUD.cameras = [camHUD];
+
+		kadeHUD = new KadeHUD();
+		kadeHUD.alpha = 0;
+		add(kadeHUD);
+		kadeHUD.cameras = [camHUD];
 
 		if (Init.trueSettings.get('Judgement Recycling'))
 		{
@@ -685,8 +708,18 @@ class PlayState extends MusicBeatState
 					{
 						PlayState.SONG.validScore = false;
 						bfStrums.autoplay = !bfStrums.autoplay;
-						uiHUD.autoplayMark.visible = bfStrums.autoplay;
-						uiHUD.scoreBar.visible = !bfStrums.autoplay;
+						switch (Init.trueSettings.get('HUD Style').toLowerCase())
+						{
+							case 'psych':
+								psychHUD.autoplayMark.visible = bfStrums.autoplay;
+								psychHUD.scoreBar.visible = !bfStrums.autoplay;
+							case 'demolition':
+								demolitionHUD.autoplayMark.visible = bfStrums.autoplay;
+								demolitionHUD.scoreBar.visible = !bfStrums.autoplay;
+							default:
+								uiHUD.autoplayMark.visible = bfStrums.autoplay;
+								uiHUD.scoreBar.visible = !bfStrums.autoplay;
+						}
 					}
 
 					if (FlxG.keys.justPressed.SEVEN)
@@ -1706,6 +1739,10 @@ class PlayState extends MusicBeatState
 		}
 
 		uiHUD.beatHit(curBeat);
+		demoHUD.beatHit(curBeat);
+		psychHUD.beatHit(curBeat);
+		baseHUD.beatHit(curBeat);
+		kadeHUD.beatHit(curBeat);
 
 		//
 		charactersDance(curBeat);
@@ -2052,7 +2089,17 @@ class PlayState extends MusicBeatState
 		}
 		//
 
-		FlxTween.tween(uiHUD, {alpha: 1}, (Conductor.crochet * 2) / 1000, {startDelay: (Conductor.crochet / 1000)});
+		switch (Init.trueSettings.get('HUD Style').toLowerCase())
+		{
+			case 'psych': // psych engine fans gonna go nuts about this
+				FlxTween.tween(psychHUD, {alpha: 1}, (Conductor.crochet * 2) / 1000, {startDelay: (Conductor.crochet / 1000)});
+
+			case 'demolition': // demoliton HUD
+				FlxTween.tween(demolitionHUD, {alpha: 1}, (Conductor.crochet * 2) / 1000, {startDelay: (Conductor.crochet / 1000)});
+
+			default: // forever HUD
+				FlxTween.tween(uiHUD, {alpha: 1}, (Conductor.crochet * 2) / 1000, {startDelay: (Conductor.crochet / 1000)});
+		}
 
 		if (skipCountdown)
 		{
