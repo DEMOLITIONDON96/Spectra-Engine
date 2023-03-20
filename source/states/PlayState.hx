@@ -32,6 +32,7 @@ import flixel.util.FlxTimer;
 import objects.*;
 import objects.Character;
 import objects.ui.*;
+import objects.ui.hud.*;
 import objects.ui.Strumline.Receptor;
 import openfl.media.Sound;
 import states.editors.CharacterOffsetEditor;
@@ -152,6 +153,11 @@ class PlayState extends MusicBeatState
 
 	// User Interface and Objects
 	public static var uiHUD:ClassHUD;
+	public static var demoHUD:DemolitionHUD;
+	public static var psychHUD:PsychHUD;
+	public static var baseHUD:VanillaHUD;
+	public static var kadeHUD:KadeHUD;
+	
 	public static var daPixelZoom:Float = 6;
 
 	public static var stageBuild:Stage;
