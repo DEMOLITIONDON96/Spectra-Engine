@@ -70,6 +70,7 @@ class OptionsData
 		{name: "UI Skin", type: "option"},
 		{name: "Note Skin", type: "option"},
 		{name: "Clip Style", type: "option"},
+		{name: "HUD Style", type: "option"},
 		//
 		{name: "Note and Holds", type: "divider"},
 		//
