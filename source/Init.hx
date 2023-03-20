@@ -134,7 +134,7 @@ class Init extends FlxState
 			Selector,
 			"Chooses a style of what your HUD may look like in-game",
 			NOT_FORCED,
-			['forever', 'psych', 'demolition', 'vanilla', 'kade']
+			['forever', 'psych', 'demolition', 'vanilla', 'kade', 'redbun']
 		],
 		"UI Skin" => [
 			'default',
