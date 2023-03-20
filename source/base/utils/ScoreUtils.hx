@@ -312,8 +312,17 @@ class ScoreUtils
 			curCombo = 'SDCB';
 
 		// this updates the most so uh
-		PlayState.uiHUD.updateScoreText();
-		PlayState.uiHUD.colorHighlight(curRating);
+		switch (Init.trueSettings.get("HUD Style").toLowerCase())
+		{
+			case 'demolition':
+				PlayState.demoHUD.updateScoreText();
+				PlayState.demoHUD.colorHighlight(curRating);
+			case 'psych':
+				PlayState.psychHUD.updateScoreText();
+			default:
+				PlayState.uiHUD.updateScoreText();
+				PlayState.uiHUD.colorHighlight(curRating);
+		}
 	}
 
 	public static function setJudgeTiming(rating:Int, newTiming:Float)
