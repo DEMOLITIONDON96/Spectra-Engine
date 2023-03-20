@@ -39,7 +39,7 @@ class ClassHUD extends FlxSpriteGroup
 	// display texts
 	public var infoDisplay:String = CoolUtil.dashToSpace(PlayState.SONG.song);
 	public var diffDisplay:String = '[${CoolUtil.difficultyString}]';
-	public var engineDisplay:String = 'FOREVER ENGINE v0.3.1';
+	public var engineDisplay:String = "FE FEATHER v" + Main.game.versionFF;
 
 	// eep
 	public function new()
@@ -208,6 +208,25 @@ class ClassHUD extends FlxSpriteGroup
 			PlayState.detailsSub = scoreBar.text;
 
 		PlayState.updateRPC(false);
+	}
+	
+	public function colorHighlight(curRating:String)
+	{
+		// highlights the accuracy mark on the score bar;
+		var rankingsMap:Map<String, FlxColor> = [
+			"S+" => FlxColor.fromString('#F8D482'),
+			"S" => FlxColor.CYAN,
+			"A" => FlxColor.LIME,
+			"B" => FlxColor.GREEN,
+			"C" => FlxColor.BROWN,
+			"D" => FlxColor.PINK,
+			"E" => FlxColor.ORANGE,
+			"F" => FlxColor.RED,
+		];
+
+		if (rankingsMap.exists(curRating))
+			if (ScoreUtils.curRating == curRating)
+				scoreFlashFormat = new FlxTextFormat(rankingsMap.get(curRating), true);
 	}
 
 	public function reloadHealthBar()
