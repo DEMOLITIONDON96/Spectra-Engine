@@ -50,7 +50,7 @@ class DemolitionHUD extends FlxSpriteGroup
 	// display texts
 	public var infoDisplay:String = CoolUtil.dashToSpace(PlayState.SONG.song);
 	public var diffDisplay:String = '[${CoolUtil.difficultyString}]';
-	public var engineDisplay:String = "Funkin.avi v2";
+	public var engineDisplay:String = "FE FEATHER v" + Main.game.versionFF; // lmao, i forgor
 
 	// eep
 	public function new()
@@ -85,6 +85,7 @@ class DemolitionHUD extends FlxSpriteGroup
 			default:
 				timeBar.createFilledBar(0xFF2E2E2E, 0xFFB7B7B7);
 		}*/
+		// this shit was from the scrapped source from F.AVI V2 lmao
 		
 		if (Init.trueSettings.get('Downscroll')) songTime = new FlxText(-108, 655, 400, "", 32); else songTime = new FlxText(-108, 100, 400, "", 32);
 		songTime.setFormat(Paths.font("VanillaExtractRegular"), 13, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
@@ -130,7 +131,7 @@ class DemolitionHUD extends FlxSpriteGroup
 		updateScoreText();
 		add(scoreBar);
 	
-		// F.AVI V2 Watermark
+		// F.AVI V2 Watermark cause yes
 		cornerMark = new FlxText(0, 0, 0, engineDisplay);
 		cornerMark.setFormat(Paths.font('VanillaExtractRegular'), 18, FlxColor.WHITE);
 		cornerMark.setBorderStyle(OUTLINE, FlxColor.BLACK, 2);
@@ -181,7 +182,7 @@ class DemolitionHUD extends FlxSpriteGroup
 			case 11:
 				autoplayMark.text = "[POV: YOU'RE LAZY TO ACTUALLY PLAY THE GAME]";
 			case 12:
-				autoplayMark.text = "[What's up guys, <Insert Generic YouTube Name Here> here and welcome to Funkin.avi version 2 point O!]";
+				autoplayMark.text = "[What's up guys, <Insert Generic YouTube Name Here> here and welcome to another dope asf mod!]"; // this is F.AVI dude
 			case 13:
 				autoplayMark.text = "[eyeless mouse is real.]";
 			case 14:
@@ -330,9 +331,33 @@ class DemolitionHUD extends FlxSpriteGroup
 
 		// update playstate
 		if(Init.trueSettings.get('HUD Style') == "demolition")
-		PlayState.detailsSub = scoreBar.text;
+			PlayState.detailsSub = scoreBar.text;
 		
 		PlayState.updateRPC(false);
+	}
+	
+	public function bounceScoreTxt()
+	{
+		// gonna do something with this soon
+	}
+	
+	public function colorHighlight(curRating:String)
+	{
+		// highlights the accuracy mark on the score bar;
+		var rankingsMap:Map<String, FlxColor> = [
+			"S+" => FlxColor.fromString('#F8D482'),
+			"S" => FlxColor.CYAN,
+			"A" => FlxColor.LIME,
+			"B" => FlxColor.GREEN,
+			"C" => FlxColor.BROWN,
+			"D" => FlxColor.PINK,
+			"E" => FlxColor.ORANGE,
+			"F" => FlxColor.RED,
+		];
+
+		if (rankingsMap.exists(curRating))
+			if (ScoreUtils.curRating == curRating)
+				scoreFlashFormat = new FlxTextFormat(rankingsMap.get(curRating), true);
 	}
 
 	public function reloadHealthBar()
