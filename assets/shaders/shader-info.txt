@@ -1,3 +1,12 @@
 Shaders may have the .frag (fragment) or .vert (vertex) format
 credits for the shader support itself goes to EliteMasterEric
 https://twitter.com/EliteMasterEric
+
+example of his use (MUST BE ON YOU'RE STAGE CODE)
+
+var coolShader:FlxRuntimeShader = new FlxRuntimeShader(File.getContent('./assets/shaders/monitor.frag), null, 140);
+PlayState.camGame.setFilters([new ShaderFilter(coolShader)]);
+
+shader properties
+
+setFloat(name:String, theSet:Float) sets the shader float, useful for shaders which use iTime or uTime
