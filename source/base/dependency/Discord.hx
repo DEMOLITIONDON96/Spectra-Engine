@@ -49,7 +49,7 @@ class Discord
 
 	//
 
-	public static function changePresence(details:String = '', state:Null<String> = '', ?smallImageKey:String, ?hasStartTimestamp:Bool, ?endTimestamp:Float)
+	public static function changePresence(details:String = '', state:Null<String> = '', ?iconRPC:String = 'fef-logo', ?smallImageKey:String, ?hasStartTimestamp:Bool, ?endTimestamp:Float)
 	{
 		var startTimestamp:Float = (hasStartTimestamp) ? Date.now().getTime() : 0;
 
@@ -59,7 +59,7 @@ class Discord
 		DiscordRpc.presence({
 			details: details,
 			state: state,
-			largeImageKey: 'fef-logo',
+			largeImageKey: iconRPC,
 			largeImageText: "Forever Engine Feather",
 			smallImageKey: smallImageKey,
 			// Obtained times are in milliseconds so they are divided so Discord can use it
