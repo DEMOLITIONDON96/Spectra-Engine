@@ -84,9 +84,9 @@ class Main
 				mainView.findComponent("restart-button", Button).onClick = function(_)
 				{
 					#if windows
-					new Process("Forever Engine Feather", []);
+					new Process("FE-Feather.exe", []); // How did the original devs of this engine overlook something simple????
 					#elseif linux
-					new Process("./Forever Engine Feather", []);
+					new Process("./FE-Feather", []);
 					#end
 
 					Sys.exit(0);
