@@ -253,9 +253,9 @@ class PlayState extends MusicBeatState
 		gf.dance();
 		boyfriend.dance();
 		
-		opponent.curCharacter.endsWith('-pixel') ? opponent.antialiasing = false : opponent.antialiasing = true;
-		gf.curCharacter.endsWith('-pixel') ? gf.antialiasing = false : gf.antialiasing = true;
-		boyfriend.curCharacter.endsWith('-pixel') ? boyfriend.antialiasing = false : boyfriend.antialiasing = true;
+		opponent.antialiasing = !opponent.curCharacter.endsWith('-pixel');
+		gf.antialiasing = !gf.curCharacter.endsWith('-pixel');
+		boyfriend.antialiasing = !boyfriend.curCharacter.endsWith('-pixel');
 
 		repositionChars();
 	}
@@ -284,9 +284,9 @@ class PlayState extends MusicBeatState
 		gf.dance();
 		boyfriend.dance();
 		
-		opponent.curCharacter.endsWith('-pixel') ? opponent.antialiasing = false : opponent.antialiasing = true;
-		gf.curCharacter.endsWith('-pixel') ? gf.antialiasing = false : gf.antialiasing = true;
-		boyfriend.curCharacter.endsWith('-pixel') ? boyfriend.antialiasing = false : boyfriend.antialiasing = true;
+		opponent.antialiasing = !opponent.curCharacter.endsWith('-pixel');
+		gf.antialiasing = !gf.curCharacter.endsWith('-pixel');
+		boyfriend.antialiasing = !boyfriend.curCharacter.endsWith('-pixel');
 
 		repositionChars();
 	}
