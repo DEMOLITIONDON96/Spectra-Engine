@@ -78,6 +78,8 @@ class PlayState extends MusicBeatState
 	public static var SONG:SwagSong;
 	public static var songMusic:FlxSound;
 	public static var songLength:Float = 0;
+	
+	// Song Files
 	public static var vocals:FlxSound;
 	public static var bf_vocals:FlxSound;
 	public static var opp_vocals:FlxSound;
