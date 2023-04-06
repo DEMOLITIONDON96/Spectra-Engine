@@ -57,7 +57,7 @@ class SongCard extends FlxSpriteGroup
          if (!FileSystem.exists('./assets/images/card/${fileName}.png'))
              cardSprite = new FlxSprite().makeGraphic(600, 350, 0xFF000000);
          else
-             cardSprite = new FlxSprite().loadGraphic(Paths.image('menus/Funkin_avi/card/${fileName}'));
+             cardSprite = new FlxSprite().loadGraphic(Paths.image('card/${fileName}'));
 
          cardTxt.setFormat(Paths.font(fontStuff), 38, FlxColor.WHITE, CENTER);
 
