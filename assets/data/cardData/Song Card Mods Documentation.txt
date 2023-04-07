@@ -52,7 +52,7 @@ Simple, right?
 
 -VARIABLES AND WHAT THEY DO-
 
-customArt - Replaces the default black box card with the name of the image you want (your image MUST be in the following directory: "assets/images/menus/Funkin_avi/card")
+customArt - Replaces the default black box card with the name of the image you want (your image MUST be in the following directory: "assets/images/cardSkins")
 
 font - Replaces the default font file (vcr) with the font you want it to use (your font MUST be a .ttf or .otf file AND be in the following directory: "assets/fonts")
 
