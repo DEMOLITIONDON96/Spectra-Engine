@@ -48,6 +48,7 @@ class OptionsData
 		{name: "Disable Antialiasing", type: "option"},
 		{name: "Disable Flashing Lights", type: "option"},
 		{name: "Disable Screen Shaders", type: "option"},
+		//{name: "Low Quality", type: "option"}, // coming soon
 		//
 		{name: "Motion Settings", type: "divider"},
 		//
@@ -67,6 +68,7 @@ class OptionsData
 		//
 		{name: "User Interface", type: "divider"},
 		//
+		{name: "Display Song Cards", type: "option"},
 		{name: "UI Skin", type: "option"},
 		{name: "Note Skin", type: "option"},
 		{name: "Clip Style", type: "option"},

@@ -1,0 +1,11 @@
+{
+  "customCardData": {
+      "customArt": "your-card-art-here",
+      "font": "your-font-here",
+      "playerIcon": "bf",
+      "opponentIcon": "dad",
+	   "playerOffset": [850, 460],
+	   "opponentOffset": [260, 130],
+	   "cardAlpha": [1]
+  }
+}

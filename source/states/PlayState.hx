@@ -32,8 +32,8 @@ import flixel.util.FlxTimer;
 import objects.*;
 import objects.Character;
 import objects.ui.*;
-import objects.ui.hud.*;
 import objects.ui.Strumline.Receptor;
+import objects.ui.hud.*;
 import openfl.media.Sound;
 import states.editors.CharacterOffsetEditor;
 import states.menus.*;
@@ -159,6 +159,9 @@ class PlayState extends MusicBeatState
 	public static var psychHUD:PsychHUD;
 	public static var baseHUD:VanillaHUD;
 	public static var kadeHUD:KadeHUD;
+
+	// Epic Song Card
+	public static var songCard:SongCard;
 	
 	public static var daPixelZoom:Float = 6;
 
@@ -443,6 +446,14 @@ class PlayState extends MusicBeatState
 
 		// add the dialogue UI
 		FlxG.cameras.add(dialogueHUD, false);
+
+		if (Init.trueSettings.get('Display Song Cards'))
+		{
+			songCard = new SongCard();
+			add(songCard);
+			songCard.cameras = [camHUD];
+			songCard.playCardAnim(0.08);
+		}
 
 		uiHUD = new ClassHUD();
 		uiHUD.alpha = 0;

@@ -8,6 +8,8 @@ package base.song;
 typedef SwagSong =
 {
 	var song:String;
+	var composer:String;
+	var charter:String;
 	var notes:Array<SwagSection>;
 	var events:Array<Dynamic>;
 	var bpm:Float;

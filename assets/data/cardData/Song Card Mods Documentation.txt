@@ -1,0 +1,89 @@
+Hi, it's your dope little boi, demo here, and here is some cool little info that will help you understand exactly how these files work
+
+
+
+
+
+-GETTING STARTED-
+
+Alright, so first things first, you will have a file named "example-card-data.json" within this folder!
+
+Inside this folder will have 7 different variables you can play around with!
+
+The following variables being:
+- customArt
+- font
+- playerIcon
+- opponentIcon
+- playerOffset
+- opponentOffset
+- cardAlpha
+
+Now, this may seem a bit complicated, but it's actually SUPER simple to understand and use after reading this txt file entirely :)
+
+
+
+
+
+-CREATING A CUSTOM CARD-
+
+Okay, first things first, you'll notice that all the songs will by default load in:
+- a black box 
+- VCR OSD Mono as the font
+- reuses your health bar's existing icons
+
+How do you customize it?
+
+Well, setting it up is SUPER easy!
+
+Here's a step-to-step guide to setting it up:
+
+1) Create a copy of the template json file and rename it after the song you want this card to load in (for example: satin-panties.json) [NOTE: it's just like naming a chart file for a song, keep that in mind!]
+
+2) Start playing with the variables given to ya!
+
+3) Save the file, load up the song, and your final custom card will appear in front of you upon startup of the song you wanted it on
+
+Simple, right?
+
+
+
+
+
+-VARIABLES AND WHAT THEY DO-
+
+customArt - Replaces the default black box card with the name of the image you want (your image MUST be in the following directory: "assets/images/menus/Funkin_avi/card")
+
+font - Replaces the default font file (vcr) with the font you want it to use (your font MUST be a .ttf or .otf file AND be in the following directory: "assets/fonts")
+
+playerIcon - Replaces the BF/Player icon loaded from the BF character in-game with your custom icon (Example: "mom", Directory: "assets/data/characters/mom") [IMPORTANT: YOUR CHARACTER FILE MUST HAVE AN IMAGE NAMED "icon.png" OR YOUR GAME WILL CRASH]
+
+opponentIcon - Does the same as "playerIcon" but for the Dad/Opponent Icon
+
+playerOffset - Replaces the default icon offset for the BF/Player Icon with your custom values (Example: [500, 500])
+
+opponentOffset - Does the same as "playerOffset" but for the Dad/Opponent Icon
+
+cardAlpha - Sets the alpha value of your custom card when it shows up (Example: [0.75])
+
+
+
+
+
+Alright, that's all you need to know, happy modding!
+
+
+
+
+- DEMOLITIONDON96
+
+
+
+
+
+
+
+
+
+
+

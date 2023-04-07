@@ -8,6 +8,8 @@ import sys.io.File;
 class Song
 {
 	public var song:String;
+	public var composer:String;
+	public var charter:String;
 	public var notes:Array<SwagSection>;
 	public var bpm:Float;
 	public var needsVoices:Bool = true;
@@ -44,6 +46,8 @@ class Song
 		if (rawJson == null)
 			return cast {
 				song: "ERROR, CHECK YOUR CHART JSON!",
+				composer: "UNKNOWN",
+				charter: "UNKNOWN",
 				player1: "placeholder",
 				player2: "placeholder",
 				gfVersion: "placeholder",
@@ -66,6 +70,8 @@ class Song
 		{
 			return cast {
 				song: oldSong.song,
+				composer: oldSong.song,
+				charter: oldSong.song,
 				player1: oldSong.player1,
 				player2: oldSong.player2,
 				gfVersion: oldSong.gfVersion,

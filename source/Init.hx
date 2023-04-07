@@ -56,7 +56,7 @@ class Init extends FlxState
 			'Whether to pause the game automatically if the window is unfocused.',
 			NOT_FORCED
 		],
-		'FPS Counter' => [true, Checkmark, 'Whether to display the FPS counter.', NOT_FORCED],
+		'FPS Counter' => [true, Checkmark, 'Whether to display the FPS Counter.', NOT_FORCED],
 		'Memory Counter' => [
 			true,
 			Checkmark,
@@ -93,6 +93,13 @@ class Init extends FlxState
 			false,
 			Checkmark,
 			'Whether to disable Anti-Aliasing, helps in improving performance.',
+			NOT_FORCED
+		],
+		// soon
+		'Low Quality' => [
+			false,
+			Checkmark,
+			'If checked, tons of content gets removed for more optimization (objects, some shaders, etc).',
 			NOT_FORCED
 		],
 		'Disable Flashing Lights' => [
@@ -132,7 +139,7 @@ class Init extends FlxState
 		"HUD Style" => [
 			'demolition',
 			Selector,
-			"Chooses a style of what your HUD may look like in-game",
+			"Chooses a UI Style for gameplay",
 			NOT_FORCED,
 			['forever', 'psych', 'demolition', 'vanilla', 'kade', 'redbun']
 		],
@@ -142,6 +149,12 @@ class Init extends FlxState
 			'Choose a UI Skin for judgements, combo, etc.',
 			NOT_FORCED,
 			''
+		],
+		"Display Song Cards" => [
+			true,
+			Checkmark,
+			"Whether to display the song cards at the start of a song.",
+			NOT_FORCED
 		],
 		"Note Skin" => [
 			'default',
