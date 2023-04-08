@@ -1,11 +1,60 @@
 {
-  "customCardData": {
-      "customArt": "your-card-art-here",
-      "font": "your-font-here",
-      "playerIcon": "bf",
-      "opponentIcon": "dad",
-	   "playerOffset": [850, 460],
-	   "opponentOffset": [260, 130],
-	   "cardAlpha": [1]
-  }
+	"baseSettings": {
+      		"customArt": "aiHorror",
+      		"playerIcon": "bf",
+      		"opponentIcon": "dad"
+  	},
+
+	"extraSettings": {
+		"cardAlpha": [1],
+		"cardScale": [1, 1],
+		"cardOffsets": [0, 0],
+		"isScreenCenter": true
+	},
+
+	"animationSettings": {
+		"isAnimated": false,
+		"animName": "your-animation-name-here",
+		"animFramerate": [24]
+	},
+
+	"fontSettings": {
+		"font": "your-font-file-here",
+		"fontSize": [60],
+		"fontColor": [255, 255, 255, 255],
+		"fontAlignType": "center",
+		"fontScale": [1, 1],
+		"fontAlpha": [1]
+	},
+
+	"iconSettings": {
+		"playerOffset": [850, 460],
+		"playerScale": [1, 1],
+		"playerAlpha": [1],
+		"opponentOffset": [260, 130],
+		"opponentScale": [1, 1],
+		"opponentAlpha": [1]
+	},
+
+	"graphicSettings": {
+		"cardShader": null,
+		"playerShader": null,
+		"opponentShader": null,
+		"cardBlend": "normal",
+		"playerBlend": "normal",
+		"opponentBlend": "normal"
+	},
+
+	"tweenSettings": {
+		"tweenIn": "sineInOut",
+		"tweenOut": "sineInOut",
+		"cardMoveIntro": [330, 180],
+		"cardMoveOutro": [330, 180],
+		"playerMoveIntro": [850, 460],
+		"playerMoveOutro": [850, 460],
+		"oppMoveIntro": [260, 130],
+		"oppMoveOutro": [260, 130],
+		"fontMoveIntro": [450, 280],
+		"fontMoveOutro": [450, 280]
+	}
 }
