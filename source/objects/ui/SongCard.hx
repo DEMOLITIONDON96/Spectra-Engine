@@ -230,7 +230,7 @@ class SongCard extends FlxSpriteGroup
 				if (cardIcons.playerScale != null)
 					playerIcon.scale.set(cardIcons.playerScale[0], cardIcons.playerScale[1]);
 
-				if (!FileSystem.exists('./assets/images/menus/Funkin_avi/card/${artFile}.png'))
+				if (!FileSystem.exists('./assets/images/cardSkins/${artFile}.png'))
 				{
 				  	cardSprite.makeGraphic(600, 350, 0xFF000000);
 				}
@@ -241,13 +241,13 @@ class SongCard extends FlxSpriteGroup
 						animName = (cardAnimation.animName != null ? cardData.animName : "idle");
 						animFPS = (cardAnimation.animFramerate != null ? cardData.animFramerate[0] : 24);
 
-						cardSprite.frames = Paths.getSparrowAtlas('menus/Funkin_avi/card/${artFile}');
+						cardSprite.frames = Paths.getSparrowAtlas('cardSkins/${artFile}');
 						cardSprite.animation.addByPrefix('idle', animName, animFPS);
 						cardSprite.animation.play('idle');
 					}
 					else
 					{
-				  		cardSprite.loadGraphic(Paths.image('menus/Funkin_avi/card/${artFile}'));
+				  		cardSprite.loadGraphic(Paths.image('cardSkins/${artFile}'));
 					}
 				}
 
@@ -291,10 +291,10 @@ class SongCard extends FlxSpriteGroup
 				playerIcon.x = 850;
 		   		playerIcon.y = 460;
 
-				if (!FileSystem.exists('./assets/images/menus/Funkin_avi/card/${fileName}.png'))
+				if (!FileSystem.exists('./assets/images/cardSkins/${fileName}.png'))
 					cardSprite.makeGraphic(600, 350, 0xFF000000);
 			  	else
-					cardSprite.loadGraphic(Paths.image('menus/Funkin_avi/card/${fileName}'));
+					cardSprite.loadGraphic(Paths.image('cardSkins/${fileName}'));
 
 				  cardSprite.screenCenter();
 
