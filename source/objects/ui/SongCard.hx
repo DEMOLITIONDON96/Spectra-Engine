@@ -1,20 +1,20 @@
 package objects.ui;
 
 import flixel.FlxSprite;
-import flixel.tweens.FlxTween;
-import flixel.tweens.FlxEase;
 import flixel.graphics.FlxGraphic;
+import flixel.group.FlxSpriteGroup;
 import flixel.math.FlxMath;
-import sys.FileSystem;
-import sys.io.File;
-import flixel.util.FlxColor;
 import flixel.text.FlxText;
+import flixel.tweens.FlxEase;
+import flixel.tweens.FlxTween;
 import flixel.ui.FlxBar;
+import flixel.util.FlxColor;
 import flixel.util.FlxSort;
 import flixel.util.FlxStringUtil;
-import flixel.group.FlxSpriteGroup;
 import haxe.Json;
 import states.PlayState;
+import sys.FileSystem;
+import sys.io.File;
 
 using flixel.util.FlxSpriteUtil;
 
@@ -27,6 +27,7 @@ typedef SongCardData =
 	var fontScale:Array<Float>;
 	var fontAlpha:Array<Float>;
 	var fontAlignType:String;
+	var fontOffset:Array<Float>;
 
 	// Base Settings
 	var customArt:String;
@@ -36,7 +37,8 @@ typedef SongCardData =
 	// Animation Settings
 	var isAnimated:Bool;
 	var animName:String;
-	var animFramerate:Array<Int>;
+	var animFramerate:Int;
+	var isLooped:Bool;
 
 	// Icon Settings
 	var playerOffset:Array<Float>;
@@ -87,6 +89,8 @@ class SongCard extends FlxSpriteGroup
 	public var oIconName:String = PlayState.opponent.characterData.icon;
 	public var fontColor:FlxColor = FlxColor.WHITE;
 	public var fontSize:Int = 42;
+	public var fontOffsetX:Float = 0;
+	public var fontOffsetY:Float = 0;
 	public var cardScaleX:Float = 1;
 	public var cardScaleY:Float = 1;
 	public var animName:String = "card";
@@ -156,8 +160,6 @@ class SongCard extends FlxSpriteGroup
 
 		   cardSprite = new FlxSprite();
 
-		   cardTxt = new FlxText(cardSprite.x, cardSprite.y, 0, '- ${songTitle} -\nBy: ${composer}');
-
 		   if (FileSystem.exists('./assets/data/cardData/${fileName}.json')) 
 		   {
 				var rawJson = File.getContent(Paths.getPath('data/cardData/${fileName}.json', TEXT));
@@ -180,6 +182,8 @@ class SongCard extends FlxSpriteGroup
 				alignString = cardFont.fontAlignType;
 				fontScaleX = (cardFont.fontScale != null ? cardFont.fontScale[0] : 1);
 				fontScaleY = (cardFont.fontScale != null ? cardFont.fontScale[1] : 1);
+				fontOffsetX = (cardFont.fontOffset != null ? cardFont.fontOffset[0] : 0);
+				fontOffsetY = (cardFont.fontOffset != null ? cardFont.fontOffset[1] : 0);
 
 				// extraSettings
 				cardScaleX = (cardAdvanced.cardScale != null ? cardAdvanced.cardScale[0] : 1);
@@ -239,10 +243,10 @@ class SongCard extends FlxSpriteGroup
 					if (cardAnimation.isAnimated)
 					{
 						animName = (cardAnimation.animName != null ? cardData.animName : "idle");
-						animFPS = (cardAnimation.animFramerate != null ? cardData.animFramerate[0] : 24);
+						animFPS = (cardAnimation.animFramerate >= 0 ? cardData.animFramerate : 24);
 
 						cardSprite.frames = Paths.getSparrowAtlas('cardSkins/${artFile}');
-						cardSprite.animation.addByPrefix('idle', animName, animFPS);
+						cardSprite.animation.addByPrefix('idle', animName, animFPS, cardAnimation.isLooped);
 						cardSprite.animation.play('idle');
 					}
 					else
@@ -277,8 +281,8 @@ class SongCard extends FlxSpriteGroup
 
 				if (cardAdvanced.isScreenCenter) cardSprite.screenCenter();
 
+				cardTxt = new FlxText(fontOffsetX, fontOffsetY, 0, '- ${songTitle} -\nBy: ${composer}');
 				cardTxt.setFormat(Paths.font(fontStuff), fontSize, fontColor, (alignString != null ? ForeverTools.setTextAlign(alignString) : CENTER));
-
 				cardTxt.scale.set(fontScaleX, fontScaleY);
 		   }
 		   else
@@ -298,7 +302,9 @@ class SongCard extends FlxSpriteGroup
 
 				  cardSprite.screenCenter();
 
-			  cardTxt.setFormat(Paths.font(fontStuff), 42, FlxColor.WHITE, CENTER);
+				 cardTxt = new FlxText(cardSprite.x, cardSprite.y, 0, '- ${songTitle} -\nBy: ${composer}');
+			 	 cardTxt.setFormat(Paths.font(fontStuff), 42, FlxColor.WHITE, CENTER);
+				 cardTxt.screenCenter();
 		   }
 
 		   cardSprite.alpha = 0.001;
@@ -310,7 +316,6 @@ class SongCard extends FlxSpriteGroup
 		   playerIcon.alpha = 0.001;
 
 		   cardTxt.setBorderStyle(OUTLINE, FlxColor.BLACK, 2);
-		   cardTxt.screenCenter();
 		   cardTxt.alpha = 0.001;
 
 		   add(cardSprite);
@@ -341,19 +346,19 @@ class SongCard extends FlxSpriteGroup
 			cardIntroPosX = (cardTween.cardMoveIntro != null ? cardTween.cardMoveIntro[0] : 0);
 			cardIntroPosY = (cardTween.cardMoveIntro != null ? cardTween.cardMoveIntro[1] : 0);
 			cardOutroPosX = (cardTween.cardMoveOutro != null ? cardTween.cardMoveOutro[0] : 0);
-			cardOutroPosX = (cardTween.cardMoveOutro != null ? cardTween.cardMoveOutro[1] : 0);
+			cardOutroPosY = (cardTween.cardMoveOutro != null ? cardTween.cardMoveOutro[1] : 0);
 			playerIntroPosX = (cardTween.playerMoveIntro != null ? cardTween.playerMoveIntro[0] : 0);
 			playerIntroPosY = (cardTween.playerMoveIntro != null ? cardTween.playerMoveIntro[1] : 0);
 			playerOutroPosX = (cardTween.playerMoveOutro != null ? cardTween.playerMoveOutro[0] : 0);
-			playerOutroPosX = (cardTween.playerMoveOutro != null ? cardTween.playerMoveOutro[1] : 0);
+			playerOutroPosY = (cardTween.playerMoveOutro != null ? cardTween.playerMoveOutro[1] : 0);
 			oppIntroPosX = (cardTween.oppMoveIntro != null ? cardTween.oppMoveIntro[0] : 0);
 			oppIntroPosY = (cardTween.oppMoveIntro != null ? cardTween.oppMoveIntro[1] : 0);
 			oppOutroPosX = (cardTween.oppMoveOutro != null ? cardTween.oppMoveOutro[0] : 0);
-			oppOutroPosX = (cardTween.oppMoveOutro != null ? cardTween.oppMoveOutro[1] : 0);
+			oppOutroPosY = (cardTween.oppMoveOutro != null ? cardTween.oppMoveOutro[1] : 0);
 			fontIntroPosX = (cardTween.fontMoveIntro != null ? cardTween.fontMoveIntro[0] : 0);
 			fontIntroPosY = (cardTween.fontMoveIntro != null ? cardTween.fontMoveIntro[1] : 0);
 			fontOutroPosX = (cardTween.fontMoveOutro != null ? cardTween.fontMoveOutro[0] : 0);
-			fontOutroPosX = (cardTween.fontMoveOutro != null ? cardTween.fontMoveOutro[1] : 0);
+			fontOutroPosY = (cardTween.fontMoveOutro != null ? cardTween.fontMoveOutro[1] : 0);
 
 			// Fade Stuff
 			FlxTween.tween(cardSprite, 

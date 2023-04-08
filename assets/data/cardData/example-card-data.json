@@ -15,7 +15,8 @@
 	"animationSettings": {
 		"isAnimated": false,
 		"animName": "your-animation-name-here",
-		"animFramerate": [24]
+		"animFramerate": 24,
+		"isLooped": false
 	},
 
 	"fontSettings": {
@@ -24,7 +25,8 @@
 		"fontColor": [255, 255, 255, 255],
 		"fontAlignType": "center",
 		"fontScale": [1, 1],
-		"fontAlpha": [1]
+		"fontAlpha": [1],
+		"fontOffset": [450, 280]
 	},
 
 	"iconSettings": {
