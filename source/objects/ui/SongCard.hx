@@ -11,6 +11,7 @@ import flixel.ui.FlxBar;
 import flixel.util.FlxColor;
 import flixel.util.FlxSort;
 import flixel.util.FlxStringUtil;
+import flixel.addons.display.FlxRuntimeShader;
 import haxe.Json;
 import states.PlayState;
 import sys.FileSystem;
