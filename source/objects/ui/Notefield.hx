@@ -46,7 +46,7 @@ class Notefield extends FlxTypedGroup<Note>
 
 		var roundedSpeed = FlxMath.roundDecimal(daNote.noteSpeed, 2);
 		var receptorPosX:Float = strumline.receptors.members[Math.floor(daNote.noteData)].x;
-		var receptorPosY:Float = strumline.receptors.members[Math.floor(daNote.noteData)].y /* + Note.swagWidth / 6 */;
+		var receptorPosY:Float = strumline.receptors.members[Math.floor(daNote.noteData)].y + Note.swagWidth / 6;
 		//
 		var psuedoY:Float = (downscrollMultiplier * -((Conductor.songPosition - daNote.strumTime) * (0.45 * roundedSpeed)));
 		var psuedoX = 25 + daNote.noteVisualOffset;
