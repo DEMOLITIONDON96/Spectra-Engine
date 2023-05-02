@@ -1001,7 +1001,8 @@ class PlayState extends MusicBeatState
 				// reset color if it's not white;
 				if (character.color != 0xFFFFFFFF)
 					character.color = 0xFFFFFFFF;
-				characterPlayAnimation(coolNote, character);
+				if (!coolNote.noAnim)
+					characterPlayAnimation(coolNote, character);
 			}
 
 			// special thanks to sam, they gave me the original system which kinda inspired my idea for this new one
