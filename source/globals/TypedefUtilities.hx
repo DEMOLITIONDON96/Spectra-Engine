@@ -30,9 +30,9 @@ typedef SongMetadata =
 	var week:Int;
 	var character:String;
 	var color:FlxColor;
-	var composer:String;
-	var difficultyRank:String;
-	var textColor:FlxColor;
+	//var composer:String;
+	//var difficultyRank:String;
+	//var textColor:FlxColor;
 	//var discArt:String;
 }
 
