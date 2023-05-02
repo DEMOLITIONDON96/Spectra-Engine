@@ -4,6 +4,8 @@
  */
 
 //
+import globals.*; // using doesn't have '*' support
+
 using StringTools;
 using base.Controls;
 using base.dependency.ForeverDeps;
