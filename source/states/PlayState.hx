@@ -34,7 +34,8 @@ import objects.Character;
 import objects.ui.*;
 import objects.ui.notes.*;
 import objects.ui.notes.Strumline.Receptor;
-import objects.ui.hud.*;
+import objects.ui.hud.toggleable.*;
+import objects.ui.hud.hardcoded.*; // this is for special HUDs you want to appear on your songs
 import openfl.media.Sound;
 import states.editors.CharacterOffsetEditor;
 import states.menus.*;
