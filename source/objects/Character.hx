@@ -6,8 +6,6 @@ import base.utils.FNFUtils.FNFSprite;
 import flixel.graphics.frames.FlxAtlasFrames;
 import haxe.Json;
 import objects.CharacterData.CharacterOrigin;
-import objects.CharacterData.PsychAnimArray;
-import objects.CharacterData.PsychEngineChar;
 import states.PlayState;
 import sys.FileSystem;
 import sys.io.File;
@@ -22,7 +20,7 @@ class Character extends FNFSprite
 
 	public var isPlayer:Bool = false;
 	public var curCharacter:String = 'bf';
-
+	
 	public var holdTimer:Float = 0;
 	public var heyTimer:Float = 0.6;
 
@@ -383,7 +381,7 @@ class Character extends FNFSprite
 			// check if a text file exists with the character name exists, if so, it's a spirit-like character;
 			if (FileSystem.exists(textAsset))
 				spriteType = "PackerAtlas";
-			else 
+			else
 				spriteType = "SparrowAtlas";
 		}
 		catch (e)
@@ -399,6 +397,7 @@ class Character extends FNFSprite
 			if (newFramesPath != null && newFramesPath != '')
 				framesPath = newFramesPath;
 		});
+		setVar('isPlayer', isPlayer);
 
 		switch (spriteType)
 		{
@@ -445,6 +444,11 @@ class Character extends FNFSprite
 		setVar('setCamOffsets', function(x:Float = 0, y:Float = 0)
 		{
 			characterData.camOffsets = [x, y];
+		});
+		
+		setVar('antialiasing', function(isNotPixel:Bool = true)
+		{
+			characterData.antialiasing = isNotPixel;
 		});
 
 		setVar('setScale', function(?x:Float = 1, ?y:Float = 1)

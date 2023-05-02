@@ -11,70 +11,12 @@ import flixel.ui.FlxBar;
 import flixel.util.FlxColor;
 import flixel.util.FlxSort;
 import flixel.util.FlxStringUtil;
-import flixel.addons.display.FlxRuntimeShader;
 import haxe.Json;
 import states.PlayState;
 import sys.FileSystem;
 import sys.io.File;
 
 using flixel.util.FlxSpriteUtil;
-
-typedef SongCardData =
-{
-	// Font Settings
-	var font:String;
-	var fontSize:Array<Int>;
-	var fontColor:Array<Float>;
-	var fontScale:Array<Float>;
-	var fontAlpha:Array<Float>;
-	var fontAlignType:String;
-	var fontOffset:Array<Float>;
-
-	// Base Settings
-	var customArt:String;
-	var playerIcon:String;
-	var opponentIcon:String;
-
-	// Animation Settings
-	var isAnimated:Bool;
-	var animName:String;
-	var animFramerate:Int;
-	var isLooped:Bool;
-
-	// Icon Settings
-	var playerOffset:Array<Float>;
-	var opponentOffset:Array<Float>;
-	var playerScale:Array<Float>;
-	var opponentScale:Array<Float>;
-	var playerAlpha:Array<Float>;
-	var opponentAlpha:Array<Float>;
-
-	// Extra Settings
-	var cardAlpha:Array<Float>;
-	var cardScale:Array<Float>;
-	var cardOffsets:Array<Float>;
-	var isScreenCenter:Bool;
-
-	// Tween Settings
-	var tweenIn:String;
-	var tweenOut:String;
-	var cardMoveIntro:Array<Float>;
-	var cardMoveOutro:Array<Float>;
-	var playerMoveIntro:Array<Float>;
-	var playerMoveOutro:Array<Float>;
-	var oppMoveIntro:Array<Float>;
-	var oppMoveOutro:Array<Float>;
-	var fontMoveIntro:Array<Float>;
-	var fontMoveOutro:Array<Float>;
-
-	// Special FX Settings
-	var cardShader:String;
-	var playerShader:String;
-	var opponentShader:String;
-	var cardBlend:String;
-	var playerBlend:String;
-	var opponentBlend:String;
-}
 
 class SongCard extends FlxSpriteGroup
 {	

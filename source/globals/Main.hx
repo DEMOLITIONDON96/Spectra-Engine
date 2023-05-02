@@ -1,4 +1,4 @@
-package;
+package globals;
 
 import base.*;
 import base.Overlay.Console;

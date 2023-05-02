@@ -1,4 +1,4 @@
-package objects.ui;
+package objects.ui.notes;
 
 import base.song.Conductor;
 import flixel.FlxG;

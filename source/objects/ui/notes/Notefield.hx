@@ -1,11 +1,12 @@
-package objects.ui;
+package objects.ui.notes;
 
 import base.song.Conductor;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxMath;
 import flixel.math.FlxRect;
 import flixel.util.FlxSort;
-import objects.ui.Strumline;
+import objects.ui.notes.Strumline;
+import objects.ui.notes.Strumline.Receptor;
 import states.PlayState;
 
 /**
@@ -42,7 +43,7 @@ class Notefield extends FlxTypedGroup<Note>
 	public function noteCalls(daNote:Note, strumline:Strumline)
 	{
 		// set the notes x and y
-		var downscrollMultiplier:Int = (strumline.downscroll ? -1 : 1) * FlxMath.signOf(PlayState.songSpeed);
+		var downscrollMultiplier:Float = (strumline.downscroll ? -1: 1) * FlxMath.signOf(PlayState.songSpeed);
 
 		var roundedSpeed = FlxMath.roundDecimal(daNote.noteSpeed, 2);
 		var receptorPosX:Float = strumline.receptors.members[Math.floor(daNote.noteData)].x;

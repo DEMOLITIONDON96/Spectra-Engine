@@ -5,16 +5,6 @@ import haxe.Json;
 import sys.FileSystem;
 import sys.io.File;
 
-typedef StoryCharacter =
-{
-	var image:String;
-	var scale:Float;
-	var position:Array<Int>;
-	var idleAnim:Array<Dynamic>;
-	var heyAnim:Array<Dynamic>;
-	var flipX:Bool;
-}
-
 class MenuCharacter extends FNFSprite
 {
 	public var character:String = '';

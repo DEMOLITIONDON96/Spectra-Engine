@@ -1,4 +1,4 @@
-package;
+package globals;
 
 /*
 	Aw hell yeah! something I can actually work on!

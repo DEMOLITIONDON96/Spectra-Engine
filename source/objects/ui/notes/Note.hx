@@ -1,15 +1,17 @@
-package objects.ui;
+package objects.ui.notes;
 
 import base.dependency.FeatherDeps.ScriptHandler;
 import base.song.Conductor;
 import base.utils.FNFUtils.FNFSprite;
 import base.utils.ScoreUtils;
 import flixel.FlxSprite;
-import objects.ui.Strumline.Receptor;
+import objects.ui.notes.Strumline.Receptor;
 
 class Note extends FNFSprite
 {
 	public var strumTime:Float = 0;
+	
+	public var noAnim:Bool = false;
 
 	public var mustPress:Bool = false;
 	public var noteData:Int = 0;
@@ -35,14 +37,13 @@ class Note extends FNFSprite
 	// not set initially
 	public var noteQuant:Int = -1;
 	public var noteVisualOffset:Float = 0;
+	public var noteSpeed(default, set):Float;
 	public var noteDirection:Float = 0;
 
 	// values
 	public var offsetX:Float = 0;
 	public var offsetY:Float = 0;
-
-	public var noteSpeed(default, set):Float;
-
+	
 	public function set_noteSpeed(value:Float):Float
 	{
 		if (noteSpeed != value)
@@ -79,6 +80,7 @@ class Note extends FNFSprite
 			noteType = 'default';
 
 		isMine = false;
+		noAnim = false;
 
 		super(x, y);
 

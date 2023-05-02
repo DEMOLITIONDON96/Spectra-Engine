@@ -12,11 +12,6 @@ enum KeyState
 	RELEASED;
 }
 
-typedef KeyCall = (Int, KeyState) -> Void; // ID in Array, State -> Function;
-typedef BindCall = (String, Int, KeyState) -> Void; // Name, ID in Array, State -> Function;
-// for convenience;
-typedef Key = Null<Int>;
-
 class Controls
 {
 	//

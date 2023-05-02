@@ -1,4 +1,4 @@
-package objects.ui.hud;
+package objects.ui.hud.toggleable;
 
 import base.utils.ScoreUtils;
 import flixel.FlxG;
@@ -11,7 +11,7 @@ import flixel.util.FlxColor;
 import flixel.util.FlxSort;
 import states.PlayState;
 
-class KadeHUD extends FlxSpriteGroup
+class VanillaHUD extends FlxSpriteGroup
 {
 	// bar variables
 	public var scoreBar:FlxText;
@@ -70,7 +70,7 @@ class KadeHUD extends FlxSpriteGroup
 		add(iconP2);
 
 		scoreBar = new FlxText(healthBarBG.x + healthBarBG.width - 190, healthBarBG.y + 30, 0, scoreDisplay, 20);
-		scoreBar.setFormat(Paths.font("vcr"), 16, FlxColor.WHITE, FlxTextAlign.CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		scoreBar.setFormat(Paths.font("vcr"), 16, FlxColor.WHITE, RIGHT);
 		scoreBar.scrollFactor.set();
 		scoreBar.visible = !PlayState.bfStrums.autoplay;
 		updateScoreText();
@@ -145,7 +145,7 @@ class KadeHUD extends FlxSpriteGroup
 	{
 		// pain, this is like the 7th attempt
 		healthBar.percent = (PlayState.health * 50); // so it doesn't make the mechanic worthless
-		
+
 		var iconOffset:Int = 26;
 
 		iconP1.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01) - iconOffset);
@@ -172,12 +172,10 @@ class KadeHUD extends FlxSpriteGroup
 
 	public function updateScoreText()
 	{
-		scoreDisplay = 'Score: ' + ScoreUtils.score + ' | Combo Breaks: ${ScoreUtils.misses} | Accuracy: ${ScoreUtils.returnAccuracy()} | ${ScoreUtils.returnRankingStatus()}';
+		scoreDisplay = 'Score: ' + ScoreUtils.score;
 		scoreDisplay += '\n';
 
 		scoreBar.text = scoreDisplay;
-
-        scoreBar.screenCenter(X);
 
 		// update counter
 		if (Init.trueSettings.get('Counter') != 'None')
@@ -190,7 +188,7 @@ class KadeHUD extends FlxSpriteGroup
 		}
 
 		// update playstate
-		if(Init.trueSettings.get('HUD Style') == "kade")
+		if(Init.trueSettings.get('HUD Style') == "forever")
 		PlayState.detailsSub = scoreBar.text;
 		
 		PlayState.updateRPC(false);
@@ -223,4 +221,13 @@ class KadeHUD extends FlxSpriteGroup
 	}
 
 	var scoreFlashFormat:FlxTextFormat;
+
+	override function add(Object:FlxSprite):FlxSprite
+	{
+		if (Std.isOfType(Object, FlxText))
+			cast(Object, FlxText).antialiasing = !Init.trueSettings.get('Disable Antialiasing');
+		if (Std.isOfType(Object, FlxSprite))
+			cast(Object, FlxSprite).antialiasing = !Init.trueSettings.get('Disable Antialiasing');
+		return super.add(Object);
+	}
 }

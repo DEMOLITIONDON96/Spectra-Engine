@@ -108,6 +108,11 @@ class ScriptHandler extends SScript
 		set('FlxGradient', flixel.util.FlxGradient);
 		set('FlxMath', flixel.math.FlxMath);
 
+		// WINDOW MODCHARTS
+		set('Application', lime.app.Application);
+		set('System', flash.system.System);
+		set('Window', lime.ui.Window);
+
 		// CLASSES (FUNKIN);
 		set('Alphabet', objects.fonts.Alphabet);
 		set('Boyfriend', objects.Character.Boyfriend);
@@ -115,11 +120,11 @@ class ScriptHandler extends SScript
 		set('Character', objects.Character);
 		set('Conductor', base.song.Conductor);
 		set('HealthIcon', objects.ui.HealthIcon);
-		set('Receptor', objects.ui.Strumline.Receptor);
-		set('Strumline', objects.ui.Strumline);
+		set('Receptor', objects.ui.notes.Strumline.Receptor);
+		set('Strumline', objects.ui.notes.Strumline);
 		set('game', states.PlayState.main);
 		set('PlayState', states.PlayState);
-		set('Paths', Paths);
+		set('Paths', globals.Paths);
 
 		// CLASSES (FOREVER);
 		set('Init', Init);

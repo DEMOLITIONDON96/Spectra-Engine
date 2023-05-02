@@ -3,17 +3,6 @@ package base.utils;
 import flixel.FlxG;
 import states.PlayState;
 
-typedef Judgement =
-{
-	var name:String; // default: sick
-	var score:Int; // default: 350
-	var health:Float; // default: 100
-	var accuracy:Float; // default : 100
-	var timing:Float; // default: 45
-	var timingCap:Float; // default: 45
-	var comboStatus:String; // default: none
-}
-
 /*
 	Class that saves Score data and calculates Accuracy for Songs;
 	Unified Highscore.hx and Timings.hx for better managment later;

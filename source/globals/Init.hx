@@ -1,3 +1,5 @@
+package globals;
+
 import base.Overlay;
 import base.utils.ScoreUtils;
 import flixel.FlxG;

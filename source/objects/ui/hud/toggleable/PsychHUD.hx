@@ -1,4 +1,4 @@
-package objects.ui.hud;
+package objects.ui.hud.toggleable;
 
 import base.song.Conductor;
 import base.utils.ScoreUtils;

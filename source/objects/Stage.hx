@@ -18,7 +18,7 @@ class Stage extends FlxTypedGroup<FlxBasic>
 	public var layers:FlxTypedGroup<FlxBasic>;
 
 	public var spawnGirlfriend:Bool = true;
-	public var hideBoyfriend:Bool = false; // for cool little first person POV songs
+	public var hideBoyfriend:Bool = false;
 
 	public var stageScript:ScriptHandler;
 
@@ -128,14 +128,15 @@ class Stage extends FlxTypedGroup<FlxBasic>
 		setVar('foreground', foreground);
 		setVar('layers', layers);
 		setVar('gfVersion', gfVersion);
+		setVar('lowQuality', Init.trueSettings.get('Low Quality'));
 		setVar('game', PlayState.main);
 		setVar('spawnGirlfriend', function(blah:Bool)
 		{
 			spawnGirlfriend = blah;
 		});
-		setVar('hideBoyfriend', function(shit:Bool)
+		setVar('hideBoyfriend', function(hidden:Bool)
 		{
-			hideBoyfriend = shit;
+			hideBoyfriend = hidden;
 		});
 		if (PlayState.SONG != null)
 			setVar('songName', PlayState.SONG.song.toLowerCase());

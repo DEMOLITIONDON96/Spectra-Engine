@@ -8,23 +8,23 @@ import sys.io.File;
 class Song
 {
 	public var song:String;
-	public var composer:String;
-	public var charter:String;
 	public var notes:Array<SwagSection>;
 	public var bpm:Float;
 	public var needsVoices:Bool = true;
 	public var instType:String = "Legacy";
 	public var speed:Float = 1;
+	public var composer:String = "unknown";
+	public var charter:String = "unknown";
 
 	public var player1:String = 'bf';
 	public var player2:String = 'dad';
 	public var gfVersion:String = 'gf';
-
+	
 	public function new(song, notes, bpm)
 	{
 		this.song = song;
 		this.notes = notes;
-		this.bpm = bpm;
+		this.bpm = bpm;	
 	}
 
 	public static function loadFromJson(jsonInput:String, ?folder:String):SwagSong
@@ -46,8 +46,6 @@ class Song
 		if (rawJson == null)
 			return cast {
 				song: "ERROR, CHECK YOUR CHART JSON!",
-				composer: "UNKNOWN",
-				charter: "UNKNOWN",
 				player1: "placeholder",
 				player2: "placeholder",
 				gfVersion: "placeholder",
@@ -61,7 +59,9 @@ class Song
 				needsVoices: false,
 				instType: "Legacy",
 				validScore: false,
-				assetModifier: "base"
+				assetModifier: "base",
+				composer: "unknown",
+				charter: "unknown"
 			};
 
 		var oldSong:SwagSong = cast Json.parse(rawJson).song;
@@ -70,8 +70,6 @@ class Song
 		{
 			return cast {
 				song: oldSong.song,
-				composer: oldSong.song,
-				charter: oldSong.song,
 				player1: oldSong.player1,
 				player2: oldSong.player2,
 				gfVersion: oldSong.gfVersion,
@@ -86,6 +84,8 @@ class Song
 				instType: oldSong.instType,
 				validScore: true,
 				assetModifier: oldSong.assetModifier,
+				composer: oldSong.composer,
+				charter: oldSong.charter
 			};
 		};
 
