@@ -37,22 +37,14 @@ class Note extends FNFSprite
 	// not set initially
 	public var noteQuant:Int = -1;
 	public var noteVisualOffset:Float = 0;
-	public var noteSpeed(default, set):Float;
+	public var customScrollspeed:Bool = false;
+	@:isVar
+	public var noteSpeed(get, set):Float = 0;
 	public var noteDirection:Float = 0;
 
 	// values
 	public var offsetX:Float = 0;
 	public var offsetY:Float = 0;
-	
-	public function set_noteSpeed(value:Float):Float
-	{
-		if (noteSpeed != value)
-		{
-			noteSpeed = value;
-			updateSustainScale();
-		}
-		return noteSpeed;
-	}
 
 	public var parentNote:Note;
 	public var childrenNotes:Array<Note> = [];
@@ -110,13 +102,14 @@ class Note extends FNFSprite
 	{
 		if (isSustainNote)
 		{
+			noteSpeed = prevNote.noteSpeed;
 			alpha = Init.trueSettings.get('Hold Opacity') * 0.01;
 			if (prevNote != null && prevNote.exists)
 			{
 				if (prevNote.isSustainNote)
 				{
 					// listen I dont know what i was doing but I was onto something
-					prevNote.scale.y = (prevNote.width / prevNote.frameWidth) * ((Conductor.stepCrochet / 100) * (1.07 / holdHeight)) * noteSpeed;
+					prevNote.scale.y = (prevNote.width / prevNote.frameWidth) * ((Conductor.stepCrochet / 100) * (1.07 / holdHeight)) * prevNote.noteSpeed;
 					prevNote.updateHitbox();
 					offsetX = prevNote.offsetX;
 				}
@@ -135,6 +128,8 @@ class Note extends FNFSprite
 	override function update(elapsed:Float)
 	{
 		super.update(elapsed);
+
+		updateSustainScale();
 
 		if (mustPress)
 		{
@@ -270,5 +265,19 @@ class Note extends FNFSprite
 		}
 
 		return quantArray.length - 1;
+	}
+
+	function get_noteSpeed():Float {
+		return noteSpeed;
+	}
+
+	function set_noteSpeed(value:Float):Float {
+		var ratio:Float = value / noteSpeed;
+		if (customScrollspeed && isSustainNote && !animation.curAnim.name.endsWith('end')) {
+			scale.y *= ratio;
+			updateHitbox();
+		}
+		noteSpeed = value;
+		return value;
 	}
 }
