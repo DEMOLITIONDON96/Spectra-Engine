@@ -1611,8 +1611,6 @@ class PlayState extends MusicBeatState
 		}
 	}
 
-	public var songSpeedTween:FlxTween;
-
 	public function eventTrigger(name:String, params:Array<String>)
 	{
 		if (name == "Multiply Scroll Speed")
