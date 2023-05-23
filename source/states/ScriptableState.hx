@@ -113,12 +113,12 @@ class ScriptableState extends MusicBeatState
 		scriptSet('updatePresence', function(detailsTop:String, subDetails:String, ?iconRPC:String, ?updateTime:Bool = false, time:Float)
 		{
 			#if DISCORD_RPC
-			dependency.Discord.changePresence(detailsTop, subDetails, iconRPC, updateTime, time);
+			base.dependency.Discord.changePresence(detailsTop, subDetails, iconRPC, updateTime, time);
 			#end
 		});
 		scriptSet('logTrace', function(text:String, time:Float, onConsole:Bool = false)
 		{
-			logTrace(text, time, onConsole, null);
+			logTrace(text, time, onConsole);
 		});
 		scriptSet('openSubState', openSubState);
 	}
@@ -228,7 +228,7 @@ class ScriptableSubstate extends MusicBeatSubstate
 		scriptSet('updatePresence', function(detailsTop:String, subDetails:String, ?iconRPC:String, ?updateTime:Bool = false, time:Float)
 		{
 			#if DISCORD_RPC
-			dependency.Discord.changePresence(detailsTop, subDetails, iconRPC, updateTime, time);
+			base.dependency.Discord.changePresence(detailsTop, subDetails, iconRPC, updateTime, time);
 			#end
 		});
 	}

@@ -92,7 +92,7 @@ class MainMenu extends MusicBeatState
 		mainScript.call('postCreate', []);
 
 		if (logContent != null && logContent.length > 1)
-			logTrace('$logContent', 3, menuHUD);
+			logTrace('$logContent', 3, true);
 
 		states.substates.PauseSubstate.toOptions = false;
 	}
