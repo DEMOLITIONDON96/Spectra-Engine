@@ -1,0 +1,15 @@
+{
+	"staticBack": "menuBG",
+	"flashingBack": "menuDesat",
+	"staticBackColor": null,
+	"flashingBackColor": [
+		253,
+		113,
+		155
+	],
+	"options": [
+		"story mode",
+		"freeplay",
+		"options"
+	]
+}

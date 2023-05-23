@@ -14,6 +14,7 @@ package globals;
 *	- BindCall
 *	- Key
 *	- SongMetaData
+*	- MainMenuDef
 *	- Judgement
 *	- SongCardData
 *	- CharacterData
@@ -51,6 +52,20 @@ typedef SongMetadata =
 	//var difficultyRank:String;
 	//var textColor:FlxColor;
 	//var discArt:String;
+}
+
+/*
+	Typedef for Menu Preferences
+	carries information for items
+	menu background images and other minor customization stuffs
+ */
+typedef MainMenuDef =
+{
+	var staticBack:String;
+	var flashingBack:String;
+	var staticBackColor:Array<Int>;
+	var flashingBackColor:Array<Int>;
+	var options:Array<String>;
 }
 
 /**
