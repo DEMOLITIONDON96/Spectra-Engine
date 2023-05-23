@@ -170,6 +170,7 @@ function update(elapsed:Float)
 						case 'story mode':
 							Main.switchState(this, new StoryMenu());
 						case 'freeplay':
+							CoolUtil.difficulties = CoolUtil.difficultyArray; // i'm suprised this works without an import for these scripts
 							Main.switchState(this, new FreeplayMenu());
 						case 'credits':
 							Main.switchState(this, new ScriptableState('CreditsMenu'));
