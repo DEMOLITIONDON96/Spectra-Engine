@@ -23,10 +23,10 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.group.FlxGroup;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
-#if (flixel <= "5.2.2") 
-flixel.system.FlxSound;
-#else 
-flixel.sound.FlxSound;
+#if (flixel <= "5.2.2")
+import flixel.system.FlxSound;
+#else
+import flixel.sound.FlxSound;
 #end
 import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
