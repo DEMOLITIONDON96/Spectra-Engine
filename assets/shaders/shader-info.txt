@@ -2,11 +2,41 @@ Shaders may have the .frag (fragment) or .vert (vertex) format
 credits for the shader support itself goes to EliteMasterEric
 https://twitter.com/EliteMasterEric
 
-example of his use (MUST BE ON YOU'RE STAGE CODE)
+example of his use:
 
 var coolShader:FlxRuntimeShader = new FlxRuntimeShader(File.getContent('./assets/shaders/monitor.frag), null, 140);
 PlayState.camGame.setFilters([new ShaderFilter(coolShader)]);
 
-shader properties
+SHADER PROPERTIES:
 
-setFloat(name:String, theSet:Float) sets the shader float, useful for shaders which use iTime or uTime
+Modify a float parameter of the shader.
+name: The name of the parameter to modify.
+value: The new float value to use.
+
+setFloat(name:String, value:Float)
+
+Ditto a setFloat, but the property is an Array instead
+setFloatArray(name:String, value:Array<Float>)
+
+Modify an integer parameter of the shader
+name: The name of the parameter to modify.
+value: The new integrer (or Int) value to use.
+setInt(name:String, value:Int)
+
+Ditto as setInt, but the property is an Array instead
+setIntArray(name:String, value:Array<Int>)
+
+Modify a boolean parameter of the shader.
+name: The name of the parameter to modify.
+value: The new boolean (or Bool) value to use.
+public function setBool(name:String, value:Bool)
+
+Ditto as setBool, but the property is an Array instead
+public function setBoolArray(name:String, value:Array<Bool>)
+
+Set or modify a sampler2D input of the shader.
+name: The name of the shader input to modify.
+value: The texture to use as the sampler2D input.
+setSampler2D(name:String, value:BitmapData)
+
+There are also functions of getting the shader properties (example: getFloat, getIntArray, etc)
