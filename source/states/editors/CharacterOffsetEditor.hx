@@ -22,6 +22,7 @@ import flixel.ui.FlxButton;
 import flixel.util.FlxColor;
 import flixel.util.FlxGradient;
 import objects.Character;
+import objects.Stage;
 import objects.CharacterData;
 import objects.fonts.Alphabet;
 import objects.ui.HealthIcon;
@@ -43,8 +44,13 @@ class CharacterOffsetEditor extends MusicBeatState
 	var char:Character;
 	var ghost:Character;
 
+	var stageBuild:Stage;
+
 	public var curCharacter:String;
 	public var curGhost:String;
+
+	public var curStage:String;
+	public var greyBG:FlxSprite;
 
 	var isPlayer:Bool = false;
 
@@ -63,11 +69,13 @@ class CharacterOffsetEditor extends MusicBeatState
 
 	var UI_box:FlxUITabMenu;
 
-	public function new(curCharacter:String = 'bf', isPlayer:Bool = false)
+	public function new(curCharacter:String = 'bf', isPlayer:Bool = false, curStage:String = 'stage')
 	{
 		super();
 
 		instance = this;
+
+		this.curStage = curStage;
 
 		curGhost = curCharacter;
 		this.curCharacter = curCharacter;
@@ -98,10 +106,14 @@ class CharacterOffsetEditor extends MusicBeatState
 
 		FlxG.camera.follow(camFollow);
 
-		// add stage
-		var greyBG:FlxSprite = new FlxSprite(FlxG.width * -0.5, FlxG.height * -0.5);
+		greyBG = new FlxSprite(FlxG.width * -0.5, FlxG.height * -0.5);
 		greyBG.makeGraphic(FlxG.width * 2, FlxG.height * 2, FlxColor.GRAY);
 		add(greyBG);
+
+		stageBuild = new Stage(curStage);
+		add(stageBuild);
+
+		add(stageBuild.layers);
 
 		generateCharacter(!curCharacter.startsWith('bf') || !curCharacter.endsWith('-player'), true);
 		generateCharacter(!curCharacter.startsWith('bf') || !curCharacter.endsWith('-player'));
@@ -119,10 +131,13 @@ class CharacterOffsetEditor extends MusicBeatState
 
 		genCharOffsets();
 
+		add(stageBuild.foreground);
+
 		// add menu tabs
 		var tabs = [
 			{name: 'Preferences', label: 'Preferences'},
 			{name: 'Characters', label: 'Characters'},
+			{name: 'Stage', label: 'Stage'},
 		];
 
 		UI_box = new FlxUITabMenu(null, tabs, true);
@@ -136,6 +151,7 @@ class CharacterOffsetEditor extends MusicBeatState
 		addTextUI();
 		addPreferencesUI();
 		addCharactersUI();
+		addStageUI();
 	}
 
 	var ghostAnimDropDown:FlxUIDropDownMenu;
@@ -189,7 +205,8 @@ class CharacterOffsetEditor extends MusicBeatState
 		{
 			var prevCharacter = curCharacter;
 			var wasPlayer = (prevCharacter.startsWith('bf') || prevCharacter.endsWith('-player'));
-			Main.switchState(this, new CharacterOffsetEditor(prevCharacter, wasPlayer));
+			var prevStage = curStage;
+			Main.switchState(this, new CharacterOffsetEditor(prevCharacter, wasPlayer, prevStage));
 		});
 
 		showGhostBttn = new FlxButton(140, 50, "Show Ghost", function()
@@ -224,12 +241,12 @@ class CharacterOffsetEditor extends MusicBeatState
 
 		characterSelectBttn = new FlxButton(10, 30, "Change", function()
 		{
-			openSubState(new CharacterSelectorSubstate(false));
+			openSubState(new CharacterSelectorSubstate(false, false));
 		});
 
 		ghostSelectBttn = new FlxButton(10, characterSelectBttn.y + 40, "Change", function()
 		{
-			openSubState(new CharacterSelectorSubstate(true));
+			openSubState(new CharacterSelectorSubstate(true, false));
 		});
 
 		tab_group.add(resetBttn);
@@ -244,6 +261,50 @@ class CharacterOffsetEditor extends MusicBeatState
 		characterSelTextField.setPosition(characterSelectBttn.x, characterSelectBttn.y - 18);
 		ghostSelTextField.setPosition(ghostSelectBttn.x, ghostSelectBttn.y - 18);
 
+		UI_box.addGroup(tab_group);
+	}
+
+	var showStage:Bool = false;
+
+	var stageButton:FlxButton;
+	var toggleStage:FlxButton;
+
+	function addStageUI()
+	{
+		var tab_group = new FlxUI(null, UI_box);
+		tab_group.name = "Stage";
+
+		var stage:Array<String> = CoolUtil.returnAssetsLibrary('stages', 'assets/data');
+
+		stageButton = new FlxButton(140, 30, "Change Stage", function()
+		{
+			openSubState(new CharacterSelectorSubstate(false, true));
+		});
+		
+		toggleStage = new FlxButton(140, 50, "Show Stage", function()
+		{
+			if (!showStage)
+			{
+				stageBuild.visible = true;
+				for (junk in stageBuild.foreground)
+					junk.visible = true;
+				greyBG.visible = false;
+				toggleStage.text = 'Hide Stage';
+				showStage = true;
+			}
+			else
+			{
+				stageBuild.visible = false;
+				for (junk in stageBuild.foreground)
+					junk.visible = false;
+				greyBG.visible = true;
+				toggleStage.text = 'Show Stage';
+				showStage = false;
+			}
+		});
+
+		tab_group.add(stageButton);
+		tab_group.add(toggleStage);
 		UI_box.addGroup(tab_group);
 	}
 
@@ -269,6 +330,11 @@ class CharacterOffsetEditor extends MusicBeatState
 		ghost.visible = showGhost;
 		char.alpha = (ghost.visible ? 0.85 : 1);
 
+		stageBuild.visible = showStage;
+		for (junk in stageBuild.foreground)
+			junk.visible = showStage;
+		greyBG.visible = !showStage;
+
 		if (FlxG.keys.justPressed.ESCAPE)
 		{
 			FlxG.mouse.visible = false;
@@ -278,7 +344,7 @@ class CharacterOffsetEditor extends MusicBeatState
 		if (FlxG.keys.justPressed.BACKSPACE)
 		{
 			FlxG.mouse.visible = false;
-			Main.switchState(this, new states.menus.FreeplayMenu());
+			Main.switchState(this, new states.menus.FreeplayMenu() /*new states.menus.freeplay.FreeplayCategories() for later on hee hee*/);
 		}
 
 		// camera controls
@@ -396,6 +462,16 @@ class CharacterOffsetEditor extends MusicBeatState
 
 	public function generateCharacter(isDad:Bool = true, isGhost:Bool = false)
 	{
+		if (stageBuild.foreground != null)
+			for (junk in stageBuild.foreground)
+				remove(junk);
+		if (stageBuild != null)
+			remove(stageBuild);
+		stageBuild = new Stage(curStage);
+		add(stageBuild);
+		
+		add(stageBuild.layers);
+		
 		var genOffset:FlxPoint = new FlxPoint(100, 100);
 
 		if (!isDad)
@@ -424,6 +500,8 @@ class CharacterOffsetEditor extends MusicBeatState
 			ghost.color = 0xFF666688;
 			add(ghost);
 		}
+		
+		add(stageBuild.foreground);
 
 		#if DISCORD_RPC
 		Discord.changePresence('OFFSET EDITOR', 'Editing: ' + curCharacter);
@@ -586,17 +664,24 @@ class CharacterSelectorSubstate extends MusicBeatSubstate
 	var existingCharacters:Array<String> = [];
 	var iconArray:Array<HealthIcon> = [];
 
+	var stages:Array<String> = [];
+	var existingStages:Array<String> = [];
+
+	//var stagePreview:FlxSprite; wanna do something cool later with this
+
 	var bg:FlxSprite;
 
 	public var isGhost:Bool = false;
+	public var isStage:Bool = false;
 
-	public function new(isGhost:Bool)
+	public function new(isGhost:Bool, isStage:Bool)
 	{
 		super();
 
 		cameras = [FlxG.cameras.list[FlxG.cameras.list.length - 1]];
 
 		this.isGhost = isGhost;
+		this.isStage = isStage;
 
 		var bg:FlxSprite = new FlxSprite().makeGraphic(FlxG.width, FlxG.height, FlxColor.BLACK);
 		bg.alpha = 0;
@@ -605,30 +690,53 @@ class CharacterSelectorSubstate extends MusicBeatSubstate
 
 		FlxTween.tween(bg, {alpha: 0.6}, 0.4, {ease: FlxEase.quartInOut});
 
-		for (i in CoolUtil.returnAssetsLibrary('characters', 'assets/data'))
+		if (!isStage)
 		{
-			if (!existingCharacters.contains(i.toLowerCase()) && !i.endsWith('-dead'))
-				characters.push(i);
+			for (i in CoolUtil.returnAssetsLibrary('characters', 'assets/data'))
+			{
+				if (!existingCharacters.contains(i.toLowerCase()) && !i.endsWith('-dead'))
+					characters.push(i);
+			}
+	
+			grpChars = new FlxTypedGroup<Alphabet>();
+			add(grpChars);
+	
+			for (i in 0...characters.length)
+			{
+				var songText:Alphabet = new Alphabet(0, (70 * i) + 30, characters[i], true, false);
+				songText.isMenuItem = true;
+				songText.targetY = i;
+				grpChars.add(songText);
+	
+				var icon:HealthIcon = new HealthIcon(characters[i]);
+				icon.sprTracker = songText;
+	
+				// using a FlxGroup is too much fuss!
+				iconArray.push(icon);
+				add(icon);
+			}
+			changeCharSelection();
 		}
-
-		grpChars = new FlxTypedGroup<Alphabet>();
-		add(grpChars);
-
-		for (i in 0...characters.length)
+		else
 		{
-			var songText:Alphabet = new Alphabet(0, (70 * i) + 30, CoolUtil.swapSpaceDash(characters[i]), true, false);
-			songText.isMenuItem = true;
-			songText.targetY = i;
-			grpChars.add(songText);
+			for (i in CoolUtil.returnAssetsLibrary('stages', 'assets/data'))
+			{
+				if (!existingStages.contains(i.toLowerCase()))
+					stages.push(i);
+			}
 
-			var icon:HealthIcon = new HealthIcon(characters[i]);
-			icon.sprTracker = songText;
+			grpChars = new FlxTypedGroup<Alphabet>();
+			add(grpChars);
 
-			// using a FlxGroup is too much fuss!
-			iconArray.push(icon);
-			add(icon);
+			for (i in 0...stages.length)
+			{
+				var songText:Alphabet = new Alphabet(0, (70 * i) + 30, stages[i], true, false);
+				songText.isMenuItem = true;
+				songText.targetY = i;
+				grpChars.add(songText);
+			}
+			changeStageSelection();
 		}
-		changeSelection();
 	}
 
 	override function update(elapsed:Float)
@@ -641,11 +749,21 @@ class CharacterSelectorSubstate extends MusicBeatSubstate
 		if (characters.length > 1)
 		{
 			if (upP)
-				changeSelection(-1);
+				changeCharSelection(-1);
 			if (downP)
-				changeSelection(1);
+				changeCharSelection(1);
 			if (FlxG.mouse.wheel != 0)
-				changeSelection(-1 * FlxG.mouse.wheel);
+				changeCharSelection(-1 * FlxG.mouse.wheel);
+		}
+
+		if (stages.length > 1)
+		{
+			if (upP)
+				changeStageSelection(-1);
+			if (downP)
+				changeStageSelection(1);
+			if (FlxG.mouse.wheel != 0)
+				changeStageSelection(-1 * FlxG.mouse.wheel);
 		}
 
 		if (Controls.getPressEvent("accept") || FlxG.mouse.justPressed)
@@ -653,19 +771,27 @@ class CharacterSelectorSubstate extends MusicBeatSubstate
 			var editorInstance = CharacterOffsetEditor.instance;
 			var daSelected = grpChars.members[curSelected].text;
 
-			if (!isGhost)
+			if (!isStage)
 			{
-				editorInstance.curCharacter = daSelected;
-				editorInstance.generateCharacter(!daSelected.startsWith('bf') || !daSelected.endsWith('-player'));
-				editorInstance.genCharOffsets(true, false);
+				if (!isGhost)
+				{
+					editorInstance.curCharacter = daSelected;
+					editorInstance.generateCharacter(!daSelected.startsWith('bf') || !daSelected.endsWith('-player'));
+					editorInstance.genCharOffsets(true, false);
+				}
+				else
+				{
+					editorInstance.curGhost = daSelected;
+					editorInstance.generateCharacter(!daSelected.startsWith('bf') || !daSelected.endsWith('-player'), true);
+					editorInstance.genCharOffsets(false, true);
+				}
 			}
 			else
 			{
-				editorInstance.curGhost = daSelected;
-				editorInstance.generateCharacter(!daSelected.startsWith('bf') || !daSelected.endsWith('-player'), true);
-				editorInstance.genCharOffsets(false, true);
+				editorInstance.curStage = daSelected;
+				editorInstance.generateCharacter(!daSelected.startsWith('bf') || !daSelected.endsWith('-player'));
+				editorInstance.genCharOffsets(true, true);
 			}
-
 			close();
 		}
 
@@ -673,7 +799,7 @@ class CharacterSelectorSubstate extends MusicBeatSubstate
 			close();
 	}
 
-	function changeSelection(change:Int = 0)
+	function changeCharSelection(change:Int = 0)
 	{
 		FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
 		curSelected = FlxMath.wrap(curSelected + change, 0, characters.length - 1);
@@ -696,4 +822,28 @@ class CharacterSelectorSubstate extends MusicBeatSubstate
 				item.alpha = 1;
 		}
 	}
+
+	function changeStageSelection(change:Int = 0)
+		{
+			FlxG.sound.play(Paths.sound('scrollMenu'), 0.4);
+			curSelected = FlxMath.wrap(curSelected + change, 0, stages.length - 1);
+	
+			//for (i in 0...iconArray.length)
+				//iconArray[i].alpha = 0.6;
+	
+			//iconArray[curSelected].alpha = 1;
+	
+			var bullShit:Int = 0;
+	
+			for (item in grpChars.members)
+			{
+				item.targetY = bullShit - curSelected;
+				bullShit++;
+	
+				item.alpha = 0.6;
+	
+				if (item.targetY == 0)
+					item.alpha = 1;
+			}
+		}
 }
