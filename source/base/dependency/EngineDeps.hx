@@ -224,7 +224,7 @@ class EngineAssets
 	{
 		var uiReceptor:Receptor = new Receptor(x, y, receptorData);
 
-		var framesArg:String = "NOTE_assets" + (PlayState.assetModifier != 'pixel' ? '-${PlayState.noteSkinType}' : '');
+		var framesArg:String = "NOTE_assets";
 
 		switch (assetModifier)
 		{
@@ -276,16 +276,6 @@ class EngineAssets
 					uiReceptor.animation.addByPrefix('confirm', stringSect + ' confirm', 24, false);
 
 					uiReceptor.antialiasing = true;
-					switch (PlayState.noteSkinType)
-					{
-						case 'VANILLA':
-							uiReceptor.setGraphicSize(Std.int(uiReceptor.width * 0.7));
-						default:
-							if (uiReceptor.strumData == 0)
-								uiReceptor.setGraphicSize(Std.int(uiReceptor.width * 0.62));
-							else
-								uiReceptor.setGraphicSize(Std.int(uiReceptor.width * 0.6));
-					}
 
 					// set little offsets per note!
 					// so these had a little problem honestly and they make me wanna off(set) myself so the middle notes basically
@@ -303,74 +293,6 @@ class EngineAssets
 							offsetMiddleY += 2;
 						}
 					}
-
-					switch (PlayState.noteSkinType)
-					{
-						case 'VANILLA':
-							uiReceptor.addOffset('static');
-							uiReceptor.addOffset('pressed', -2, -2);
-							uiReceptor.addOffset('confirm', 36 + offsetMiddleX, 36 + offsetMiddleY);
-						case 'CARTOON':
-							switch (uiReceptor.strumData)
-							{
-								case 0:
-									uiReceptor.addOffset('confirm', 49 + offsetMiddleX, 36 + offsetMiddleY);
-									uiReceptor.addOffset('static', 11, -5);
-									uiReceptor.addOffset('pressed', 9, -7);
-								case 1:
-									uiReceptor.addOffset('confirm', 42 + offsetMiddleX, 38 + offsetMiddleY);
-									uiReceptor.addOffset('static');
-									uiReceptor.addOffset('pressed', -4, -4);
-								case 2:
-									uiReceptor.addOffset('confirm', 36 + offsetMiddleX, 40 + offsetMiddleY);
-									uiReceptor.addOffset('static');
-									uiReceptor.addOffset('pressed', -5, -4);
-								case 3:
-									uiReceptor.addOffset('confirm', 36 + offsetMiddleX, 36 + offsetMiddleY);
-									uiReceptor.addOffset('static');
-									uiReceptor.addOffset('pressed', -4, -4);
-							}
-						case 'MERCY':
-							switch (uiReceptor.strumData)
-							{
-								case 0:
-									uiReceptor.addOffset('confirm', 49 + offsetMiddleX, 36 + offsetMiddleY);
-									uiReceptor.addOffset('static', 9, -5);
-									uiReceptor.addOffset('pressed', 11, -2);
-								case 1:
-									uiReceptor.addOffset('confirm', 42 + offsetMiddleX, 36 + offsetMiddleY);
-									uiReceptor.addOffset('static');
-									uiReceptor.addOffset('pressed', 1, 1);
-								case 2:
-									uiReceptor.addOffset('confirm', 36 + offsetMiddleX, 40 + offsetMiddleY);
-									uiReceptor.addOffset('static');
-									uiReceptor.addOffset('pressed', 1, 1);
-								case 3:
-									uiReceptor.addOffset('confirm', 36 + offsetMiddleX, 36 + offsetMiddleY);
-									uiReceptor.addOffset('static');
-									uiReceptor.addOffset('pressed', 1, 1);
-							}
-						default:
-							switch (uiReceptor.strumData)
-							{
-								case 0:
-									uiReceptor.addOffset('confirm', 49 + offsetMiddleX, 36 + offsetMiddleY);
-									uiReceptor.addOffset('static', 9, -5);
-									uiReceptor.addOffset('pressed', 6, -7);
-								case 1:
-									uiReceptor.addOffset('confirm', 42 + offsetMiddleX, 36 + offsetMiddleY);
-									uiReceptor.addOffset('static');
-									uiReceptor.addOffset('pressed', -4, -4);
-								case 2:
-									uiReceptor.addOffset('confirm', 36 + offsetMiddleX, 40 + offsetMiddleY);
-									uiReceptor.addOffset('static');
-									uiReceptor.addOffset('pressed', -5, -4);
-								case 3:
-									uiReceptor.addOffset('confirm', 36 + offsetMiddleX, 36 + offsetMiddleY);
-									uiReceptor.addOffset('static');
-									uiReceptor.addOffset('pressed', -4, -4);
-							}
-					}
 				}
 		}
 
@@ -383,7 +305,7 @@ class EngineAssets
 	public static function generateArrow(framesArg, assetModifier, strumTime, noteData, noteType, ?isSustainNote:Bool = false, ?prevNote:Note = null):Note
 	{
 		if (framesArg == null || framesArg.length < 1)
-			framesArg = 'NOTE_assets' + (PlayState.assetModifier != 'pixel' ? '-${PlayState.noteSkinType}' : '');
+			framesArg = 'NOTE_assets';
 		var changeableSkin:String = Init.trueSettings.get("Note Skin");
 
 		var newNote:Note;
@@ -391,14 +313,6 @@ class EngineAssets
 		var scaleShit:Float = 0.7;
 
 		newNote = new Note(strumTime, noteData, noteType, prevNote, isSustainNote);
-
-		switch (PlayState.noteSkinType)
-		{
-			case 'VANILLA':
-				scaleShit = 0.7;
-			default:
-				scaleShit = 0.63;
-		}
 
 		try
 		{
@@ -457,31 +371,10 @@ class EngineAssets
 		// hold note shit
 		if (isSustainNote && prevNote != null)
 		{
-			// set note offset
-			if (PlayState.noteSkinType == 'MERCY')
-			{
-				switch (newNote.noteData)
-				{
-					case 0:
-						newNote.noteVisualOffset = 20;
-					case 1:
-						newNote.noteVisualOffset = 35;
-					case 2:
-						newNote.noteVisualOffset = 37;
-					default:
-						if (prevNote.isSustainNote)
-							newNote.noteVisualOffset = prevNote.noteVisualOffset;	
-						else // calculate a new visual offset based on that note's width and newnote's width
-							newNote.noteVisualOffset = ((prevNote.width / 2) - (newNote.width / 2));
-				}
-			}
-			else
-			{
 			if (prevNote.isSustainNote)
 				newNote.noteVisualOffset = prevNote.noteVisualOffset;	
 			else // calculate a new visual offset based on that note's width and newnote's width
 				newNote.noteVisualOffset = ((prevNote.width / 2) - (newNote.width / 2));
-			}
 		}
 
 		return newNote;
