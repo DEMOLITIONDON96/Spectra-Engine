@@ -21,7 +21,7 @@ class ScriptableState extends MusicBeatState
 		// here we actually create the main script
 		try
 		{
-			stateScript = new ScriptHandler(Paths.module('states/$className'));
+			stateScript = new ScriptHandler(Paths.module('data/menus/states/$className'));
 		}
 		catch (e)
 		{
@@ -113,12 +113,12 @@ class ScriptableState extends MusicBeatState
 		scriptSet('updatePresence', function(detailsTop:String, subDetails:String, ?iconRPC:String, ?updateTime:Bool = false, time:Float)
 		{
 			#if DISCORD_RPC
-			dependency.Discord.changePresence(detailsTop, subDetails, iconRPC, updateTime, time);
+			base.dependency.Discord.changePresence(detailsTop, subDetails, iconRPC, updateTime, time);
 			#end
 		});
 		scriptSet('logTrace', function(text:String, time:Float, onConsole:Bool = false)
 		{
-			logTrace(text, time, onConsole, null);
+			logTrace(text, time, onConsole);
 		});
 		scriptSet('openSubState', openSubState);
 	}
@@ -148,7 +148,7 @@ class ScriptableSubstate extends MusicBeatSubstate
 		// here we actually create the main script
 		try
 		{
-			stateScript = new ScriptHandler(Paths.module('states/substates/$className'));
+			stateScript = new ScriptHandler(Paths.module('data/menus/substates/$className'));
 		}
 		catch (e)
 		{
@@ -170,7 +170,7 @@ class ScriptableSubstate extends MusicBeatSubstate
 	{
 		if (stateScript == null)
 		{
-			Main.switchState(this, new states.menus.MainMenu('[SCRIPTABLE STATE]: $errorCatch'));
+			Main.switchState(this, new states.menus.MainMenu('[SCRIPTABLE SUBSTATE]: $errorCatch'));
 			return;
 		}
 		scriptCall('update', [elapsed]);
@@ -228,7 +228,7 @@ class ScriptableSubstate extends MusicBeatSubstate
 		scriptSet('updatePresence', function(detailsTop:String, subDetails:String, ?iconRPC:String, ?updateTime:Bool = false, time:Float)
 		{
 			#if DISCORD_RPC
-			dependency.Discord.changePresence(detailsTop, subDetails, iconRPC, updateTime, time);
+			base.dependency.Discord.changePresence(detailsTop, subDetails, iconRPC, updateTime, time);
 			#end
 		});
 	}

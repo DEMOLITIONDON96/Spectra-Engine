@@ -26,6 +26,11 @@ import flixel.input.keyboard.FlxKey;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
+#if (flixel <= "5.2.2") 
+import flixel.system.FlxSound;
+#else 
+import flixel.sound.FlxSound;
+#end
 import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
@@ -1863,8 +1868,6 @@ class PlayState extends MusicBeatState
 			eventModule.call('loadedEventAction', [event.values]);
 		}
 	}
-
-	public var songSpeedTween:FlxTween;
 
 	public function eventTrigger(name:String, params:Array<String>)
 	{

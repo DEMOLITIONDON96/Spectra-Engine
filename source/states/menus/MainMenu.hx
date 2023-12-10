@@ -1,43 +1,39 @@
 package states.menus;
 
-import base.dependency.Discord;
 import base.dependency.FeatherDeps.ScriptHandler;
+import base.dependency.Discord;
 import flixel.FlxBasic;
 import flixel.FlxCamera;
 import flixel.FlxG;
-import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.addons.transition.FlxTransitionableState;
-import flixel.effects.FlxFlicker;
-import flixel.graphics.frames.FlxAtlasFrames;
-import flixel.group.FlxGroup.FlxTypedGroup;
-import flixel.math.FlxMath;
 import flixel.text.FlxText;
-import flixel.tweens.FlxEase;
-import flixel.tweens.FlxTween;
-import flixel.util.FlxColor;
 import states.MusicBeatState;
 
-using StringTools;
-
-/**
- * This is the main menu state! Not a lot is going to change about it so it'll remain similar to the original, but I do want to condense some code and such.
- * Get as expressive as you can with this, create your own menu!
- * 
- * I really need to make a structure to manage and customize menus haha @BeastlyGhost
-**/
+/*
+	currently, the Main Menu is completely handled by a script located on the assets/scripts/menus folder
+	you can get as expressive as you can with that, create your own custom menu
+ */
 class MainMenu extends MusicBeatState
 {
-	var menuItems:FlxTypedGroup<FlxSprite>;
-	var curSelected:Float = 0;
+	var parsedJson:MainMenuDef;
+	var mainScript:ScriptHandler;
 
-	var bg:FlxSprite; // the background has been separated for more control
-	var magenta:FlxSprite;
-	var camFollow:FlxObject;
-
-	var optionShit:Array<String> = ['story mode', 'freeplay', 'options'];
+	var menuCam:FlxCamera;
+	var menuHUD:FlxCamera;
 
 	public var logContent:String;
+
+	function cameraCalls()
+	{
+		menuCam = new FlxCamera();
+		menuHUD = new FlxCamera();
+		menuHUD.bgColor.alpha = 0;
+
+		FlxG.cameras.reset(menuCam);
+		FlxG.cameras.add(menuHUD, false);
+		FlxG.cameras.setDefaultDrawTarget(menuCam, true);
+	}
 
 	public function new(?logContent:String)
 	{
@@ -46,17 +42,16 @@ class MainMenu extends MusicBeatState
 		this.logContent = logContent;
 	}
 
-	// the create 'state'
 	override function create()
 	{
-		super.create();
-
 		// set the transitions to the previously set ones
 		transIn = FlxTransitionableState.defaultTransIn;
 		transOut = FlxTransitionableState.defaultTransOut;
 
 		// make sure the music is playing
 		ForeverTools.resetMenuMusic();
+
+		cameraCalls();
 
 		#if DISCORD_RPC
 		Discord.changePresence('MENU SCREEN', 'Main Menu');
@@ -65,213 +60,92 @@ class MainMenu extends MusicBeatState
 		// uh
 		persistentUpdate = persistentDraw = true;
 
-		// background
-		bg = new FlxSprite(-80);
-		bg.loadGraphic(Paths.image('menus/base/menuBG'));
-		bg.scrollFactor.set(0, 0.18);
-		bg.setGraphicSize(Std.int(bg.width * 1.1));
-		bg.updateHitbox();
-		bg.screenCenter();
-		bg.antialiasing = true;
-		add(bg);
-
-		magenta = new FlxSprite(-80).loadGraphic(Paths.image('menus/base/menuDesat'));
-		magenta.scrollFactor.set(0, 0.18);
-		magenta.setGraphicSize(Std.int(magenta.width * 1.1));
-		magenta.updateHitbox();
-		magenta.screenCenter();
-		magenta.visible = false;
-		magenta.antialiasing = true;
-		magenta.color = 0xFFfd719b;
-		add(magenta);
-
-		// add the camera
-		camFollow = new FlxObject(0, 0, 1, 1);
-		add(camFollow);
-
-		// add the menu items
-		menuItems = new FlxTypedGroup<FlxSprite>();
-		add(menuItems);
-
-		// loop through the menu options
-		for (i in 0...optionShit.length)
+		try // set up the menu preferences json if it exists;
 		{
-			var menuItem:FlxSprite = new FlxSprite(0, 80 + (i * 230));
-			menuItem.frames = Paths.getSparrowAtlas('menus/base/menuItems/' + optionShit[i]);
-
-			// add the animations in a cool way (real
-			menuItem.animation.addByPrefix('idle', optionShit[i] + " basic", 24);
-			menuItem.animation.addByPrefix('selected', optionShit[i] + " white", 24);
-			menuItem.animation.play('idle');
-
-			// set the id
-			menuItem.ID = i;
-
-			// placements
-			menuItem.screenCenter(X);
-			// if the id is divisible by 2
-			if (menuItem.ID % 2 == 0)
-				menuItem.x += 1000;
-			else
-				menuItem.x -= 1000;
-
-			// actually add the item
-			menuItems.add(menuItem);
-			menuItem.scrollFactor.set();
-			menuItem.antialiasing = true;
-			menuItem.updateHitbox();
+			parsedJson = haxe.Json.parse(Paths.getTextFile('data/menus/states/MainMenu.json'));
+		}
+		catch (e) // ...or just use a hardcoded fallback one;
+		{
+			parsedJson = haxe.Json.parse('{
+				"staticBack": "menuBG",
+				"flashingBack": "menuDesat",
+				"staticBackColor": null,
+				"flashingBackColor": [253, 113, 155],
+				"options": ["story mode", "freeplay", "options"]
+			}');
 		}
 
-		// set the camera to actually follow the camera object that was created before
-		var camLerp = Main.framerateAdjust(0.10);
-		FlxG.camera.follow(camFollow, null, camLerp);
+		// set up the main menu script itself
+		mainScript = new ScriptHandler(Paths.module('MainMenu', 'data/menus/states'));
+		mainScript.call('create', []);
 
-		updateSelection();
+		mainScript.set('parsedJson', parsedJson);
 
-		// from the base game lol
-		var versionShit:FlxText = new FlxText(5, FlxG.height - 18, 0, 'Forever Engine: Feather v${Main.game.versionFF} - Legacy v${Main.game.versionFE}', 12);
-		versionShit.setFormat(Paths.font("vcr"), 16, 0xFFFFFFFF, ForeverTools.setTextAlign('left'), FlxTextBorderStyle.OUTLINE, 0xFF000000);
-		versionShit.scrollFactor.set();
-		add(versionShit);
+		mainScript.set('add', add);
+		mainScript.set('remove', remove);
+		mainScript.set('this', this);
+		mainScript.set('menuCam', menuCam);
+		mainScript.set('menuHUD', menuHUD);
+
+		super.create();
+
+		mainScript.call('postCreate', []);
 
 		if (logContent != null && logContent.length > 1)
-			logTrace('$logContent', 3);
+			logTrace('$logContent', 3, true);
 
-		//
+		states.substates.PauseSubstate.toOptions = false;
 	}
-
-	var selectedSomethin:Bool = false;
-	var counterControl:Float = 0;
 
 	override function update(elapsed:Float)
 	{
-		var up = Controls.getPressEvent("ui_up", "pressed");
-		var down = Controls.getPressEvent("ui_down", "pressed");
-		var up_p = Controls.getPressEvent("ui_up");
-		var down_p = Controls.getPressEvent("ui_down");
-		var controlArray:Array<Bool> = [up, down, up_p, down_p];
-
-		if ((controlArray.contains(true)) && (!selectedSomethin))
-		{
-			for (i in 0...controlArray.length)
-			{
-				// here we check which keys are pressed
-				if (controlArray[i] == true)
-				{
-					/*
-						i > 1 is single press
-						up is 2, down is 3
-					 */
-
-					var changeValue:Int = 0;
-
-					if (i > 1)
-					{
-						if (i == 2)
-							changeValue -= 1;
-						else if (i == 3)
-							changeValue += 1;
-
-						FlxG.sound.play(Paths.sound('base/menus/scrollMenu'));
-					}
-
-					curSelected = FlxMath.wrap(Math.floor(curSelected) + changeValue, 0, optionShit.length - 1);
-				}
-				//
-			}
-		}
-		else
-		{
-			// reset variables
-			counterControl = 0;
-		}
-
-		if ((Controls.getPressEvent("back")) && (!selectedSomethin))
-		{
-			//
-			selectedSomethin = true;
-			FlxG.sound.play(Paths.sound('base/menus/cancelMenu'));
-			Main.switchState(this, new TitleState());
-		}
-
-		if ((Controls.getPressEvent("accept")) && (!selectedSomethin))
-		{
-			//
-			selectedSomethin = true;
-			FlxG.sound.play(Paths.sound('base/menus/confirmMenu'));
-
-			var flashValue:Float = 0.1;
-			if (Init.trueSettings.get('Disable Flashing Lights'))
-				flashValue = 0.2;
-			else
-				FlxFlicker.flicker(magenta, 0.8, 0.1, false);
-
-			menuItems.forEach(function(spr:FlxSprite)
-			{
-				if (curSelected != spr.ID)
-				{
-					FlxTween.tween(spr, {alpha: 0, x: FlxG.width * 2}, 0.4, {
-						ease: FlxEase.quadOut,
-						onComplete: function(twn:FlxTween)
-						{
-							spr.kill();
-						}
-					});
-				}
-				else
-				{
-					FlxFlicker.flicker(spr, 1, flashValue, false, false, function(flick:FlxFlicker)
-					{
-						var daChoice:String = optionShit[Math.floor(curSelected)];
-
-						switch (daChoice)
-						{
-							case 'story mode':
-								Main.switchState(this, new StoryMenu());
-							case 'freeplay':
-								CoolUtil.difficulties = CoolUtil.difficultyArray;
-								Main.switchState(this, new FreeplayMenu());
-							case 'options':
-								transIn = FlxTransitionableState.defaultTransIn;
-								transOut = FlxTransitionableState.defaultTransOut;
-								Main.switchState(this, new OptionsMenu());
-						}
-					});
-				}
-			});
-		}
-
-		if (Math.floor(curSelected) != lastCurSelected)
-			updateSelection();
-
+		mainScript.call('update', [elapsed]);
 		super.update(elapsed);
+		mainScript.call('postUpdate', [elapsed]);
 
-		menuItems.forEach(function(menuItem:FlxSprite)
-		{
-			menuItem.screenCenter(X);
-		});
+		mainScript.set('elapsed', elapsed);
 	}
 
-	var lastCurSelected:Int = 0;
-
-	private function updateSelection()
+	override function beatHit()
 	{
-		// reset all selections
-		menuItems.forEach(function(spr:FlxSprite)
-		{
-			spr.animation.play('idle');
-			spr.updateHitbox();
-		});
+		super.beatHit();
 
-		// set the sprites and all of the current selection
-		camFollow.setPosition(menuItems.members[Math.floor(curSelected)].getGraphicMidpoint().x,
-			menuItems.members[Math.floor(curSelected)].getGraphicMidpoint().y);
+		mainScript.call('beatHit', [curBeat]);
+		mainScript.set('curBeat', curBeat);
+	}
 
-		if (menuItems.members[Math.floor(curSelected)].animation.curAnim.name == 'idle')
-			menuItems.members[Math.floor(curSelected)].animation.play('selected');
+	override function stepHit()
+	{
+		super.stepHit();
 
-		menuItems.members[Math.floor(curSelected)].updateHitbox();
+		mainScript.call('stepHit', [curStep]);
+		mainScript.set('curStep', curStep);
+	}
 
-		lastCurSelected = Math.floor(curSelected);
+	override public function destroy()
+	{
+		mainScript.call('destroy', []);
+		super.destroy();
+	}
+
+	override public function onFocus()
+	{
+		mainScript.call('onFocus', []);
+		super.onFocus();
+	}
+
+	override public function onFocusLost()
+	{
+		mainScript.call('onFocusLost', []);
+		super.onFocusLost();
+	}
+
+	override function add(Object:FlxBasic):FlxBasic
+	{
+		if (Init.trueSettings.get('Disable Antialiasing') && Std.isOfType(Object, FlxSprite))
+			cast(Object, FlxSprite).antialiasing = false;
+		if (Init.trueSettings.get('Disable Antialiasing') && Std.isOfType(Object, FlxText))
+			cast(Object, FlxText).antialiasing = false;
+		return super.add(Object);
 	}
 }

@@ -19,14 +19,6 @@ import sys.FileSystem;
 import sys.thread.Mutex;
 import sys.thread.Thread;
 
-typedef SongMetadata =
-{
-	var name:String;
-	var week:Int;
-	var character:String;
-	var color:FlxColor;
-}
-
 class FreeplayMenu extends MusicBeatState
 {
 	//

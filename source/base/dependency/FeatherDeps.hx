@@ -142,6 +142,10 @@ class ScriptHandler extends SScript
 		set('FeatherSprite', base.dependency.FeatherSprite);
 		set('Controls', base.Controls);
 
+		// SCRIPTED STATES & SUBSTATES
+		set('ScriptableState', states.ScriptableState);
+		set('ScriptableSubstate', states.ScriptableState.ScriptableSubstate);
+
 		// SHADER HANDLERS
 		set('FlxRuntimeShader', flixel.addons.display.FlxRuntimeShader);
 		set('GraphicsShader', openfl.display.GraphicsShader);

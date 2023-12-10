@@ -1,14 +1,32 @@
 package globals;
 
-/*
-	okay, I was getting tired of having to rename the fucking typedef stuff for every menu,
-	so here's the more better, and more simpler approach to this, 
-	basically, you don't need to worry about rewriting a new typedef
-	not anymore, 
-	this file has been made to be globally used on all over files, if it is needed, 
-	you can thank me later.
-
-	-don
+/**
+*	~ TypedefUtilities.hx Documentation ~
+*
+*	**This file was created as a way to make the code more organized and cleaner, as you can tell, this file contains nothing but typedef names.**
+*
+*	Why have all of them in one file? Cause chances are you're gonna want to add a typedef of your own when you make your own mod,
+*	hence why this file exists, for your typedefs can be used on, well, basically every file on the source code, just don't be stupid.
+*
+*	Typedefs in this file:
+*
+*	- KeyCall
+*	- BindCall
+*	- Key
+*	- SongMetaData
+*	- MainMenuDef
+*	- Judgement
+*	- SongCardData
+*	- CharacterData
+*	- PsychEngineChar
+*	- PsychAnimArray
+*	- PortraitDataDef
+*	- DialogueDataDef
+*	- BoxDataDef
+*	- DialogueFileDataDef
+*	- StoryCharacter
+*
+*	-don
 */
 
 import flixel.util.FlxColor;
@@ -34,6 +52,20 @@ typedef SongMetadata =
 	//var difficultyRank:String;
 	//var textColor:FlxColor;
 	//var discArt:String;
+}
+
+/*
+	Typedef for Menu Preferences
+	carries information for items
+	menu background images and other minor customization stuffs
+ */
+typedef MainMenuDef =
+{
+	var staticBack:String;
+	var flashingBack:String;
+	var staticBackColor:Array<Int>;
+	var flashingBackColor:Array<Int>;
+	var options:Array<String>;
 }
 
 /**

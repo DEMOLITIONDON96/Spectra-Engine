@@ -22,8 +22,8 @@ import flixel.ui.FlxButton;
 import flixel.util.FlxColor;
 import flixel.util.FlxGradient;
 import objects.Character;
-import objects.Stage;
 import objects.CharacterData;
+import objects.Stage;
 import objects.fonts.Alphabet;
 import objects.ui.HealthIcon;
 import openfl.events.Event;
@@ -69,7 +69,7 @@ class CharacterOffsetEditor extends MusicBeatState
 
 	var UI_box:FlxUITabMenu;
 
-	public function new(curStage:String = 'stage', curCharacter:String = 'bf', isPlayer:Bool = false)
+	public function new(curCharacter:String = 'bf', isPlayer:Bool = false)
 	{
 		super();
 
@@ -205,8 +205,7 @@ class CharacterOffsetEditor extends MusicBeatState
 		{
 			var prevCharacter = curCharacter;
 			var wasPlayer = (prevCharacter.startsWith('bf') || prevCharacter.endsWith('-player'));
-			var prevStage = curStage;
-			Main.switchState(this, new CharacterOffsetEditor(prevStage, prevCharacter, wasPlayer));
+			Main.switchState(this, new CharacterOffsetEditor(prevCharacter, wasPlayer));
 		});
 
 		showGhostBttn = new FlxButton(140, 50, "Show Ghost", function()
@@ -344,7 +343,7 @@ class CharacterOffsetEditor extends MusicBeatState
 		if (FlxG.keys.justPressed.BACKSPACE)
 		{
 			FlxG.mouse.visible = false;
-			Main.switchState(this, new states.menus.freeplay.FreeplayCategories());
+			Main.switchState(this, new states.menus.FreeplayMenu());
 		}
 
 		// camera controls
