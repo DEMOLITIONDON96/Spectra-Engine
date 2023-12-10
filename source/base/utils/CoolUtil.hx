@@ -1,7 +1,21 @@
 package base.utils;
 
+import flixel.FlxBasic;
+import flixel.FlxCamera;
+import flixel.FlxG;
+import flixel.util.FlxSave;
+import flixel.util.FlxTimer;
+import haxe.io.Bytes;
 import haxe.io.Path;
+import lime.app.Application;
 import lime.utils.Assets;
+import openfl.filters.BitmapFilter;
+import openfl.filters.ShaderFilter;
+import states.PlayState;
+import sys.io.File;
+
+using StringTools;
+
 #if sys
 import sys.FileSystem;
 #end
@@ -97,5 +111,18 @@ class CoolUtil
 		path = path.replace("/", "\\");
 		#end
 		return path;
+	}
+
+	/** Quick Function to Fix Save Files for Flixel 5
+		if you are making a mod, you are gonna wanna change "Dunkin-Funkin" to something else
+		so the engine saves won't conflict with yours
+		@BeastlyGabi
+	**/
+	public static function getSavePath(folder:String = 'Dunkin-Funkin'):String
+	{
+		@:privateAccess
+		return #if (flixel < "5.0.0") folder #else FlxG.stage.application.meta.get('company')
+			+ '/'
+			+ FlxSave.validate(FlxG.stage.application.meta.get('file')) #end;
 	}
 }

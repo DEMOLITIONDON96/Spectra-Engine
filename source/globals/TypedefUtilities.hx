@@ -30,9 +30,9 @@ typedef SongMetadata =
 	var week:Int;
 	var character:String;
 	var color:FlxColor;
-	//var composer:String;
-	//var difficultyRank:String;
-	//var textColor:FlxColor;
+	var composer:String;
+	var difficultyRank:String;
+	var textColor:FlxColor;
 	//var discArt:String;
 }
 
@@ -239,7 +239,7 @@ typedef StoryCharacter =
 	var heyAnim:Array<Dynamic>;
 	var flipX:Bool;
 }
-
+	
 typedef BitchDetector =
 {
 	var hasBitches:Bool;
@@ -247,3 +247,7 @@ typedef BitchDetector =
 	var fakeBitchRemover:Int;
 	var finalBitchCount:String;
 }
+
+
+// prob gonna keep jsons and then hardcode it cus thats pretty smart
+typedef CharMenuThing = { info:Array<Dynamic> };

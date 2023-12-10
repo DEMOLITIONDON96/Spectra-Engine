@@ -77,7 +77,7 @@ class Strumline extends FlxSpriteGroup
 			var addX:Int = PlayState.assetModifier == 'pixel' ? -35 : -20;
 			var addY:Int = PlayState.assetModifier == 'pixel' ? 40 : 25;
 
-			var receptor:Receptor = ForeverAssets.generateUIArrows(addX + xPos, yPos, i, PlayState.assetModifier);
+			var receptor:Receptor = EngineAssets.generateUIArrows(addX + xPos, yPos, i, PlayState.assetModifier);
 			receptor.ID = i;
 
 			receptor.x -= ((keyAmount / 2) * Note.swagWidth);
@@ -169,6 +169,8 @@ class Receptor extends FlxSprite
 	public var angleTo:Float;
 
 	public var overrideAlpha:Bool = false;
+
+	public var strumDirection:Float = 0;
 
 	public var setAlpha:Float = Init.trueSettings.get('Arrow Opacity') * 0.01;
 

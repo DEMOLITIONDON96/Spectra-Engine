@@ -23,7 +23,11 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.group.FlxGroup;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
-import flixel.system.FlxSound;
+#if (flixel <= "5.2.2")
+	import flixel.system.FlxSound;
+#else
+	import flixel.sound.FlxSound;
+#end
 import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
@@ -36,7 +40,6 @@ import objects.*;
 import objects.Character;
 import objects.ui.*;
 import objects.ui.notes.*;
-import objects.ui.notes.Strumline.Receptor;
 import openfl.display.BlendMode;
 import openfl.events.Event;
 import openfl.events.IOErrorEvent;
@@ -46,7 +49,7 @@ import openfl.utils.ByteArray;
 import states.MusicBeatState;
 
 /**
- * In case you dont like the forever engine chart editor, here's the base game one instead.
+ * In case you dont like the engine editor, here's the base game one instead.
 **/
 class OriginalChartingState extends MusicBeatState
 {
@@ -656,7 +659,7 @@ class OriginalChartingState extends MusicBeatState
 		{
 			songMusic.onComplete = function()
 			{
-				ForeverTools.killMusic([songMusic, songMusicNew, vocals, bf_vocals, opp_vocals]);
+				EngineTools.killMusic([songMusic, songMusicNew, vocals, bf_vocals, opp_vocals]);
 				loadSong(daSong);
 				changeSection();
 			};
@@ -666,7 +669,7 @@ class OriginalChartingState extends MusicBeatState
 		{
 			songMusicNew.onComplete = function()
 			{
-				ForeverTools.killMusic([songMusic, songMusicNew, vocals, bf_vocals, opp_vocals]);
+				EngineTools.killMusic([songMusic, songMusicNew, vocals, bf_vocals, opp_vocals]);
 				loadSong(daSong);
 				changeSection();
 			};
@@ -1394,7 +1397,7 @@ class OriginalChartingState extends MusicBeatState
 			Note.resetNote(null, Init.trueSettings.get("Note Skin"), _song.assetModifier, note);
 			note.antialiasing = true;
 
-			// var note:Note = ForeverAssets.generateArrow(null, _song.assetModifier, daStrumTime, daNoteInfo % 4, 0, daNoteType);
+			// var note:Note = EngineAssets.generateArrow(null, _song.assetModifier, daStrumTime, daNoteInfo % 4, 0, daNoteType);
 
 			note.sustainLength = daSus;
 			note.noteType = daNoteType;

@@ -27,14 +27,14 @@ class ScoreUtils
 	public static var notesHit:Int = 0;
 	public static var minesHit:Int = 0;
 
-	inline static function get_accuracy():Float
+	public static function get_accuracy():Float
 		return notesAccuracy / notesHit;
 
 	public static final judges:Array<Judgement> = [
 		{
 			name: "sick",
 			score: 350,
-			health: 100,
+			health: 22,
 			accuracy: 100,
 			timing: 45,
 			timingCap: 45,
@@ -43,7 +43,7 @@ class ScoreUtils
 		{
 			name: "good",
 			score: 150,
-			health: 50,
+			health: 18,
 			accuracy: 85,
 			timing: 90,
 			timingCap: 90,
@@ -52,7 +52,7 @@ class ScoreUtils
 		{
 			name: "bad",
 			score: 50,
-			health: 20,
+			health: 6,
 			accuracy: 50,
 			timing: 125,
 			timingCap: 125,
@@ -61,7 +61,7 @@ class ScoreUtils
 		{
 			name: "shit",
 			score: -50,
-			health: -50,
+			health: -120,
 			accuracy: 0,
 			timing: 150,
 			timingCap: 150,
@@ -70,7 +70,7 @@ class ScoreUtils
 		{
 			name: "miss",
 			score: -100,
-			health: -100,
+			health: -190,
 			accuracy: 0,
 			timing: 175,
 			timingCap: 175,
@@ -97,7 +97,7 @@ class ScoreUtils
 		"judge four" => [45, 90, 135, 180],
 		"itg" => [43, 102, 135, 180],
 		"funkin" => [33.33, 91.67, 133.33, 166.67],
-		"forever" => [45, 90, 125, 150]
+		"default" => [45, 90, 125, 150]
 	];
 
 	public static var curRating:String = null;
@@ -119,7 +119,7 @@ class ScoreUtils
 	{
 		var daSong:String = formatSong(song, diff);
 
-		FlxG.save.bind("HighScores", "Feather");
+		FlxG.save.bind("HighScores", CoolUtil.getSavePath());
 		if (songScores.exists(daSong))
 		{
 			if (songScores.get(daSong) < score)
@@ -133,7 +133,7 @@ class ScoreUtils
 	{
 		var daWeek:String = formatSong('week' + week, diff);
 
-		FlxG.save.bind("WeekScores", "Feather");
+		FlxG.save.bind("WeekScores", CoolUtil.getSavePath());
 		if (weekScores.exists(daWeek))
 		{
 			if (weekScores.get(daWeek) < score)
@@ -148,7 +148,7 @@ class ScoreUtils
 	 */
 	inline static function setScore(song:String, score:Int):Void
 	{
-		FlxG.save.bind("HighScores", "Feather");
+		FlxG.save.bind("HighScores", CoolUtil.getSavePath());
 		// Reminder that I don't need to format this song, it should come formatted!
 		songScores.set(song, score);
 		FlxG.save.data.songScores = songScores;
@@ -157,7 +157,7 @@ class ScoreUtils
 
 	inline static function setWeekScore(song:String, score:Int):Void
 	{
-		FlxG.save.bind("WeekScores", "Feather");
+		FlxG.save.bind("WeekScores", CoolUtil.getSavePath());
 		// Reminder that I don't need to format this song, it should come formatted!
 		weekScores.set(song, score);
 		FlxG.save.data.setWeekScore = weekScores;
@@ -178,7 +178,7 @@ class ScoreUtils
 
 	inline public static function getScore(song:String, diff:Int):Int
 	{
-		FlxG.save.bind("HighScores", "Feather");
+		FlxG.save.bind("HighScores", CoolUtil.getSavePath());
 		if (!songScores.exists(formatSong(song, diff)))
 			setScore(formatSong(song, diff), 0);
 
@@ -187,7 +187,7 @@ class ScoreUtils
 
 	inline public static function getWeekScore(week:Int, diff:Int):Int
 	{
-		FlxG.save.bind("WeekScores", "Feather");
+		FlxG.save.bind("WeekScores", CoolUtil.getSavePath());
 		if (!weekScores.exists(formatSong('week' + week, diff)))
 			setWeekScore(formatSong('week' + week, diff), 0);
 
@@ -196,11 +196,11 @@ class ScoreUtils
 
 	inline public static function loadScores():Void
 	{
-		FlxG.save.bind("HighScores", "Feather");
+		FlxG.save.bind("HighScores", CoolUtil.getSavePath());
 		if (FlxG.save.data.songScores != null)
 			songScores = FlxG.save.data.songScores;
 
-		FlxG.save.bind("WeekScores", "Feather");
+		FlxG.save.bind("WeekScores", CoolUtil.getSavePath());
 		if (FlxG.save.data.weekScores != null)
 			weekScores = FlxG.save.data.weekScores;
 	}
@@ -301,17 +301,18 @@ class ScoreUtils
 			curCombo = 'SDCB';
 
 		// this updates the most so uh
-		switch (Init.trueSettings.get("HUD Style").toLowerCase())
+		switch (Init.trueSettings.get('HUD Style').toLowerCase())
 		{
-			case 'demolition':
-				PlayState.demoHUD.updateScoreText();
-				PlayState.demoHUD.colorHighlight(curRating);
+			case 'default':
+				PlayState.uiHUD.updateScoreText();
+			case 'spectra':
+				PlayState.spectraHUD.updateScoreText();
 			case 'psych':
 				PlayState.psychHUD.updateScoreText();
 			default:
 				PlayState.uiHUD.updateScoreText();
-				PlayState.uiHUD.colorHighlight(curRating);
 		}
+		//PlayState.uiHUD.colorHighlight(curRating);
 	}
 
 	public static function setJudgeTiming(rating:Int, newTiming:Float)

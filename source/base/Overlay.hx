@@ -1,5 +1,6 @@
 package base;
 
+import openfl.Memory;
 import flixel.FlxG;
 import haxe.Timer;
 import openfl.events.Event;
@@ -33,27 +34,71 @@ class Overlay extends TextField
 		autoSize = LEFT;
 		selectable = false;
 
-		defaultTextFormat = new TextFormat(Paths.font("vcr"), 16, 0xFFFFFF);
+		defaultTextFormat = new TextFormat(Paths.font("vcr"), 18, 0xFFFFFF);
 		text = "";
 
 		addEventListener(Event.ENTER_FRAME, update);
 	}
 
-	static final intervalArray:Array<String> = ['B', 'KB', 'MB', 'GB', 'TB'];
+	public var textAfter:String = '';
 
-	inline public static function getInterval(num:UInt):String
+	static function formatMemory(num:UInt):String
 	{
 		var size:Float = num;
 		var data = 0;
-		while (size > 1024 && data < intervalArray.length - 1)
+		var dataTexts = ["B", "KB", "MB", "GB"];
+		while (size > 1024 && data < dataTexts.length - 1)
 		{
 			data++;
 			size = size / 1024;
 		}
 
 		size = Math.round(size * 100) / 100;
-		return size + " " + intervalArray[data];
+		var formatSize:String = formatAccuracy(size);
+		return '${formatSize} ${dataTexts[data]}';
 	}
+
+	static function formatAccuracy(value:Float)
+	{
+		var conversion:Map<String, String> = [
+			'0' => '0.00',
+			'0.0' => '0.00',
+			'0.00' => '0.00',
+			'00' => '00.00',
+			'00.0' => '00.00',
+			'00.00' => '00.00', // gotta do these as well because lazy
+			'000' => '000.00'
+		]; // these are to ensure you're getting the right values, instead of using complex if statements depending on string length
+
+		var stringVal:String = Std.string(value);
+		var converVal:String = '';
+		for (i in 0...stringVal.length)
+		{
+			if (stringVal.charAt(i) == '.')
+				converVal += '.';
+			else
+				converVal += '0';
+		}
+
+		var wantedConversion:String = conversion.get(converVal);
+		var convertedValue:String = '';
+
+		for (i in 0...wantedConversion.length)
+		{
+			if (stringVal.charAt(i) == '')
+				convertedValue += wantedConversion.charAt(i);
+			else
+				convertedValue += stringVal.charAt(i);
+		}
+
+		if (convertedValue.length == 0)
+			return '$value';
+
+		return convertedValue;
+	}
+
+	var peakMemory:Float;
+	var curMemory:UInt;
 
 	function update(_:Event)
 	{
@@ -62,16 +107,16 @@ class Overlay extends TextField
 		while (times[0] < now - 1)
 			times.shift();
 
-		var mem = System.totalMemory;
-		if (mem > memPeak)
-			memPeak = mem;
+		curMemory = base.system.Memory.obtainMemory();
+		if (curMemory >= peakMemory)
+			peakMemory = curMemory;
 
 		if (visible)
 		{
 			text = '' // set up the text itself
 				+ (displayFps ? times.length + " FPS\n" : '') // Framerate
 				+ (displayExtra ? 'Class Object Count: ' + FlxG.state.members.length + "\n" : '') // Current Game State
-				+ (displayMemory ? '${getInterval(mem)} // ${getInterval(memPeak)}\n' : ''); // Current and Total Memory Usage
+				+ (displayMemory ? '${formatMemory(Std.int(curMemory))} / ${formatMemory(Std.int(peakMemory))}\n' : ''); // Current and Total Memory Usage
 		}
 	}
 

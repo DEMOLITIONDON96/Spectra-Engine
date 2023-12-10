@@ -1,7 +1,7 @@
 package base.dependency;
 
 /*
-	Forever Dependencies is a way to unify both ForeverAssets and ForeverTools;
+	This engine's dependencies is a way to unify both EngineAssets and EngineTools;
 	it contains data for custom asset skins and generation scripts for asset types;
  */
 import base.dependency.FeatherDeps.ScriptHandler;
@@ -14,7 +14,11 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.group.FlxSpriteGroup.FlxTypedSpriteGroup;
 import flixel.group.FlxSpriteGroup;
 import flixel.math.FlxMath;
-import flixel.system.FlxSound;
+#if (flixel <= "5.2.2")
+	import flixel.system.FlxSound;
+#else
+	import flixel.sound.FlxSound;
+#end
 import flixel.text.FlxText;
 import flixel.effects.particles.FlxEmitter;
 import flixel.tweens.FlxEase;
@@ -33,7 +37,7 @@ import sys.FileSystem;
  * Forever Assets is a class that manages the different asset types, basically a compilation of switch statements that are
  * easy to edit for your own needs. Most of these are just static functions that return information
 **/
-class ForeverAssets
+class EngineAssets
 {
 	//
 	public static function generateCombo(asset:String, assetGroup:FlxTypedGroup<FNFSprite>, number:String, allSicks:Bool, assetModifier:String = 'base',
@@ -96,7 +100,7 @@ class ForeverAssets
 	public static function generateRating(id:Int, assetGroup:FlxTypedGroup<FNFSprite>, assetModifier:String = 'base', changeableSkin:String = 'default',
 			baseLibrary:String):FNFSprite
 	{
-		var width = assetModifier == 'pixel' ? 60 : 390;
+		var width = assetModifier == 'pixel' ? 60 : 510;
 		var height = assetModifier == 'pixel' ? 32 : 163;
 
 		if (!Init.trueSettings.get('Judgement Recycling'))
@@ -176,7 +180,7 @@ class ForeverAssets
 			newSprite = group.recycle(FNFSprite);
 		else
 			newSprite = new FNFSprite();
-		newSprite.loadGraphic(Paths.image(ForeverTools.returnSkinAsset(asset, aMod, skin, lib)), animated, width, height);
+		newSprite.loadGraphic(Paths.image(EngineTools.returnSkinAsset(asset, aMod, skin, lib)), animated, width, height);
 		return newSprite;
 	}
 
@@ -220,7 +224,7 @@ class ForeverAssets
 	{
 		var uiReceptor:Receptor = new Receptor(x, y, receptorData);
 
-		var framesArg:String = "NOTE_assets";
+		var framesArg:String = "NOTE_assets" + (PlayState.assetModifier != 'pixel' ? '-${PlayState.noteSkinType}' : '');
 
 		switch (assetModifier)
 		{
@@ -263,7 +267,7 @@ class ForeverAssets
 					// call arrow type I think
 					stringSect = Receptor.actions[receptorData];
 
-					uiReceptor.frames = Paths.getSparrowAtlas(ForeverTools.returnSkinAsset('$framesArg', assetModifier, Init.trueSettings.get("Note Skin"),
+					uiReceptor.frames = Paths.getSparrowAtlas(EngineTools.returnSkinAsset('$framesArg', assetModifier, Init.trueSettings.get("Note Skin"),
 						'$noteType/skins', 'data/notetypes'),
 						'data/notetypes');
 
@@ -272,7 +276,16 @@ class ForeverAssets
 					uiReceptor.animation.addByPrefix('confirm', stringSect + ' confirm', 24, false);
 
 					uiReceptor.antialiasing = true;
-					uiReceptor.setGraphicSize(Std.int(uiReceptor.width * 0.7));
+					switch (PlayState.noteSkinType)
+					{
+						case 'VANILLA':
+							uiReceptor.setGraphicSize(Std.int(uiReceptor.width * 0.7));
+						default:
+							if (uiReceptor.strumData == 0)
+								uiReceptor.setGraphicSize(Std.int(uiReceptor.width * 0.62));
+							else
+								uiReceptor.setGraphicSize(Std.int(uiReceptor.width * 0.6));
+					}
 
 					// set little offsets per note!
 					// so these had a little problem honestly and they make me wanna off(set) myself so the middle notes basically
@@ -291,9 +304,73 @@ class ForeverAssets
 						}
 					}
 
-					uiReceptor.addOffset('static');
-					uiReceptor.addOffset('pressed', -2, -2);
-					uiReceptor.addOffset('confirm', 36 + offsetMiddleX, 36 + offsetMiddleY);
+					switch (PlayState.noteSkinType)
+					{
+						case 'VANILLA':
+							uiReceptor.addOffset('static');
+							uiReceptor.addOffset('pressed', -2, -2);
+							uiReceptor.addOffset('confirm', 36 + offsetMiddleX, 36 + offsetMiddleY);
+						case 'CARTOON':
+							switch (uiReceptor.strumData)
+							{
+								case 0:
+									uiReceptor.addOffset('confirm', 49 + offsetMiddleX, 36 + offsetMiddleY);
+									uiReceptor.addOffset('static', 11, -5);
+									uiReceptor.addOffset('pressed', 9, -7);
+								case 1:
+									uiReceptor.addOffset('confirm', 42 + offsetMiddleX, 38 + offsetMiddleY);
+									uiReceptor.addOffset('static');
+									uiReceptor.addOffset('pressed', -4, -4);
+								case 2:
+									uiReceptor.addOffset('confirm', 36 + offsetMiddleX, 40 + offsetMiddleY);
+									uiReceptor.addOffset('static');
+									uiReceptor.addOffset('pressed', -5, -4);
+								case 3:
+									uiReceptor.addOffset('confirm', 36 + offsetMiddleX, 36 + offsetMiddleY);
+									uiReceptor.addOffset('static');
+									uiReceptor.addOffset('pressed', -4, -4);
+							}
+						case 'MERCY':
+							switch (uiReceptor.strumData)
+							{
+								case 0:
+									uiReceptor.addOffset('confirm', 49 + offsetMiddleX, 36 + offsetMiddleY);
+									uiReceptor.addOffset('static', 9, -5);
+									uiReceptor.addOffset('pressed', 11, -2);
+								case 1:
+									uiReceptor.addOffset('confirm', 42 + offsetMiddleX, 36 + offsetMiddleY);
+									uiReceptor.addOffset('static');
+									uiReceptor.addOffset('pressed', 1, 1);
+								case 2:
+									uiReceptor.addOffset('confirm', 36 + offsetMiddleX, 40 + offsetMiddleY);
+									uiReceptor.addOffset('static');
+									uiReceptor.addOffset('pressed', 1, 1);
+								case 3:
+									uiReceptor.addOffset('confirm', 36 + offsetMiddleX, 36 + offsetMiddleY);
+									uiReceptor.addOffset('static');
+									uiReceptor.addOffset('pressed', 1, 1);
+							}
+						default:
+							switch (uiReceptor.strumData)
+							{
+								case 0:
+									uiReceptor.addOffset('confirm', 49 + offsetMiddleX, 36 + offsetMiddleY);
+									uiReceptor.addOffset('static', 9, -5);
+									uiReceptor.addOffset('pressed', 6, -7);
+								case 1:
+									uiReceptor.addOffset('confirm', 42 + offsetMiddleX, 36 + offsetMiddleY);
+									uiReceptor.addOffset('static');
+									uiReceptor.addOffset('pressed', -4, -4);
+								case 2:
+									uiReceptor.addOffset('confirm', 36 + offsetMiddleX, 40 + offsetMiddleY);
+									uiReceptor.addOffset('static');
+									uiReceptor.addOffset('pressed', -5, -4);
+								case 3:
+									uiReceptor.addOffset('confirm', 36 + offsetMiddleX, 36 + offsetMiddleY);
+									uiReceptor.addOffset('static');
+									uiReceptor.addOffset('pressed', -4, -4);
+							}
+					}
 				}
 		}
 
@@ -306,12 +383,22 @@ class ForeverAssets
 	public static function generateArrow(framesArg, assetModifier, strumTime, noteData, noteType, ?isSustainNote:Bool = false, ?prevNote:Note = null):Note
 	{
 		if (framesArg == null || framesArg.length < 1)
-			framesArg = 'NOTE_assets';
+			framesArg = 'NOTE_assets' + (PlayState.assetModifier != 'pixel' ? '-${PlayState.noteSkinType}' : '');
 		var changeableSkin:String = Init.trueSettings.get("Note Skin");
 
 		var newNote:Note;
 
+		var scaleShit:Float = 0.7;
+
 		newNote = new Note(strumTime, noteData, noteType, prevNote, isSustainNote);
+
+		switch (PlayState.noteSkinType)
+		{
+			case 'VANILLA':
+				scaleShit = 0.7;
+			default:
+				scaleShit = 0.63;
+		}
 
 		try
 		{
@@ -338,7 +425,7 @@ class ForeverAssets
 
 			// load default so the game won't explode in front of you;
 			Note.resetNote(framesArg, changeableSkin, assetModifier, newNote);
-			newNote.setGraphicSize(Std.int(newNote.width * (assetModifier == "pixel" ? PlayState.daPixelZoom : 0.7)));
+			newNote.setGraphicSize(Std.int(newNote.width * (assetModifier == "pixel" ? PlayState.daPixelZoom : scaleShit)));
 			newNote.updateHitbox();
 		}
 
@@ -348,6 +435,8 @@ class ForeverAssets
 			{
 				if (newNote.animation.getByName(Receptor.colors[noteData] + 'Scroll') != null)
 					newNote.animation.play(Receptor.colors[noteData] + 'Scroll');
+				if (newNote.noteData == 0 && PlayState.noteSkinType == 'MERCY')
+					newNote.noteVisualOffset = -10;
 			}
 
 			if (isSustainNote && prevNote != null)
@@ -369,10 +458,30 @@ class ForeverAssets
 		if (isSustainNote && prevNote != null)
 		{
 			// set note offset
+			if (PlayState.noteSkinType == 'MERCY')
+			{
+				switch (newNote.noteData)
+				{
+					case 0:
+						newNote.noteVisualOffset = 20;
+					case 1:
+						newNote.noteVisualOffset = 35;
+					case 2:
+						newNote.noteVisualOffset = 37;
+					default:
+						if (prevNote.isSustainNote)
+							newNote.noteVisualOffset = prevNote.noteVisualOffset;	
+						else // calculate a new visual offset based on that note's width and newnote's width
+							newNote.noteVisualOffset = ((prevNote.width / 2) - (newNote.width / 2));
+				}
+			}
+			else
+			{
 			if (prevNote.isSustainNote)
-				newNote.noteVisualOffset = prevNote.noteVisualOffset;
+				newNote.noteVisualOffset = prevNote.noteVisualOffset;	
 			else // calculate a new visual offset based on that note's width and newnote's width
 				newNote.noteVisualOffset = ((prevNote.width / 2) - (newNote.width / 2));
+			}
 		}
 
 		return newNote;
@@ -385,7 +494,7 @@ class ForeverAssets
 			baseLibrary:String)
 	{
 		var newCheckmark:Checkmark = new Checkmark(x, y);
-		newCheckmark.frames = Paths.getSparrowAtlas(ForeverTools.returnSkinAsset(asset, assetModifier, changeableSkin, baseLibrary));
+		newCheckmark.frames = Paths.getSparrowAtlas(EngineTools.returnSkinAsset(asset, assetModifier, changeableSkin, baseLibrary));
 		newCheckmark.antialiasing = true;
 
 		switch (assetModifier)
@@ -427,10 +536,10 @@ class ForeverAssets
 }
 
 /**
- * This class is used as an extension to many other forever engine stuffs, please don't delete it as it is not only exclusively used in forever engine
+ * This class is used as an extension to many other engine stuffs, please don't delete it as it is not only exclusively used in the engine
  * custom stuffs, and is instead used globally.
 **/
-class ForeverTools
+class EngineTools
 {
 	/**
 	 * [Resets the Main Menu Music]
@@ -480,9 +589,9 @@ class ForeverTools
 	 * @param daZaza - Default Camera Zoom
 	 * @param forceZaza - Forced Paramaters for Zooming / Changing Angle
 	 */
-	inline public static function cameraBumpingZooms(leCam:FlxCamera, daZaza:Float = 1.05, ?forceZaza:Array<Float>)
+	inline public static function cameraBumpingZooms(leCam:FlxCamera, daZaza:Float = 1.05, ?forceZaza:Array<Float>, elapsed:Float)
 	{
-		var easeLerp = 1 - Main.framerateAdjust(0.05);
+		var easeLerp = CoolUtil.boundTo(1 - (elapsed * 3.125), 0, 1);
 
 		if (forceZaza == null)
 			forceZaza = [0, 0, 0, 0];

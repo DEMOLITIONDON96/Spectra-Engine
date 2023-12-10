@@ -8,6 +8,7 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.input.keyboard.FlxKey;
 import flixel.math.FlxMath;
 import flixel.text.FlxText;
+import lime.app.Application;
 import flixel.util.FlxColor;
 import objects.fonts.Alphabet;
 import states.MusicBeatState.MusicBeatSubstate;

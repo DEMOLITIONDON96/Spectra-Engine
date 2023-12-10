@@ -5,11 +5,6 @@ package globals;
  */
 import flixel.FlxG;
 import flixel.graphics.FlxGraphic;
-import haxe.Json;
-import flixel.math.FlxPoint;
-import openfl.geom.Rectangle;
-import flixel.math.FlxRect;
-import flixel.system.FlxAssets.FlxGraphicAsset;
 import flixel.graphics.frames.FlxAtlasFrames;
 import lime.utils.Assets;
 import objects.CharacterData;
@@ -58,69 +53,110 @@ class Paths
 
 	/// haya I love you for the base cache dump I took to the max
 	public static function clearUnusedMemory()
-	{
-		// clear non local assets in the tracked assets list
-		var counter:Int = 0;
-		for (key in currentTrackedAssets.keys())
 		{
-			if (!localTrackedAssets.contains(key) && !dumpExclusions.contains(key))
+			// clear non local assets in the tracked assets list
+			var counter:Int = 0;
+			for (key in currentTrackedAssets.keys())
 			{
-				var obj = currentTrackedAssets.get(key);
-				if (obj != null)
+				// if it is not currently contained within the used local assets
+				if (!localTrackedAssets.contains(key) && !dumpExclusions.contains(key))
 				{
-					var isTexture:Bool = currentTrackedTextures.exists(key);
-					if (isTexture)
-					{
-						var texture = currentTrackedTextures.get(key);
-						texture.dispose();
-						texture = null;
-						currentTrackedTextures.remove(key);
-					}
+					// get rid of it
+					var obj = currentTrackedAssets.get(key);
 					@:privateAccess
-					if (openfl.Assets.cache.hasBitmapData(key))
+					if (obj != null)
 					{
-						openfl.Assets.cache.removeBitmapData(key);
+						var isTexture:Bool = currentTrackedTextures.exists(key);
+						if (isTexture)
+						{
+							var texture = currentTrackedTextures.get(key);
+							texture.dispose();
+							texture = null;
+							currentTrackedTextures.remove(key);
+						}
+						OpenFlAssets.cache.removeBitmapData(key);
+						OpenFlAssets.cache.clearBitmapData(key);
+						OpenFlAssets.cache.clear(key);
 						FlxG.bitmap._cache.remove(key);
+						obj.destroy();
+						currentTrackedAssets.remove(key);
+						counter++;
 					}
-					obj.destroy();
-					currentTrackedAssets.remove(key);
-					counter++;
+				}
+			}
+
+			var cache:haxe.ds.Map<String, FlxGraphic> = cast Reflect.field(FlxG.bitmap, "_cache");
+			for (key => graphic in cache)
+			{
+				if (key.indexOf("text") == 0 && graphic.useCount <= 0)
+				{
+					FlxG.bitmap.remove(graphic);
 				}
 			}
 		}
-		// run the garbage collector for good measure lmfao
-		System.gc();
-	}
 
 	// define the locally tracked assets
 	public static var localTrackedAssets:Array<String> = [];
 
 	public static function clearStoredMemory(?cleanUnused:Bool = false)
-	{
-		// clear anything not in the tracked assets list
-		@:privateAccess
-		for (key in FlxG.bitmap._cache.keys())
 		{
-			var obj = FlxG.bitmap._cache.get(key);
-			if (obj != null && !currentTrackedAssets.exists(key))
+			// clear anything not in the tracked assets list
+			var counterAssets:Int = 0;
+	
+			@:privateAccess
+			for (key in FlxG.bitmap._cache.keys())
 			{
-				openfl.Assets.cache.removeBitmapData(key);
-				FlxG.bitmap._cache.remove(key);
-				obj.destroy();
+				var obj = FlxG.bitmap._cache.get(key);
+				if (obj != null && !currentTrackedAssets.exists(key))
+				{
+					OpenFlAssets.cache.removeBitmapData(key);
+					OpenFlAssets.cache.clearBitmapData(key);
+					OpenFlAssets.cache.clear(key);
+					FlxG.bitmap._cache.remove(key);
+					obj.destroy();
+					counterAssets++;
+				}
+			}
+	
+			// clear all sounds that are cached
+			var counterSound:Int = 0;
+			for (key in currentTrackedSounds.keys())
+			{
+				if (!localTrackedAssets.contains(key) && !dumpExclusions.contains(key) && key != null)
+				{
+					// trace('test: ' + dumpExclusions, key);
+					OpenFlAssets.cache.removeSound(key);
+					OpenFlAssets.cache.clearSounds(key);
+					currentTrackedSounds.remove(key);
+					counterSound++;
+				}
+			}
+	
+			// Clear everything everything that's left
+			var counterLeft:Int = 0;
+			for (key in OpenFlAssets.cache.getKeys())
+			{
+				if (!localTrackedAssets.contains(key) && !dumpExclusions.contains(key) && key != null)
+				{
+					OpenFlAssets.cache.clear(key);
+					counterLeft++;
+				}
+			}
+	
+			// flags everything to be cleared out next unused memory clear
+			localTrackedAssets = [];
+			openfl.Assets.cache.clear("songs");
+	
+		var cache:haxe.ds.Map<String, FlxGraphic> = cast Reflect.field(FlxG.bitmap, "_cache");
+		for (key => graphic in cache)
+		{
+			if (key.indexOf("text") == 0 && graphic.useCount <= 0)
+			{
+				FlxG.bitmap.remove(graphic);
 			}
 		}
-
-		// clear all sounds that are cached
-		for (key in currentTrackedSounds.keys())
-		{
-			if (!localTrackedAssets.contains(key) && !dumpExclusions.contains(key) && key != null)
-			{
-				Assets.cache.clear(key);
-				currentTrackedSounds.remove(key);
-			}
-		}
-		// flags everything to be cleared out next unused memory clear
-		localTrackedAssets = [];
+		// idk if this does anything.
+		// THANK YOU MALICIOUS BUNNY!!
 	}
 
 	public static function returnGraphic(key:String, ?folder:String, ?library:String, ?gpuRender:Bool = false)
@@ -132,7 +168,7 @@ class Paths
 			{
 				var bitmap = BitmapData.fromFile(path);
 				var newGraphic:FlxGraphic;
-				if (gpuRender)
+				if (gpuRender || Init.trueSettings.get('GPU Caching'))
 				{
 					var texture = FlxG.stage.context3D.createTexture(bitmap.width, bitmap.height, BGRA, true, 0);
 					texture.uploadFromBitmapData(bitmap);
@@ -304,11 +340,6 @@ class Paths
 		var file:Sound = returnSound('music', key, library);
 		return file;
 	}
-	
-	inline static public function video(key:String):String
-	{
-		return 'assets/videos/$key';
-	}
 
 	/*
 	* NEW SONG FILE FORMAT
@@ -415,6 +446,11 @@ class Paths
 		return getPath('$folder/$key' + extension);
 	}
 
+	inline static public function video(key:String):String
+	{
+		return 'assets/videos/$key';
+	}
+
 	inline static public function characterModule(folder:String, character:String, ?type:CharacterOrigin, ?library:String)
 	{
 		var extension:String = '';
@@ -429,7 +465,7 @@ class Paths
 		{
 			case PSYCH_ENGINE:
 				extension = '.json';
-			case FOREVER_FEATHER:
+			case DEFAULT:
 				// this is diabolic;
 				for (j in scriptExts)
 				{

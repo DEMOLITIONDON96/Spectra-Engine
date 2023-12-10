@@ -44,7 +44,7 @@ typedef SwagSection =
 }
 
 /*
-	Timed Event Format for Forever Engine Feather;
+	Timed Event Format for the engine;
  */
 typedef TimedEvent =
 {

@@ -8,6 +8,7 @@ import flixel.math.FlxMath;
 import objects.fonts.Alphabet;
 import objects.ui.menu.Checkmark;
 import objects.ui.menu.Selector;
+import lime.app.Application;
 import states.MusicBeatState;
 import states.data.OptionsData.GroupData;
 
@@ -69,7 +70,7 @@ class BaseOptions extends MusicBeatState
 		super.create();
 
 		// make sure the music is playing
-		ForeverTools.resetMenuMusic();
+		EngineTools.resetMenuMusic();
 
 		// set up category contents;
 		categoriesMap.set("preferences", OptionsData.preferences);
@@ -113,6 +114,7 @@ class BaseOptions extends MusicBeatState
 	public function updateDiscord(?forcedPresence:String)
 	{
 		var myPresence:String = curCategory == 'main' ? 'Navigating through Categories' : 'Changing $curCategory';
+		Application.current.window.title = 'Funkin.avi - Settings: ' + myPresence;
 
 		#if DISCORD_RPC
 		// changes depending on your current category;
@@ -268,7 +270,7 @@ class BaseOptions extends MusicBeatState
 				{
 					case Init.SettingTypes.Checkmark:
 						// checkmark
-						var checkmark = ForeverAssets.generateCheckmark(10, option.y, 'checkboxThingie', 'base', Init.trueSettings.get("UI Skin"), 'UI');
+						var checkmark = EngineAssets.generateCheckmark(10, option.y, 'checkboxThingie', 'base', Init.trueSettings.get("UI Skin"), 'UI');
 						checkmark.playAnim(Std.string(Init.trueSettings.get(option.text)) + ' finished');
 						checkmark.scrollFactor.set();
 						tempMap.set(option, checkmark);

@@ -1,5 +1,6 @@
 package objects.ui.hud.toggleable;
 
+import objects.psychutils.AttachedSprite;
 import base.song.Conductor;
 import base.utils.ScoreUtils;
 import flixel.FlxG;
@@ -33,6 +34,7 @@ class PsychHUD extends FlxSpriteGroup
 
 	public var timeTxt:FlxText;
 	public var timeBar:FlxBar;
+	public var timeBarBG:AttachedSprite;
 
 	// other
 	public var scoreDisplay:String = 'beep bop bo skdkdkdbebedeoop brrapadop'; // fnf mods
@@ -58,7 +60,7 @@ class PsychHUD extends FlxSpriteGroup
 			barY = 64;
 
 		healthBarBG = new FlxSprite(0,
-			barY).loadGraphic(Paths.image(ForeverTools.returnSkinAsset('healthBar', PlayState.assetModifier, PlayState.changeableSkin, 'UI')));
+			barY).loadGraphic(Paths.image(EngineTools.returnSkinAsset('healthBar', PlayState.assetModifier, PlayState.changeableSkin, 'UI')));
 		healthBarBG.screenCenter(X);
 		healthBarBG.scrollFactor.set();
 		add(healthBarBG);
@@ -82,20 +84,33 @@ class PsychHUD extends FlxSpriteGroup
 		updateScoreText();
 		add(scoreBar);
 
-		timeBar = new FlxBar(0, 24, LEFT_TO_RIGHT, 300, 65, this, 'songPercent', 0, 1);
-		timeBar.screenCenter(X);
-		timeBar.scrollFactor.set();
-		timeBar.numDivisions = 800;
-		timeBar.createFilledBar(0x000000, 0xFFFFFF);
-		add(timeBar);
-
 		timeTxt = new FlxText(0, 19, 400, "", 32);
-		timeTxt.setFormat(Paths.font("vcr"), 40, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		timeTxt.setFormat(Paths.font("vcr"), 32, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
 		timeTxt.scrollFactor.set();
 		timeTxt.borderSize = 2;
 		timeTxt.screenCenter(X);
 		if(Init.trueSettings.get('Downscroll'))
 			timeTxt.y = FlxG.height - 44;
+
+		if(Init.trueSettings.get('Downscroll')) timeTxt.y = FlxG.height - 44;
+
+		timeBarBG = new AttachedSprite('UI/funkinAVI/timeBar');
+		timeBarBG.x = timeTxt.x;
+		timeBarBG.y = timeTxt.y + (timeTxt.height / 4);
+		timeBarBG.scrollFactor.set();
+		timeBarBG.color = FlxColor.BLACK;
+		timeBarBG.xAdd = -4;
+		timeBarBG.yAdd = -4;
+
+		timeBar = new FlxBar(timeBarBG.x + 4, timeBarBG.y + 4, LEFT_TO_RIGHT, Std.int(timeBarBG.width - 8), Std.int(timeBarBG.height - 8), this,
+			'songPercent', 0, 1);
+		timeBar.scrollFactor.set();
+		timeBar.createFilledBar(0xFF000000, 0xFFFFFFFF);
+		timeBar.numDivisions = 800;
+		timeBarBG.sprTracker = timeBar;
+
+		add(timeBarBG);
+		add(timeBar);
 		add(timeTxt);
 
 		cornerMark = new FlxText(0, 0, 0, '');
@@ -176,8 +191,8 @@ class PsychHUD extends FlxSpriteGroup
 		iconP1.updateAnim(healthBar.percent);
 		iconP2.updateAnim(100 - healthBar.percent);
 
-		iconP1.bop(0.15);
-		iconP2.bop(0.15);
+		iconP1.bop(elapsed);
+		iconP2.bop(elapsed);
 
 		if (autoplayMark.visible)
 		{
@@ -195,12 +210,15 @@ class PsychHUD extends FlxSpriteGroup
 
 		if (curTime < 0)
 			curTime = 0;
-		songPercent = (curTime / PlayState.songLength);
+		songPercent = (curTime / PlayState.songMusic.length);
 		
 		if (secondsTotal < 0)
 			secondsTotal = 0;
 
 		timeTxt.text = FlxStringUtil.formatTime(secondsTotal, false);
+		timeBar.updateBar();
+		timeBar.active = true;
+		timeBar.update(elapsed);
 	}
 
 	public static var divider:String = " | ";
@@ -209,7 +227,7 @@ class PsychHUD extends FlxSpriteGroup
 
 	public function updateScoreText()
 	{
-		scoreBar.text = 'Score: ' + ScoreUtils.score + ' | Combo Breaks: ${ScoreUtils.misses} | Accuracy: ${ScoreUtils.returnAccuracy()}';
+		scoreBar.text = 'Score: ' + ScoreUtils.score + ' | Misses: ${ScoreUtils.misses} | Accuracy: ${ScoreUtils.returnAccuracy()}';
 
 		scoreBar.screenCenter(X);
 

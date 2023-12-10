@@ -207,9 +207,9 @@ class SongCard extends FlxSpriteGroup
 					if (oShaderName != null) opponentIcon.shader = opponentShader;
 				}
 
-				cardSprite.blend = (cardBlend != null ? ForeverTools.returnBlendMode(cardBlend) : NORMAL);
-				playerIcon.blend = (playerBlend != null ? ForeverTools.returnBlendMode(playerBlend) : NORMAL);
-				opponentIcon.blend = (opponentBlend != null ? ForeverTools.returnBlendMode(opponentBlend) : NORMAL);
+				cardSprite.blend = (cardBlend != null ? EngineTools.returnBlendMode(cardBlend) : NORMAL);
+				playerIcon.blend = (playerBlend != null ? EngineTools.returnBlendMode(playerBlend) : NORMAL);
+				opponentIcon.blend = (opponentBlend != null ? EngineTools.returnBlendMode(opponentBlend) : NORMAL);
 
 				if (cardAdvanced.cardOffsets != null)
 				{
@@ -225,7 +225,7 @@ class SongCard extends FlxSpriteGroup
 				if (cardAdvanced.isScreenCenter) cardSprite.screenCenter();
 
 				cardTxt = new FlxText(fontOffsetX, fontOffsetY, 0, '- ${songTitle} -\nBy: ${composer}');
-				cardTxt.setFormat(Paths.font(fontStuff), fontSize, fontColor, (alignString != null ? ForeverTools.setTextAlign(alignString) : CENTER));
+				cardTxt.setFormat(Paths.font(fontStuff), fontSize, fontColor, (alignString != null ? EngineTools.setTextAlign(alignString) : CENTER));
 				cardTxt.scale.set(fontScaleX, fontScaleY);
 		   }
 		   else
@@ -310,7 +310,7 @@ class SongCard extends FlxSpriteGroup
 					x: cardIntroPosX,
 					y: cardIntroPosY
 				}, 
-				1.5, {ease: (tweenInVal != null ? ForeverTools.returnTweenEase(tweenInVal) : FlxEase.sineInOut), startDelay: delaySet,
+				1.5, {ease: (tweenInVal != null ? EngineTools.returnTweenEase(tweenInVal) : FlxEase.sineInOut), startDelay: delaySet,
 						onComplete: function(twn:FlxTween)
 						{
 							FlxTween.tween(cardSprite, 
@@ -319,7 +319,7 @@ class SongCard extends FlxSpriteGroup
 									x: cardOutroPosX,
 									y: cardOutroPosY
 								}, 
-								1.5, {ease: (tweenOutVal != null ? ForeverTools.returnTweenEase(tweenOutVal) : FlxEase.sineInOut), startDelay: 3.5});
+								1.5, {ease: (tweenOutVal != null ? EngineTools.returnTweenEase(tweenOutVal) : FlxEase.sineInOut), startDelay: 3.5});
 						}
 				});
 			FlxTween.tween(opponentIcon, 
@@ -328,7 +328,7 @@ class SongCard extends FlxSpriteGroup
 					x: oppIntroPosX,
 					y: oppIntroPosY
 				}, 
-				2.2, {ease: (tweenInVal != null ? ForeverTools.returnTweenEase(tweenInVal) : FlxEase.sineInOut), startDelay: delaySet,
+				2.2, {ease: (tweenInVal != null ? EngineTools.returnTweenEase(tweenInVal) : FlxEase.sineInOut), startDelay: delaySet,
 						onComplete: function(twn:FlxTween)
 						{
 							FlxTween.tween(opponentIcon, 
@@ -337,7 +337,7 @@ class SongCard extends FlxSpriteGroup
 									x: oppOutroPosX,
 									y: oppOutroPosY
 								}, 
-								2.2, {ease: (tweenOutVal != null ? ForeverTools.returnTweenEase(tweenOutVal) : FlxEase.sineInOut), startDelay: 3.5});
+								2.2, {ease: (tweenOutVal != null ? EngineTools.returnTweenEase(tweenOutVal) : FlxEase.sineInOut), startDelay: 3.5});
 						}
 				});
 			FlxTween.tween(playerIcon, 
@@ -346,7 +346,7 @@ class SongCard extends FlxSpriteGroup
 					x: playerIntroPosX,
 					y: playerIntroPosY
 				}, 
-				 2.2, {ease: (tweenInVal != null ? ForeverTools.returnTweenEase(tweenInVal) : FlxEase.sineInOut), startDelay: delaySet,
+				 2.2, {ease: (tweenInVal != null ? EngineTools.returnTweenEase(tweenInVal) : FlxEase.sineInOut), startDelay: delaySet,
 						onComplete: function(twn:FlxTween)
 						{
 							FlxTween.tween(playerIcon, 
@@ -355,7 +355,7 @@ class SongCard extends FlxSpriteGroup
 									x: playerOutroPosX,
 									y: playerOutroPosY
 								}, 
-								2.2, {ease: (tweenOutVal != null ? ForeverTools.returnTweenEase(tweenOutVal) : FlxEase.sineInOut), startDelay: 3.5});
+								2.2, {ease: (tweenOutVal != null ? EngineTools.returnTweenEase(tweenOutVal) : FlxEase.sineInOut), startDelay: 3.5});
 						}
 				});
 			FlxTween.tween(cardTxt, 
@@ -364,7 +364,7 @@ class SongCard extends FlxSpriteGroup
 					x: fontIntroPosX,
 					y: fontIntroPosY
 				}, 
-				2, {ease: (tweenInVal != null ? ForeverTools.returnTweenEase(tweenInVal) : FlxEase.sineInOut), startDelay: delaySet,
+				2, {ease: (tweenInVal != null ? EngineTools.returnTweenEase(tweenInVal) : FlxEase.sineInOut), startDelay: delaySet,
 						onComplete: function(twn:FlxTween)
 						{
 							FlxTween.tween(cardTxt, 
@@ -373,7 +373,7 @@ class SongCard extends FlxSpriteGroup
 									x: fontOutroPosX,
 									y: fontOutroPosY
 								}, 
-								2, {ease: (tweenOutVal != null ? ForeverTools.returnTweenEase(tweenOutVal) : FlxEase.sineInOut), startDelay: 3.5});
+								2, {ease: (tweenOutVal != null ? EngineTools.returnTweenEase(tweenOutVal) : FlxEase.sineInOut), startDelay: 3.5});
 						}
 				});
 		}

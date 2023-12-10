@@ -1,5 +1,6 @@
 package objects.ui;
 
+import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.graphics.FlxGraphic;
 import flixel.math.FlxMath;
@@ -43,13 +44,13 @@ class HealthIcon extends FlxSprite
 			animation.curAnim.curFrame = 0;
 	}
 
-	public function bop(framerate:Float)
+	public function bop(elapsed:Float)
 	{
 		if (!canBounce)
 			return;
 
-		var iconLerp = 1 - Main.framerateAdjust(framerate);
-		scale.set(FlxMath.lerp(1, scale.x, iconLerp), FlxMath.lerp(1, scale.y, iconLerp));
+		var mult:Float = FlxMath.lerp(1, scale.x, FlxMath.bound(1 - (elapsed * 9), 0, 1));
+		scale.set(mult, mult);
 		updateHitbox();
 	}
 

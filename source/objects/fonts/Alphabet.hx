@@ -31,6 +31,7 @@ class Alphabet extends FlxTypedSpriteGroup<AlphaCharacter>
 	public var xTo = 100;
 
 	public var isMenuItem:Bool = false;
+	public var isMenuItemCenter:Bool = false;
 
 	public var text:String = "";
 	public var _finalText:String = "";
@@ -308,18 +309,32 @@ class Alphabet extends FlxTypedSpriteGroup<AlphaCharacter>
 	override function update(elapsed:Float)
 	{
 		if (isMenuItem)
-		{
-			var scaledY = FlxMath.remapToRange(targetY, 0, 1, 0, 1.3);
+			{
+				var scaledY = FlxMath.remapToRange(targetY, 0, 1, 0, 1.3);
+	
+				y = FlxMath.lerp(y, (scaledY * 120) + (FlxG.height * 0.48), elapsed * 6);
+				// lmao
+				if (forceX != Math.NEGATIVE_INFINITY)
+					x = forceX;
+				else if (!disableX)
+					x = FlxMath.lerp(x, (targetY * 20) + 90, elapsed * 6);
+				else
+					x = FlxMath.lerp(x, xTo, elapsed * 6);
+			}
 
-			y = FlxMath.lerp(y, (scaledY * 120) + (FlxG.height * 0.48), elapsed * 6);
-			// lmao
-			if (forceX != Math.NEGATIVE_INFINITY)
-				x = forceX;
-			else if (!disableX)
-				x = FlxMath.lerp(x, (targetY * 20) + 90, elapsed * 6);
-			else
-				x = FlxMath.lerp(x, xTo, elapsed * 6);
-		}
+		if (isMenuItemCenter)
+			{
+				var scaledY = FlxMath.remapToRange(targetY, 0, 1, 0, 1.3);
+	
+				y = FlxMath.lerp(y, (scaledY * 120) + (FlxG.height * 0.48), elapsed * 6);
+				// lmao
+				if (forceX != Math.NEGATIVE_INFINITY)
+					screenCenter(X);
+				else if (!disableX)
+					screenCenter(X);
+				else
+					screenCenter(X);
+			}
 
 		if ((text != textInit))
 		{

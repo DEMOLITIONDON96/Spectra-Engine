@@ -81,6 +81,9 @@ class ScriptHandler extends SScript
 		// here we set up the built-in imports
 		// these should work on *any* script;
 
+		// VARIABLES
+		set('globalElapsed', globals.Main.globalElapsed);
+
 		// CLASSES (HAXE)
 		set('Type', Type);
 		set('Math', Math);
@@ -92,7 +95,7 @@ class ScriptHandler extends SScript
 		set('FlxBasic', flixel.FlxBasic);
 		set('FlxObject', flixel.FlxObject);
 		set('FlxSprite', flixel.FlxSprite);
-		set('FlxSound', flixel.system.FlxSound);
+		set('FlxSound', #if (flixel <= "5.2.2") flixel.system.FlxSound #else flixel.sound.FlxSound #end);
 		set('FlxSort', flixel.util.FlxSort);
 		set('FlxStringUtil', flixel.util.FlxStringUtil);
 		set('FlxState', flixel.FlxState);
@@ -102,9 +105,10 @@ class ScriptHandler extends SScript
 		set('FlxTween', flixel.tweens.FlxTween);
 		set('FlxEase', flixel.tweens.FlxEase);
 		set('FlxTrail', flixel.addons.effects.FlxTrail);
-		set('FlxRuntimeShader', flixel.addons.display.FlxRuntimeShader);
 		set('FlxEmitter', flixel.effects.particles.FlxEmitter);
 		set('FlxParticle', flixel.effects.particles.FlxParticle);
+		set('FlxTypedGroup', flixel.group.FlxGroup.FlxTypedGroup);
+		set('FlxGroup', flixel.group.FlxGroup);
 		set('FlxGradient', flixel.util.FlxGradient);
 		set('FlxMath', flixel.math.FlxMath);
 
@@ -127,20 +131,22 @@ class ScriptHandler extends SScript
 		set('Paths', globals.Paths);
 
 		// CLASSES (FOREVER);
-		set('Init', Init);
-		set('Main', Main);
+		set('Init', globals.Init);
+		set('Main', globals.Main);
 		set('Stage', objects.Stage);
 		set('FNFSprite', base.utils.FNFUtils.FNFSprite);
-		set('ForeverAssets', base.dependency.ForeverDeps.ForeverAssets);
-		set('ForeverTools', base.dependency.ForeverDeps.ForeverTools);
+		set('EngineAssets', base.dependency.EngineDeps.EngineAssets);
+		set('EngineTools', base.dependency.EngineDeps.EngineTools);
 
 		// CLASSES (FEATHER);
 		set('FeatherSprite', base.dependency.FeatherSprite);
 		set('Controls', base.Controls);
 
-		// OTHER
+		// SHADER HANDLERS
+		set('FlxRuntimeShader', flixel.addons.display.FlxRuntimeShader);
 		set('GraphicsShader', openfl.display.GraphicsShader);
 		set('ShaderFilter', openfl.filters.ShaderFilter);
+		set('Shaders', base.dependency.FeatherDeps.EmbeddedShaders);
 
 		// ENUMS AND TYPEDEFINES;
 		set('GameMode', states.PlayState.GameMode);

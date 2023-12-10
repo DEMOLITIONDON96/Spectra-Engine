@@ -39,7 +39,7 @@ class ClassHUD extends FlxSpriteGroup
 	// display texts
 	public var infoDisplay:String = CoolUtil.dashToSpace(PlayState.SONG.song);
 	public var diffDisplay:String = '[${CoolUtil.difficultyString}]';
-	public var engineDisplay:String = "FE FEATHER v" + Main.game.versionFF;
+	public var engineDisplay:String = 'Spectra Engine v0.2.0';
 
 	// eep
 	public function new()
@@ -54,6 +54,7 @@ class ClassHUD extends FlxSpriteGroup
 
 		healthBarBG = new FlxSprite(0,
 			barY).loadGraphic(Paths.image(ForeverTools.returnSkinAsset('healthBar', PlayState.assetModifier, PlayState.changeableSkin, 'UI')));
+			barY).loadGraphic(Paths.image(EngineTools.returnSkinAsset('healthBar', PlayState.assetModifier, PlayState.changeableSkin, 'UI')));
 		healthBarBG.screenCenter(X);
 		healthBarBG.scrollFactor.set();
 		add(healthBarBG);
@@ -83,6 +84,12 @@ class ClassHUD extends FlxSpriteGroup
 		cornerMark.setBorderStyle(OUTLINE, FlxColor.BLACK, 2);
 		cornerMark.setPosition(FlxG.width - (cornerMark.width + 5), 5);
 		add(cornerMark);
+
+		cornerSub = new FlxText(0, 0, 0, engineSub);
+		cornerSub.setFormat(Paths.font('vcr'), 8, FlxColor.WHITE);
+		cornerSub.setBorderStyle(OUTLINE, FlxColor.BLACK, 2);
+		cornerSub.setPosition(FlxG.width - (cornerSub.width + 5), cornerMark.y + 30);
+		add(cornerSub);
 
 		centerMark = new FlxText(0, (Init.trueSettings.get('Downscroll') ? FlxG.height - 40 : 10), 0, '- $infoDisplay $diffDisplay -');
 		centerMark.setFormat(Paths.font('vcr'), 24, FlxColor.WHITE);
@@ -146,12 +153,15 @@ class ClassHUD extends FlxSpriteGroup
 	override public function update(elapsed:Float)
 	{
 		// pain, this is like the 7th attempt
-		healthBar.percent = (PlayState.health * 50); // so it doesn't make the mechanic worthless
+		var silly = PlayState.SONG.song == 'Mercy' ? PlayState.main.smoothyHealth : PlayState.health;
+		healthBar.percent = (silly * 50); // so it doesn't make the mechanic worthless
 
 		var iconOffset:Int = 26;
 
-		iconP1.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01) - iconOffset);
-		iconP2.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01)) - (iconP2.width - iconOffset);
+		if (PlayState.SONG.song == 'Mercy')
+			iconP2.x = healthBar.x + (healthBar.width * percent) - (150 * iconP2.scale.x) / 2 - iconOffset * 2;	
+		} else {
+			iconP1.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01) - iconOffset);
 
 		iconP1.updateAnim(healthBar.percent);
 		iconP2.updateAnim(100 - healthBar.percent);
@@ -204,21 +214,12 @@ class ClassHUD extends FlxSpriteGroup
 		}
 
 		// update playstate
-		if(Init.trueSettings.get('HUD Style') == "forever") //fix i think
+		if(Init.trueSettings.get('HUD Style') == "classic") //fix i think
 			PlayState.detailsSub = scoreBar.text;
 
 		PlayState.updateRPC(false);
 	}
 
-	public function colorHighlight(curRating:String)
-		{
-			// highlights the accuracy mark on the score bar;
-			var rankingsMap:Map<String, FlxColor> = [
-				"S+" => FlxColor.fromString('#F8D482'),
-				"S" => FlxColor.CYAN,
-				"A" => FlxColor.LIME,
-				"B" => FlxColor.GREEN,
-				"C" => FlxColor.BROWN,
 				"D" => FlxColor.PINK,
 				"E" => FlxColor.ORANGE,
 				"F" => FlxColor.RED,
@@ -247,13 +248,6 @@ class ClassHUD extends FlxSpriteGroup
 		{
 			if (iconP1.canBounce)
 			{
-				iconP1.setGraphicSize(Std.int(iconP1.width + 30));
-				iconP1.updateHitbox();
-			}
-
-			if (iconP2.canBounce)
-			{
-				iconP2.setGraphicSize(Std.int(iconP2.width + 30));
 				iconP2.updateHitbox();
 			}
 		}

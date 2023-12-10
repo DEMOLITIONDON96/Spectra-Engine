@@ -9,6 +9,7 @@ import flixel.addons.transition.FlxTransitionableState;
 import flixel.addons.ui.FlxUIState;
 import flixel.text.FlxText;
 import flixel.tweens.FlxTween;
+import flixel.util.FlxTimer;
 
 /* 
 	Music beat state happens to be the first thing on my list of things to add, it just so happens to be the backbone of
@@ -76,6 +77,8 @@ class MusicBeatState extends FlxUIState
 	override function update(elapsed:Float)
 	{
 		updateContents();
+
+		Main.globalElapsed = elapsed;
 
 		super.update(elapsed);
 	}

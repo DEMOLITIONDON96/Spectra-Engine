@@ -1,5 +1,6 @@
 package objects.ui.hud.toggleable;
 
+import base.song.Conductor;
 import base.utils.ScoreUtils;
 import flixel.FlxG;
 import flixel.FlxSprite;
@@ -9,6 +10,8 @@ import flixel.text.FlxText;
 import flixel.ui.FlxBar;
 import flixel.util.FlxColor;
 import flixel.util.FlxSort;
+import flixel.util.FlxStringUtil;
+import objects.psychutils.AttachedSprite;
 import states.PlayState;
 
 class KadeHUD extends FlxSpriteGroup
@@ -27,6 +30,9 @@ class KadeHUD extends FlxSpriteGroup
 	public var iconP1:HealthIcon;
 	public var iconP2:HealthIcon;
 
+	//muckney health color lmao
+	public var muckneyColors:Array<Int> = [];
+
 	// other
 	public var scoreDisplay:String = 'beep bop bo skdkdkdbebedeoop brrapadop'; // fnf mods
 
@@ -37,7 +43,13 @@ class KadeHUD extends FlxSpriteGroup
 	// display texts
 	public var infoDisplay:String = "";
 	public var diffDisplay:String = "";
-	public var engineDisplay:String = '';
+	public var engineDisplay:String = 'Spectra Engine v0.2.0';
+
+	public var timeTxt:FlxText;
+	public var timeBar:FlxBar;
+	public var timeBarBG:AttachedSprite;
+
+	var songPercent:Float = 0;
 
 	// eep
 	public function new()
@@ -51,7 +63,7 @@ class KadeHUD extends FlxSpriteGroup
 			barY = 64;
 
 		healthBarBG = new FlxSprite(0,
-			barY).loadGraphic(Paths.image(ForeverTools.returnSkinAsset('healthBar', PlayState.assetModifier, PlayState.changeableSkin, 'UI')));
+			barY).loadGraphic(Paths.image(EngineTools.returnSkinAsset('healthBar', PlayState.assetModifier, PlayState.changeableSkin, 'UI')));
 		healthBarBG.screenCenter(X);
 		healthBarBG.scrollFactor.set();
 		add(healthBarBG);
@@ -77,9 +89,9 @@ class KadeHUD extends FlxSpriteGroup
 		add(scoreBar);
 
 		cornerMark = new FlxText(0, 0, 0, engineDisplay);
-		cornerMark.setFormat(Paths.font('vcr'), 18, FlxColor.WHITE);
-		cornerMark.setBorderStyle(OUTLINE, FlxColor.BLACK, 2);
-		cornerMark.setPosition(FlxG.width - (cornerMark.width + 5), 5);
+		cornerMark.setFormat(Paths.font('vcr'), 12, FlxColor.WHITE);
+		cornerMark.setBorderStyle(OUTLINE, FlxColor.BLACK, 1);
+		cornerMark.setPosition(0, FlxG.height * 0.97);
 		add(cornerMark);
 
 		centerMark = new FlxText(0, (Init.trueSettings.get('Downscroll') ? FlxG.height - 40 : 10), 0, '');
@@ -87,6 +99,25 @@ class KadeHUD extends FlxSpriteGroup
 		centerMark.setBorderStyle(OUTLINE, FlxColor.BLACK, 2);
 		centerMark.screenCenter(X);
 		add(centerMark);
+
+		timeTxt = new FlxText(0, 10, 400, "", 32);
+		timeTxt.setFormat(Paths.font("vcr"), 32, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
+		timeTxt.scrollFactor.set();
+		timeTxt.borderSize = 2;
+		timeTxt.screenCenter(X);
+		if(Init.trueSettings.get('Downscroll'))
+			timeTxt.y = FlxG.height - 44;
+
+		if(Init.trueSettings.get('Downscroll')) timeTxt.y = FlxG.height - 44;
+
+		timeBar = new FlxBar(timeTxt.x - 300, (timeTxt.y + (timeTxt.height / 4)) + 4, LEFT_TO_RIGHT, 1000, 15, this,
+			'songPercent', 0, 1);
+		timeBar.scrollFactor.set();
+		timeBar.numDivisions = 800;
+		timeBar.createFilledBar(FlxColor.GRAY, FlxColor.LIME, true, FlxColor.BLACK);
+
+		add(timeBar);
+		add(timeTxt);
 
 		autoplayMark = new FlxText(-5, (Init.trueSettings.get('Downscroll') ? centerMark.y - 60 : centerMark.y + 60), FlxG.width - 800, '\n', 32);
 		autoplayMark.setFormat(Paths.font("vcr"), 32, FlxColor.WHITE, CENTER);
@@ -143,6 +174,9 @@ class KadeHUD extends FlxSpriteGroup
 
 	override public function update(elapsed:Float)
 	{
+		if (PlayState.SONG.song == "Birthday")
+			muckneyHealthColorShitLol();
+
 		// pain, this is like the 7th attempt
 		healthBar.percent = (PlayState.health * 50); // so it doesn't make the mechanic worthless
 		
@@ -150,12 +184,19 @@ class KadeHUD extends FlxSpriteGroup
 
 		iconP1.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01) - iconOffset);
 		iconP2.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01)) - (iconP2.width - iconOffset);
+			var percent:Float = 1 - (PlayState.main.smoothyHealth / 2);
+			iconP1.x = healthBar.x + (healthBar.width * percent) + (150 * iconP1.scale.x - 150) / 2 - iconOffset;
+			iconP2.x = healthBar.x + (healthBar.width * percent) - (150 * iconP2.scale.x) / 2 - iconOffset * 2;	
+		} else {
+			iconP1.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01) - iconOffset);
+			iconP2.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01)) - (iconP2.width - iconOffset);
+		}
 
 		iconP1.updateAnim(healthBar.percent);
 		iconP2.updateAnim(100 - healthBar.percent);
 
-		iconP1.bop(0.15);
-		iconP2.bop(0.15);
+		iconP1.bop(elapsed);
+		iconP2.bop(elapsed);
 
 		if (autoplayMark.visible)
 		{
@@ -164,6 +205,23 @@ class KadeHUD extends FlxSpriteGroup
 		}
 
 		updateScoreText();
+
+		var curTime:Float = Conductor.songPosition - Init.trueSettings.get('Offset');
+		var songCalc:Float = (PlayState.songLength - curTime);
+		var totalTime = PlayState.songLength;
+		var secondsTotal:Int = Math.floor(songCalc / 1000);
+
+		if (curTime < 0)
+			curTime = 0;
+		songPercent = (curTime / PlayState.songMusic.length);
+		
+		if (secondsTotal < 0)
+			secondsTotal = 0;
+
+		timeTxt.text = PlayState.SONG.song;
+		timeBar.updateBar();
+		timeBar.active = true;
+		timeBar.update(elapsed);
 	}
 
 	public static var divider:String = " • ";
@@ -198,10 +256,13 @@ class KadeHUD extends FlxSpriteGroup
 
 	public function reloadHealthBar()
 	{
-		var colorOpponent = PlayState.opponent.characterData.healthColor;
-		var colorPlayer = PlayState.boyfriend.characterData.healthColor;
+		muckneyColors = [FlxG.random.int(0, 255), FlxG.random.int(0, 255), FlxG.random.int(0, 255)];
+	
+		healthBar.createFilledBar(FlxColor.fromRGB(muckneyColors[0], muckneyColors[1], muckneyColors[2]), 0xFF66FF33);
+	}
 
-			healthBar.createFilledBar(0xFFFF0000, 0xFF66FF33);
+	public function reloadHealthBar()
+	{
 	}
 
 	public function beatHit(curBeat:Int)
@@ -219,6 +280,13 @@ class KadeHUD extends FlxSpriteGroup
 				iconP2.setGraphicSize(Std.int(iconP2.width + 30));
 				iconP2.updateHitbox();
 			}
+			
+						if (iconP2.canBounce)
+						{
+							iconP2.scale.set(1.2, 1.2);
+							iconP2.updateHitbox();
+						}
+				}
 		}
 	}
 

@@ -51,7 +51,7 @@ class VanillaHUD extends FlxSpriteGroup
 			barY = 64;
 
 		healthBarBG = new FlxSprite(0,
-			barY).loadGraphic(Paths.image(ForeverTools.returnSkinAsset('healthBar', PlayState.assetModifier, PlayState.changeableSkin, 'UI')));
+			barY).loadGraphic(Paths.image(EngineTools.returnSkinAsset('healthBar', PlayState.assetModifier, PlayState.changeableSkin, 'UI')));
 		healthBarBG.screenCenter(X);
 		healthBarBG.scrollFactor.set();
 		add(healthBarBG);
@@ -154,8 +154,8 @@ class VanillaHUD extends FlxSpriteGroup
 		iconP1.updateAnim(healthBar.percent);
 		iconP2.updateAnim(100 - healthBar.percent);
 
-		iconP1.bop(0.15);
-		iconP2.bop(0.15);
+		iconP1.bop(elapsed);
+		iconP2.bop(elapsed);
 
 		if (autoplayMark.visible)
 		{
@@ -188,7 +188,7 @@ class VanillaHUD extends FlxSpriteGroup
 		}
 
 		// update playstate
-		if(Init.trueSettings.get('HUD Style') == "forever")
+		if(Init.trueSettings.get('HUD Style') == "vanilla")
 		PlayState.detailsSub = scoreBar.text;
 		
 		PlayState.updateRPC(false);

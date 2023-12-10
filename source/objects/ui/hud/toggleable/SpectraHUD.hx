@@ -13,7 +13,7 @@ import flixel.util.FlxSort;
 import flixel.util.FlxStringUtil;
 import states.PlayState;
 
-class DemolitionHUD extends FlxSpriteGroup
+class SpectraHUD extends FlxSpriteGroup
 {
 	// bar variables
 	public var scoreBar:FlxText;
@@ -33,13 +33,18 @@ class DemolitionHUD extends FlxSpriteGroup
 		"AUTOPLAY",
 		"BOTPLAY",
 		"BURN IN HELL",
+		"hi nikoru lol",
 		"YOU'RE FUCKING CHEATING!",
+		"what the rat doin?",
 		"2 WORDS: GIT GUD",
+		"THIS AIN'T PSYCH ANYMORE, IT'S OPTIMIZED NOW",
 		"JAMMING TO THE SONG",
+		"Hope you know this mod's an hour long now.",
 		"you're just using the botplay key to see all these random messages, aren't you?",
 		"YOU FUCKING SUCK AT RHYTHM GAMES LMFAO",
 		"POV: YOU'RE TOO LAZY TO ACTUALLY PLAY THE GAME",
 		"What's up guys! <Insert Generic YouTube Name Here> back again with yet another cool FNF mod called Funkin dot avi version 2 point O!",
+		"eyeless mouse is real.",
 		"BOO!",
 		"IT'S ABOUT DRIVE, IT'S ABOUT POWER",
 		"WE STAY HUNGRY, WE DEVOUR",
@@ -48,12 +53,14 @@ class DemolitionHUD extends FlxSpriteGroup
 		"sample text",
 		"I did ur mom 2023",
 		"WHAT THE FUCK IS WRONG WITH YOU?",
+		"I think you deserve this loop curse more than Mickey",
 		"no.",
 		"If you're doing this on Malfunction, you're gonna die lmao",
 		"i bet you fail to the tutorial still...",
 		"I will personally skin you <3",
 		"BOTPLAY 2: ELECTRIC BOOGALOO",
 		"five nights at freddy's",
+		"Hi guys, Satan here, and welcome to Jackass *snaps Mickey in half*"
 	];
 
 	// icons
@@ -70,41 +77,13 @@ class DemolitionHUD extends FlxSpriteGroup
 	// display texts
 	public var infoDisplay:String = CoolUtil.dashToSpace(PlayState.SONG.song);
 	public var diffDisplay:String = '[${CoolUtil.difficultyString}]';
-	public var engineDisplay:String = "FE FEATHER v" + Main.game.versionFF; // bro, this is the 2nd time I let this slip
+	public var engineDisplay:String = "Spectra Engine v0.2.0";
 
 	// eep
 	public function new()
 	{
 		// call the initializations and stuffs
 		super();
-		
-		/*// time bar stuff
-		timeBarBG = new FlxSprite(0, 0).loadGraphic(Paths.image(ForeverTools.returnSkinAsset('healthBar', PlayState.assetModifier, PlayState.changeableSkin, 'UI')));
-		timeBarBG.x = 600;
-		if (Init.trueSettings.get('Downscroll')) timeBarBG.y = 0.063 * FlxG.height; else timeBarBG.y = 673;
-		timeBarBG.scrollFactor.set();
-		
-		timeBar = new FlxBar(timeBarBG.x + 4, timeBarBG.y + 4, RIGHT_TO_LEFT, Std.int(timeBarBG.width - 8), Std.int(timeBarBG.height - 8));
-		timeBar.scrollFactor.set();
-		switch(PlayState.SONG.song)
-		{
-			case 'Bless':
-				timeBar.createFilledBar(0xFFFF0000, 0xFFFFF200);
-			case 'Scrapped':
-				timeBar.createFilledBar(0xFF0008FF, 0xFF11C700);
-			case 'Sink':
-				timeBar.createFilledBar(0xFF630000, 0xFFD70000);
-			case 'Invincible':
-				timeBar.createFilledBar(0xFF000000, 0xFF52627D);
-			case 'Neglection':
-				timeBar.createFilledBar(0xFF0088FF, 0xFFE2E2E2);
-			case 'Infitrigger':
-				timeBar.createFilledBar(0xFFFFFFFF, 0xFFD400FF);
-			case 'Mercy':
-				timeBar.createFilledBar(0xFFC78800, 0xFFFFF4BA);
-			default:
-				timeBar.createFilledBar(0xFF2E2E2E, 0xFFB7B7B7);
-		}*/
 		
 		if (Init.trueSettings.get('Downscroll')) songTime = new FlxText(-108, 655, 400, "", 32); else songTime = new FlxText(-108, 100, 400, "", 32);
 		songTime.setFormat(Paths.font("VanillaExtractRegular"), 13, FlxColor.WHITE, CENTER, FlxTextBorderStyle.OUTLINE, FlxColor.BLACK);
@@ -118,7 +97,7 @@ class DemolitionHUD extends FlxSpriteGroup
 
 		// le healthbar setup
 		healthBarBG = new FlxSprite(0,
-			0).loadGraphic(Paths.image(ForeverTools.returnSkinAsset('healthBar-Long', PlayState.assetModifier, PlayState.changeableSkin, 'UI')));
+			0).loadGraphic(Paths.image(EngineTools.returnSkinAsset('healthBar-Long', PlayState.assetModifier, PlayState.changeableSkin, 'UI')));
 		healthBarBG.y = FlxG.height * 0.95;
 		healthBarBG.x = 230;
 		//healthBarBG.scale.set(1.6, 1);
@@ -152,7 +131,6 @@ class DemolitionHUD extends FlxSpriteGroup
 	
 		// F.AVI V2 Watermark
 		cornerMark = new FlxText(0, 0, 0, engineDisplay);
-		cornerMark.setFormat(Paths.font('VanillaExtractRegular'), 18, FlxColor.WHITE);
 		cornerMark.setBorderStyle(OUTLINE, FlxColor.BLACK, 2);
 		if (Init.trueSettings.get('Downscroll')) cornerMark.setPosition(0, 685); else cornerMark.setPosition(0, 8);
 		cornerMark.screenCenter(X);
@@ -231,22 +209,23 @@ class DemolitionHUD extends FlxSpriteGroup
 
 	override public function update(elapsed:Float)
 	{
+		if (PlayState.SONG.song == "Birthday")
+			muckneyHealthColorShitLol();
+
 		// pain, this is like the 7th attempt
-		healthBar.percent = (PlayState.health * 50); // so it doesn't make the mechanic worthless
+		var silly = PlayState.SONG.song == 'Mercy' ? PlayState.main.smoothyHealth : PlayState.health;
+		healthBar.percent = (silly * 50); // so it doesn't make the mechanic worthless
 
 		var iconOffset:Int = 26;
 
-		iconP1.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01) - iconOffset);
-		iconP2.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01)) - (iconP2.width - iconOffset);
-
-		iconP1.updateAnim(healthBar.percent);
-		iconP2.updateAnim(100 - healthBar.percent);
-
-		iconP1.bop(0.1);
-		iconP2.bop(0.1);
+			iconP1.x = healthBar.x + (healthBar.width * percent) + (150 * iconP1.scale.x - 150) / 2 - iconOffset;
+			iconP2.x = healthBar.x + (healthBar.width * percent) - (150 * iconP2.scale.x) / 2 - iconOffset * 2;	
+		} else {
+			iconP1.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01) - iconOffset);
+			iconP2.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01)) - (iconP2.width - iconOffset);
+		}
 
 		if (autoplayMark.visible)
-		{
 			autoplaySine += 180 * (elapsed / 4);
 			autoplayMark.alpha = 1 - Math.sin((Math.PI * autoplaySine) / 80);
 		}
@@ -307,40 +286,21 @@ class DemolitionHUD extends FlxSpriteGroup
 		}
 
 		// update playstate
-		if(Init.trueSettings.get('HUD Style') == "demolition")
+		if(Init.trueSettings.get('HUD Style') == "spectra")
 		PlayState.detailsSub = scoreBar.text;
 		
 		PlayState.updateRPC(false);
 	}
 
-	public function colorHighlight(curRating:String)
-		{
-			// highlights the accuracy mark on the score bar;
-			var rankingsMap:Map<String, FlxColor> = [
-				"S+" => FlxColor.fromString('#F8D482'),
-				"S" => FlxColor.CYAN,
-				"A" => FlxColor.LIME,
-				"B" => FlxColor.GREEN,
-				"C" => FlxColor.BROWN,
-				"D" => FlxColor.PINK,
-				"E" => FlxColor.ORANGE,
-				"F" => FlxColor.RED,
-			];
-	
-			if (rankingsMap.exists(curRating))
-				if (ScoreUtils.curRating == curRating)
-					scoreFlashFormat = new FlxTextFormat(rankingsMap.get(curRating), true);
-		}
-
-	public function reloadHealthBar()
+	public function muckneyHealthColorShitLol()
 	{
-		var colorOpponent = PlayState.opponent.characterData.healthColor;
-		var colorPlayer = PlayState.boyfriend.characterData.healthColor;
+		muckneyColors = [FlxG.random.int(0, 255), FlxG.random.int(0, 255), FlxG.random.int(0, 255)];
 
 		if (!Init.trueSettings.get('Colored Health Bar'))
-			healthBar.createFilledBar(0xFFFF0000, 0xFF66FF33 - 0xFFFF0000);
+			healthBar.createFilledBar(FlxColor.fromRGB(muckneyColors[0], muckneyColors[1], muckneyColors[2]), 0xFF66FF33 - 0xFFFF0000);
 		else
-			healthBar.createFilledBar(FlxColor.fromRGB(Std.int(colorOpponent[0]), Std.int(colorOpponent[1]), Std.int(colorOpponent[2])),
+			healthBar.createFilledBar(FlxColor.fromRGB(muckneyColors[0], muckneyColors[1], muckneyColors[2]),
+				FlxColor.fromRGB(Std.int(colorPlayer[0]), Std.int(colorPlayer[1]), Std.int(colorPlayer[2])));
 				FlxColor.fromRGB(Std.int(colorPlayer[0]), Std.int(colorPlayer[1]), Std.int(colorPlayer[2])));
 	}
 
@@ -348,28 +308,10 @@ class DemolitionHUD extends FlxSpriteGroup
 	{
 		if (!Init.trueSettings.get('Reduced Movements'))
 		{
-			if (iconP1.canBounce)
+			if (curBeat % ((PlayState.SONG.song == 'Twisted Grins') ? 2 : 1) == 0)
 			{
-				iconP1.setGraphicSize(Std.int(iconP1.width + 20));
-				iconP1.updateHitbox();
-			}
-
-			if (iconP2.canBounce)
-			{
-				iconP2.setGraphicSize(Std.int(iconP2.width + 20));
-				iconP2.updateHitbox();
-			}
-		}
-	}
-
-	var scoreFlashFormat:FlxTextFormat;
-
-	override function add(Object:FlxSprite):FlxSprite
-	{
-		if (Std.isOfType(Object, FlxText))
-			cast(Object, FlxText).antialiasing = !Init.trueSettings.get('Disable Antialiasing');
-		if (Std.isOfType(Object, FlxSprite))
-			cast(Object, FlxSprite).antialiasing = !Init.trueSettings.get('Disable Antialiasing');
-		return super.add(Object);
+				if (iconP1.canBounce)
+					{
+						iconP1.scale.set(1.2, 1.2);
 	}
 }

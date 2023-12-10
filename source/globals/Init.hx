@@ -29,14 +29,20 @@ enum SettingState
 **/
 class Init extends FlxState
 {
-	/*
-		Okay so here we'll set custom settings. As opposed to the previous options menu, everything will be handled in here with no hassle.
+	/**
+		Okay so here we'll set custom settings.
+		
+		As opposed to the previous options menu, everything will be handled in here with no hassle.
 		This will read what the second value of the key's array is, and then it will categorise it, telling the game which option to set it to.
 
 		0 - boolean, true or false checkmark
+
 		1 - choose string
+
 		2 - choose number (for fps so its low capped at 30)
+
 		3 - offsets, this is unused but it'd bug me if it were set to 0
+
 		might redo offset code since I didnt make it and it bugs me that it's hardcoded the the last part of the controls menu
 	 */
 	public static var gameSettings:Map<String, Dynamic> = [
@@ -102,7 +108,8 @@ class Init extends FlxState
 			false,
 			Checkmark,
 			'If checked, tons of content gets removed for more optimization (objects, some shaders, etc).',
-			NOT_FORCED
+			NOT_FORCED//,
+			//['Off', 'Default', 'Ultra']
 		],
 		'Disable Flashing Lights' => [
 			false,
@@ -139,11 +146,11 @@ class Init extends FlxState
 			['StepMania', 'FNF']
 		],
 		"HUD Style" => [
-			'demolition',
+			'spectra',
 			Selector,
 			"Chooses a UI Style for gameplay",
 			NOT_FORCED,
-			['forever', 'psych', 'demolition', 'vanilla', 'kade', 'redbun']
+			['classic', 'spectra', 'vanilla', 'kade', 'psych']
 		],
 		"UI Skin" => [
 			'default',
@@ -229,12 +236,18 @@ class Init extends FlxState
 			NOT_FORCED,
 			['none', 'bf', 'gf', 'dad', 'center']
 		],
+		"GPU Caching" => [
+			false,
+			Checkmark,
+			"If checked, your GPU's VRAM can be used to store some textures. Only enable if you have a good graphics card!",
+			NOT_FORCED,
+		],
 		"Timing Preset" => [
-			'forever',
+			'default',
 			Selector,
 			"Chooses what preset should be used for Judgement Timing Windows.",
 			NOT_FORCED,
-			['forever', 'funkin', 'judge four', 'itg']
+			['default', 'funkin', 'judge four', 'itg']
 		],
 		"Display Miss Judgement" => [
 			true,
@@ -289,7 +302,7 @@ class Init extends FlxState
 
 	override public function create():Void
 	{
-		FlxG.save.bind('gameSettings', "Feather");
+		FlxG.save.bind('gameSettings', CoolUtil.getSavePath());
 
 		// load controls and highscore
 		ScoreUtils.loadScores();
@@ -314,7 +327,7 @@ class Init extends FlxState
 
 	public static function loadSettings():Void
 	{
-		FlxG.save.bind('gameSettings', "Feather");
+		FlxG.save.bind('gameSettings', CoolUtil.getSavePath());
 
 		// set the true settings array
 		// only the first variable will be saved! the rest are for the menu stuffs
@@ -360,7 +373,7 @@ class Init extends FlxState
 
 	public static function loadControls():Void
 	{
-		FlxG.save.bind('gameControls', "Feather");
+		FlxG.save.bind('gameControls', CoolUtil.getSavePath());
 
 		if (FlxG.save.data.actionBinds != null)
 			Controls.actions = FlxG.save.data.actionBinds;
@@ -371,7 +384,7 @@ class Init extends FlxState
 	public static function saveSettings():Void
 	{
 		// ez save lol
-		FlxG.save.bind('gameSettings', "Feather");
+		FlxG.save.bind('gameSettings', CoolUtil.getSavePath());
 		FlxG.save.data.settings = trueSettings;
 		FlxG.save.flush();
 
@@ -380,7 +393,7 @@ class Init extends FlxState
 
 	public static function saveControls():Void
 	{
-		FlxG.save.bind('gameControls', "Feather");
+		FlxG.save.bind('gameControls', CoolUtil.getSavePath());
 		FlxG.save.data.actionBinds = Controls.actions;
 		FlxG.save.flush();
 	}

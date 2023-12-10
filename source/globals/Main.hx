@@ -5,19 +5,40 @@ import base.Overlay.Console;
 import base.dependency.Discord;
 import base.utils.FNFUtils.FNFGame;
 import base.utils.FNFUtils.FNFTransition;
+import flixel.FlxCamera;
 import flixel.FlxG;
 import flixel.FlxState;
 import flixel.addons.transition.FlxTransitionableState;
+import flixel.graphics.FlxGraphic;
+import flixel.tweens.*;
+import flixel.util.FlxColor;
+import flixel.util.FlxTimer;
+import gamejolt.GameJolt;
 import haxe.CallStack;
 import haxe.Json;
 import haxe.io.Path;
 import lime.app.Application;
+import openfl.Assets;
 import openfl.Lib;
 import openfl.display.Sprite;
 import openfl.events.UncaughtErrorEvent;
+import openfl.system.System;
+import openfl.utils.AssetCache;
+import states.MusicBeatState;
+import states.warnings.AutoSaveWarningState;
 import sys.FileSystem;
 import sys.io.File;
 import sys.io.Process;
+#if cpp
+import cpp.NativeGc;
+import cpp.vm.Gc;
+#elseif hl
+import hl.Gc;
+#elseif java
+import java.vm.Gc;
+#elseif neko
+import neko.vm.Gc;
+#end
 
 typedef GameWeek =
 {
@@ -53,14 +74,33 @@ class Main extends Sprite
 		framerate: 60, // the game's default framerate
 		skipSplash: true, // whether to skip the flixel splash screen that appears on release mode
 		fullscreen: false, // whether the game starts at fullscreen mode
-		versionFE: "0.3.1", // version of Forever Engine Legacy
-		versionFF: "0.1", // version of Forever Engine Feather
+		version: "0.1", // version of the engine
 	};
 
 	public static var baseGame:FNFGame;
 
+	// i really need this
+	public static var globalElapsed(default, set):Float = 0;
+
+	/**
+	 * The desing width of this game. You will use either this or the design heigh
+	 */
+	private static inline var DESIGN_WIDTH:Int = 1280;
+
+	/**
+	 * The desing height of this game. You will use either this or the design width
+	 */
+	private static inline var DESIGN_HEIGHT:Int = 720;
+
 	private static var infoCounter:Overlay; // initialize the heads up display that shows information before creating it.
 	private static var infoConsole:Console; // intiialize the on-screen console for script debug traces before creating it.
+
+	var oldVol:Float = 1.0;
+	var newVol:Float = 0.3;
+
+	public static var focused:Bool = true;
+
+	public static var focusMusicTween:FlxTween;
 
 	// weeks set up!
 	public static var weeksMap:Map<String, GameWeek> = [];
@@ -131,6 +171,11 @@ class Main extends Sprite
 		return Json.parse(rawJson);
 	}
 
+	public static function set_globalElapsed(value:Float):Float
+	{
+		return globalElapsed = value;
+	}
+
 	// most of these variables are just from the base game!
 	// be sure to mess around with these if you'd like.
 
@@ -144,6 +189,10 @@ class Main extends Sprite
 
 		Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, onCrash);
 
+		#if desktop
+		Gc.enable(true);
+		#end
+
 		/**
 		 * locking neko platforms on 60 because similar to html5 it cannot go over that
 		 * avoids note stutters and stuff
@@ -155,6 +204,9 @@ class Main extends Sprite
 		// define the state bounds
 		var stageWidth:Int = Lib.current.stage.stageWidth;
 		var stageHeight:Int = Lib.current.stage.stageHeight;
+
+		var _width:Int;
+		var _height:Int;
 
 		if (game.zoom == -1.0)
 		{
@@ -168,9 +220,22 @@ class Main extends Sprite
 		FlxTransitionableState.skipNextTransIn = true;
 
 		// here we set up the base game
-		baseGame = new FNFGame(game.width, game.height, Init, #if (flixel < "5.0.0") game.zoom, #end game.framerate, game.framerate, game.skipSplash,
-			game.fullscreen);
+		baseGame = new FNFGame(game.width, game.height, Init, #if (flixel < "5.0.0") game.zoom, #end game.framerate, game.framerate, game.skipSplash, game.fullscreen);
 		addChild(baseGame); // and create it afterwards
+		FlxGraphic.defaultPersist = false;
+
+		FlxG.signals.gameResized.add(onResizeGame);
+		FlxG.signals.postStateSwitch.add(() ->
+		{
+			optimizeGame(true);
+		});
+		FlxG.signals.preStateSwitch.add(() ->
+		{
+			optimizeGame(false);
+		});
+		FlxG.signals.focusLost.add(() -> gc()); // they don't know
+
+		FlxGraphic.defaultPersist = false;
 
 		// initialize the game controls;
 		Controls.init();
@@ -195,6 +260,9 @@ class Main extends Sprite
 		{
 			destroyGame();
 		});
+
+		Application.current.window.onFocusOut.add(onWindowFocusOut);
+		Application.current.window.onFocusIn.add(onWindowFocusIn);
 	}
 
 	function destroyGame()
@@ -234,6 +302,11 @@ class Main extends Sprite
 		FlxG.switchState(target);
 	}
 
+	public static function crashSwitchState(curState:FlxState, target:FlxState)
+	{
+		FlxG.switchState(target);
+	}
+
 	public static function updateFramerate(newFramerate:Int)
 	{
 		// flixel will literally throw errors at me if I dont separate the orders
@@ -247,6 +320,58 @@ class Main extends Sprite
 			FlxG.drawFramerate = newFramerate;
 			FlxG.updateFramerate = newFramerate;
 		}
+	}
+
+	/*
+	 * Haha, funi Indie Cross Code
+	 * Updates music volume if autopause is disabled in your settings
+	 */
+	function onWindowFocusOut()
+	{
+		focused = false;
+
+		// Lower global volume when unfocused
+		oldVol = FlxG.sound.volume;
+		if (oldVol > 0.3)
+		{
+			newVol = 0.3;
+		}
+		else
+		{
+			if (oldVol > 0.1)
+			{
+				newVol = 0.1;
+			}
+			else
+			{
+				newVol = 0;
+			}
+		}
+
+		if (focusMusicTween != null)
+			focusMusicTween.cancel();
+		focusMusicTween = FlxTween.tween(FlxG.sound, {volume: newVol}, 0.5);
+
+		// Conserve power by lowering draw framerate when unfocuced
+		FlxG.drawFramerate = 60;
+		FlxG.updateFramerate = 60;
+	}
+
+	function onWindowFocusIn()
+	{
+		new FlxTimer().start(0.2, function(tmr:FlxTimer)
+		{
+			focused = true;
+		});
+
+		// Lower global volume when unfocused
+		// Normal global volume when focused
+		if (focusMusicTween != null)
+			focusMusicTween.cancel();
+
+		focusMusicTween = FlxTween.tween(FlxG.sound, {volume: oldVol}, 0.5);
+
+		Main.updateFramerate(Init.trueSettings.get("Framerate Cap"));
 	}
 
 	function onCrash(e:UncaughtErrorEvent):Void
@@ -302,5 +427,88 @@ class Main extends Sprite
 		}
 
 		destroyGame();
+	}
+
+	public static function optimizeGame(post:Bool = false)
+	{
+		if (!post)
+		{
+			Paths.clearStoredMemory(true);
+			Paths.clearUnusedMemory();
+			FlxG.bitmap.dumpCache();
+
+			gc();
+
+			var cache = cast(Assets.cache, AssetCache);
+			for (key => font in cache.font)
+			{
+				cache.removeFont(key);
+				trace('removed font $key');
+			}
+			for (key => sound in cache.sound)
+			{
+				cache.removeSound(key);
+				trace('removed sound $key');
+			}
+			cache = null; // nulling the cache moment
+		}
+		else
+		{
+			Paths.clearUnusedMemory();
+			openfl.Assets.cache.clear('assets/songs');
+			openfl.Assets.cache.clear('assets/data');
+			openfl.Assets.cache.clear('assets/shaders');
+			openfl.Assets.cache.clear('assets/fonts');
+			openfl.Assets.cache.clear('assets/images');
+			openfl.Assets.cache.clear('assets/music');
+			openfl.Assets.cache.clear('assets/videos');
+			gc();
+			trace(Math.abs(System.totalMemory / 1000000));
+		}
+	}
+
+	function onResizeGame(w:Int, h:Int)
+	{
+		if (FlxG.cameras == null)
+			return;
+
+		for (cam in FlxG.cameras.list)
+		{
+			@:privateAccess
+			if (cam != null && (cam._filters != null || cam._filters != []))
+				fixShaderSize(cam);
+		}
+	}
+
+	function fixShaderSize(camera:flixel.FlxCamera)
+	{
+		@:privateAccess {
+			var sprite:Sprite = camera.flashSprite;
+
+			if (sprite != null)
+			{
+				sprite.__cacheBitmap = null;
+				sprite.__cacheBitmapData = null;
+				sprite.__cacheBitmapData2 = null;
+				sprite.__cacheBitmapData3 = null;
+				sprite.__cacheBitmapColorTransform = null;
+			}
+		}
+	}
+
+	public static function gc()
+	{
+		trace("Huh");
+
+		#if cpp
+		NativeGc.compact();
+		NativeGc.run(true);
+		#elseif hl
+		Gc.major();
+		#elseif (java || neko)
+		Gc.run(true);
+		#else
+		openfl.system.System.gc();
+		#end
 	}
 }
