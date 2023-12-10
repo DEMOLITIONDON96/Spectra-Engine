@@ -992,13 +992,9 @@ class PlayState extends MusicBeatState
 					{
 						PlayState.SONG.validScore = false;
 						bfStrums.autoplay = !bfStrums.autoplay;
-						{
-							default:
-								uiHUD.autoplayMark.visible = bfStrums.autoplay;
-								uiHUD.scoreBar.visible = !bfStrums.autoplay;
-								checkAutoplayText();
-						}
+						checkAutoplayText();
 					}
+				}
 
 					if (FlxG.keys.justPressed.SEVEN)
 					{
@@ -2321,20 +2317,6 @@ class PlayState extends MusicBeatState
 			startCountdown();
 	}
 
-	private function checkGameJoltAchievement():Void
-	{
-		switch (SONG.song.toLowerCase().replace('-', ' '))
-		{
-			case 'devilish deal':
-				if (!GameJoltAPI.checkTrophy(193090))
-					GameJoltAPI.getTrophy(193090);
-
-			case 'delusional':
-				if (!GameJoltAPI.checkTrophy(193091))
-					GameJoltAPI.getTrophy(193091);
-		}
-	}
-
 	public function callDefaultSongEnd()
 	{
 		if (gameplayMode == STORY)
@@ -2470,11 +2452,7 @@ class PlayState extends MusicBeatState
 		}
 		//
 
-		{
-
-
-				checkHUDS();
-		}
+		checkHUDS();
 
 		if (skipCountdown)
 		{

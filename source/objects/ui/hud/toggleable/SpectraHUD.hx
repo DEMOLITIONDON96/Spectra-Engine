@@ -39,11 +39,9 @@ class SpectraHUD extends FlxSpriteGroup
 		"2 WORDS: GIT GUD",
 		"THIS AIN'T PSYCH ANYMORE, IT'S OPTIMIZED NOW",
 		"JAMMING TO THE SONG",
-		"Hope you know this mod's an hour long now.",
 		"you're just using the botplay key to see all these random messages, aren't you?",
 		"YOU FUCKING SUCK AT RHYTHM GAMES LMFAO",
 		"POV: YOU'RE TOO LAZY TO ACTUALLY PLAY THE GAME",
-		"What's up guys! <Insert Generic YouTube Name Here> back again with yet another cool FNF mod called Funkin dot avi version 2 point O!",
 		"eyeless mouse is real.",
 		"BOO!",
 		"IT'S ABOUT DRIVE, IT'S ABOUT POWER",
@@ -53,14 +51,11 @@ class SpectraHUD extends FlxSpriteGroup
 		"sample text",
 		"I did ur mom 2023",
 		"WHAT THE FUCK IS WRONG WITH YOU?",
-		"I think you deserve this loop curse more than Mickey",
 		"no.",
-		"If you're doing this on Malfunction, you're gonna die lmao",
 		"i bet you fail to the tutorial still...",
 		"I will personally skin you <3",
 		"BOTPLAY 2: ELECTRIC BOOGALOO",
-		"five nights at freddy's",
-		"Hi guys, Satan here, and welcome to Jackass *snaps Mickey in half*"
+		"five nights at freddy's"
 	];
 
 	// icons
