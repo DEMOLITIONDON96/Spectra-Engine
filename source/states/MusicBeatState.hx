@@ -1,13 +1,14 @@
 package states;
 
-import flixel.FlxSprite;
 import base.song.Conductor;
 import base.utils.FNFUtils.FNFTransition;
 import flixel.FlxCamera;
 import flixel.FlxG;
+import flixel.FlxSprite;
 import flixel.FlxSubState;
 import flixel.addons.transition.FlxTransitionableState;
 import flixel.addons.ui.FlxUIState;
+import flixel.graphics.GraphicCacheSprite;
 import flixel.text.FlxText;
 import flixel.tweens.FlxTween;
 import flixel.util.FlxTimer;
@@ -31,14 +32,14 @@ class MusicBeatState extends FlxUIState
 	public var curBeat:Int = 0;
 	public var curSection:Int = 0;
 
+	public var graphicCache:GraphicCacheSprite = new GraphicCacheSprite();
+
 	// fixes a bug with FlxUITabMenu where it wouldn't respect the current camera zoom
 	public var camBeat:FlxCamera;
 
 	// class create event
 	override function create()
-	{
-		FlxSprite.defaultAntialiasing = !Init.trueSettings.get("Disable Antialiasing");
-		
+	{	
 		// dump
 		var clearPlayState = (PlayState.clearStored && !Std.isOfType(this, states.PlayState));
 		if ((clearPlayState))

@@ -4,6 +4,7 @@ import flixel.FlxG;
 import flixel.FlxGame;
 import flixel.FlxSprite;
 import flixel.FlxState;
+import flixel.addons.effects.FlxSkewedSprite;
 import flixel.graphics.FlxGraphic;
 import flixel.graphics.frames.FlxTileFrames;
 import flixel.math.FlxPoint;
@@ -118,7 +119,7 @@ class FNFTransition extends MusicBeatSubstate
  * Global FNF sprite utilities, all in one parent class!
  * You'll be able to easily edit functions and such that are used by sprites
 **/
-class FNFSprite extends FlxSprite
+class FNFSprite extends FlxSkewedSprite
 {
 	public var animOffsets:Map<String, Array<Dynamic>>;
 	public var zDepth:Float = 0;

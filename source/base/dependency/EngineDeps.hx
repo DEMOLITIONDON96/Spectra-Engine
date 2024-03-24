@@ -100,14 +100,11 @@ class EngineAssets
 	public static function generateRating(id:Int, assetGroup:FlxTypedGroup<FNFSprite>, assetModifier:String = 'base', changeableSkin:String = 'default',
 			baseLibrary:String):FNFSprite
 	{
-		var width = assetModifier == 'pixel' ? 60 : 510;
+		var width = assetModifier == 'pixel' ? 60 : 390;
 		var height = assetModifier == 'pixel' ? 32 : 163;
-
 		if (!Init.trueSettings.get('Judgement Recycling'))
 			assetGroup == null;
-
 		var judgement:FNFSprite = generateForeverSprite('judgements', assetModifier, changeableSkin, baseLibrary, true, width, height, assetGroup);
-
 		judgement.alpha = 1;
 		judgement.visible = true;
 		judgement.screenCenter();
@@ -121,19 +118,15 @@ class EngineAssets
 			judgement.velocity.x = -FlxG.random.int(0, 10);
 		}
 		judgement.zDepth = -Conductor.songPosition;
-
 		judgement.animation.add('sick-perfect', [0]);
 		for (i in 0...ScoreUtils.judges.length)
 			judgement.animation.add(ScoreUtils.judges[i].name, [i + 1]);
-
 		var perfectString = (ScoreUtils.judges[id].name == "sick" && ScoreUtils.perfectCombo ? '-perfect' : '');
 		judgement.animation.play(ScoreUtils.judges[id].name + perfectString);
-
 		if (assetModifier == 'pixel')
 			judgement.setGraphicSize(Std.int(judgement.width * PlayState.daPixelZoom * 0.7));
 		else
 			judgement.setGraphicSize(Std.int(judgement.width * 0.7));
-
 		return judgement;
 	}
 

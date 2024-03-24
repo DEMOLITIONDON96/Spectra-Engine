@@ -1600,8 +1600,8 @@ class PlayState extends MusicBeatState
 
 		if (rating != null)
 		{
-			if (!Init.trueSettings.get('Judgement Recycling'))
-				insert(members.indexOf(strumLines), rating);
+			/*if (!Init.trueSettings.get('Judgement Recycling'))
+				insert(members.indexOf(strumLines), rating);*/
 
 			if (Init.trueSettings.get("Simply Judgements"))
 			{
@@ -1639,9 +1639,9 @@ class PlayState extends MusicBeatState
 			timing = EngineAssets.generateTimings(ScoreUtils.judges[id].name, late, rating, judgementsGroup, assetModifier, changeableSkin, 'UI');
 			timing.setPosition(rating.x + ratingPlacement.x, rating.y + ratingPlacement.y + 50);
 
-			if (!Init.trueSettings.get('Judgement Recycling'))
+			/*if (!Init.trueSettings.get('Judgement Recycling'))
 				if (id != 0 && id != 4 && Init.trueSettings.get("Display Timings"))
-					insert(members.indexOf(strumLines), timing);
+					insert(members.indexOf(strumLines), timing);*/
 
 			if (Init.trueSettings.get('Fixed Judgements'))
 			{
