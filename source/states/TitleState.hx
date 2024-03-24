@@ -18,11 +18,6 @@ import flixel.input.keyboard.FlxKey;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
-#if (flixel <= "5.2.2")
-import flixel.system.FlxSound;
-#else
-import flixel.sound.FlxSound;
-#end
 import flixel.system.ui.FlxSoundTray;
 import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
@@ -33,6 +28,11 @@ import lime.app.Application;
 import objects.fonts.Alphabet;
 import openfl.Assets;
 import states.MusicBeatState;
+#if (flixel <= "5.2.2")
+import flixel.system.FlxSound;
+#else
+import flixel.sound.FlxSound;
+#end
 
 /**
  * I hate this state so much that I gave up after trying to rewrite it 3 times and just copy pasted the original code
@@ -83,7 +83,7 @@ class TitleState extends MusicBeatState
 			Discord.changePresence('TITLE SCREEN', 'Main Menu');
 			#end
 
-			ForeverTools.resetMenuMusic(true);
+			EngineTools.resetMenuMusic(true);
 		}
 
 		persistentUpdate = true;

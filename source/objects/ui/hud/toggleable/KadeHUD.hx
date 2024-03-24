@@ -174,23 +174,13 @@ class KadeHUD extends FlxSpriteGroup
 
 	override public function update(elapsed:Float)
 	{
-		if (PlayState.SONG.song == "Birthday")
-			muckneyHealthColorShitLol();
 
-		// pain, this is like the 7th attempt
-		healthBar.percent = (PlayState.health * 50); // so it doesn't make the mechanic worthless
+		healthBar.percent = (PlayState.health * 50);
 		
 		var iconOffset:Int = 26;
 
 		iconP1.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01) - iconOffset);
 		iconP2.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01)) - (iconP2.width - iconOffset);
-			var percent:Float = 1 - (PlayState.main.smoothyHealth / 2);
-			iconP1.x = healthBar.x + (healthBar.width * percent) + (150 * iconP1.scale.x - 150) / 2 - iconOffset;
-			iconP2.x = healthBar.x + (healthBar.width * percent) - (150 * iconP2.scale.x) / 2 - iconOffset * 2;	
-		} else {
-			iconP1.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01) - iconOffset);
-			iconP2.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01)) - (iconP2.width - iconOffset);
-		}
 
 		iconP1.updateAnim(healthBar.percent);
 		iconP2.updateAnim(100 - healthBar.percent);
@@ -261,10 +251,6 @@ class KadeHUD extends FlxSpriteGroup
 		healthBar.createFilledBar(FlxColor.fromRGB(muckneyColors[0], muckneyColors[1], muckneyColors[2]), 0xFF66FF33);
 	}
 
-	public function reloadHealthBar()
-	{
-	}
-
 	public function beatHit(curBeat:Int)
 	{
 		if (!Init.trueSettings.get('Reduced Movements'))
@@ -281,14 +267,17 @@ class KadeHUD extends FlxSpriteGroup
 				iconP2.updateHitbox();
 			}
 			
-						if (iconP2.canBounce)
-						{
-							iconP2.scale.set(1.2, 1.2);
-							iconP2.updateHitbox();
-						}
-				}
 		}
 	}
 
 	var scoreFlashFormat:FlxTextFormat;
+
+	override function add(Object:FlxSprite):FlxSprite
+		{
+			if (Std.isOfType(Object, FlxText))
+				cast(Object, FlxText).antialiasing = !Init.trueSettings.get('Disable Antialiasing');
+			if (Std.isOfType(Object, FlxSprite))
+				cast(Object, FlxSprite).antialiasing = !Init.trueSettings.get('Disable Antialiasing');
+			return super.add(Object);
+		}
 }

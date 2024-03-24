@@ -64,7 +64,7 @@ class StoryMenu extends MusicBeatState
 		#end
 
 		// freeaaaky
-		ForeverTools.resetMenuMusic();
+		EngineTools.resetMenuMusic();
 
 		persistentUpdate = persistentDraw = true;
 

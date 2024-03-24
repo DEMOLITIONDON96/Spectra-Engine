@@ -5,6 +5,7 @@ import base.song.Conductor;
 import base.utils.FNFUtils.FNFSprite;
 import base.utils.ScoreUtils;
 import flixel.FlxSprite;
+import flixel.math.FlxRect;
 import objects.ui.notes.Strumline.Receptor;
 
 class Note extends FNFSprite

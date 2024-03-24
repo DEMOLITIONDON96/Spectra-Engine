@@ -150,7 +150,7 @@ class ScriptHandler extends SScript
 		set('FlxRuntimeShader', flixel.addons.display.FlxRuntimeShader);
 		set('GraphicsShader', openfl.display.GraphicsShader);
 		set('ShaderFilter', openfl.filters.ShaderFilter);
-		set('Shaders', base.dependency.Shaders);
+		set('EngineShaders', base.dependency.EngineShaders);
 
 		// ENUMS AND TYPEDEFINES;
 		set('GameMode', states.PlayState.GameMode);
@@ -219,6 +219,30 @@ class ScriptHandler extends SScript
 
 		return moduleArray;
 	}
+}
+
+class EngineShaders
+{
+	public static var aberration = Shaders.aberration;
+	public static var grayScale = Shaders.grayScale;
+	public static var vignetteGlitch = Shaders.vignetteGlitch;
+	public static var andromedaVCR = Shaders.andromedaVCR;
+	public static var aberrationDefault = Shaders.aberrationDefault;
+	public static var tiltShift = Shaders.tiltShift;
+	public static var bloom = Shaders.bloom;
+	public static var bloom_alt = Shaders.bloom_alt;
+	public static var filter1990 = Shaders.filter1990;
+	public static var theBlurOf87 = Shaders.theBlurOf87;
+	public static var cameraMovement = Shaders.cameraMovement;
+	public static var monitorFilter = Shaders.monitorFilter;
+	public static var dimScreen = Shaders.dimScreen;
+	public static var greyScaleButControllable = Shaders.greyScaleButControllable;
+	public static var tvStatic = Shaders.tvStatic;
+	public static var acidTrip = Shaders.acidTrip;
+	public static var flashyFlash = Shaders.flashyFlash;
+	public static var redFromAngryBirds = Shaders.redFromAngryBirds;
+	public static var vhsFilter = Shaders.vhsFilter;
+	public static var vhsShift = Shaders.vhsShift;
 }
 
 class Events

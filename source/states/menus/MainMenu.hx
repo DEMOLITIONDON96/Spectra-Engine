@@ -49,7 +49,7 @@ class MainMenu extends MusicBeatState
 		transOut = FlxTransitionableState.defaultTransOut;
 
 		// make sure the music is playing
-		ForeverTools.resetMenuMusic();
+		EngineTools.resetMenuMusic();
 
 		cameraCalls();
 

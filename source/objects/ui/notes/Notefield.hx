@@ -1,13 +1,13 @@
 package objects.ui.notes;
 
 import base.song.Conductor;
+import flixel.FlxSprite;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxMath;
 import flixel.math.FlxRect;
-import flixel.FlxSprite;
 import flixel.util.FlxSort;
-import objects.ui.notes.Strumline;
 import objects.ui.notes.Strumline.Receptor;
+import objects.ui.notes.Strumline;
 import states.PlayState;
 
 /**
@@ -21,7 +21,9 @@ class Notefield extends FlxTypedGroup<Note>
 		if ((members[0] != null) && ((members[0].strumTime - Conductor.songPosition) < 3500))
 		{
 			var dunceNote:Note = members[0];
-			var strumline:Strumline = (dunceNote.mustPress ? strum : mustPressStrum);
+			var strumline:Strumline;
+
+			strumline = (dunceNote.mustPress ? strum : mustPressStrum);
 
 			PlayState.main.callFunc('noteSpawn', [dunceNote, dunceNote.noteData, dunceNote.noteType, dunceNote.isSustainNote]);
 
@@ -58,8 +60,6 @@ class Notefield extends FlxTypedGroup<Note>
 
 		daNote.noteDirection = strumline.receptors.members[Math.floor(daNote.noteData)].strumDirection;
 
-		{
-
 		if (downscrollMultiplier == -1) // Downscroll
 			{
 				// daNote.y = (strumY + 0.45 * (Conductor.songPosition - daNote.strumTime) * songSpeed);
@@ -77,7 +77,7 @@ class Notefield extends FlxTypedGroup<Note>
 			// painful math equation
 			daNote.x = strumline.receptors.members[Math.floor(daNote.noteData)].x
 				+ (Math.cos(flixel.math.FlxAngle.asRadians(daNote.noteDirection)) * psuedoX)
-				+ (Math.sin(flixel.math.FlxAngle.asRadians(daNote.noteDirection)) * psuedoY) + skinOffset;
+				+ (Math.sin(flixel.math.FlxAngle.asRadians(daNote.noteDirection)) * psuedoY);
 
 			// also set note rotation
 			daNote.angle = -daNote.noteDirection;

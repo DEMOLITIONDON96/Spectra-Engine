@@ -30,6 +30,7 @@ class Strumline extends FlxSpriteGroup
 	public var keyAmount:Int = 4;
 	public var xPos:Float = 0;
 	public var yPos:Float = 0;
+	
 	public var direction:Float = 0;
 
 	public function new(xPos:Float = 0, yPos:Float = 0, characters:Array<Character>, ?downscroll:Bool = false, ?displayJudges:Bool = true,

@@ -204,23 +204,15 @@ class SpectraHUD extends FlxSpriteGroup
 
 	override public function update(elapsed:Float)
 	{
-		if (PlayState.SONG.song == "Birthday")
-			muckneyHealthColorShitLol();
-
-		// pain, this is like the 7th attempt
-		var silly = PlayState.SONG.song == 'Mercy' ? PlayState.main.smoothyHealth : PlayState.health;
-		healthBar.percent = (silly * 50); // so it doesn't make the mechanic worthless
+		healthBar.percent = (PlayState.health * 50); // so it doesn't make the mechanic worthless
 
 		var iconOffset:Int = 26;
 
-			iconP1.x = healthBar.x + (healthBar.width * percent) + (150 * iconP1.scale.x - 150) / 2 - iconOffset;
-			iconP2.x = healthBar.x + (healthBar.width * percent) - (150 * iconP2.scale.x) / 2 - iconOffset * 2;	
-		} else {
 			iconP1.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01) - iconOffset);
 			iconP2.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01)) - (iconP2.width - iconOffset);
-		}
 
 		if (autoplayMark.visible)
+		{
 			autoplaySine += 180 * (elapsed / 4);
 			autoplayMark.alpha = 1 - Math.sin((Math.PI * autoplaySine) / 80);
 		}
@@ -287,26 +279,64 @@ class SpectraHUD extends FlxSpriteGroup
 		PlayState.updateRPC(false);
 	}
 
-	public function muckneyHealthColorShitLol()
+	public function colorHighlight(curRating:String)
+		{
+				// highlights the accuracy mark on the score bar;
+			var rankingsMap:Map<String, FlxColor> = [
+				"S+" => FlxColor.fromString('#F8D482'),
+				"S" => FlxColor.CYAN,
+				"A" => FlxColor.LIME,
+				"B" => FlxColor.GREEN,
+				"C" => FlxColor.BROWN,
+				"D" => FlxColor.PINK,
+				"E" => FlxColor.ORANGE,
+				"F" => FlxColor.RED,
+			];
+	
+			if (rankingsMap.exists(curRating))
+				if (ScoreUtils.curRating == curRating)
+					scoreFlashFormat = new FlxTextFormat(rankingsMap.get(curRating), true);
+		}
+
+	public function reloadHealthBar()
 	{
-		muckneyColors = [FlxG.random.int(0, 255), FlxG.random.int(0, 255), FlxG.random.int(0, 255)];
+		var colorOpponent = PlayState.opponent.characterData.healthColor;
+		var colorPlayer = PlayState.boyfriend.characterData.healthColor;
 
 		if (!Init.trueSettings.get('Colored Health Bar'))
-			healthBar.createFilledBar(FlxColor.fromRGB(muckneyColors[0], muckneyColors[1], muckneyColors[2]), 0xFF66FF33 - 0xFFFF0000);
+			healthBar.createFilledBar(0xFFFF0000, 0xFF66FF33 - 0xFFFF0000);
 		else
-			healthBar.createFilledBar(FlxColor.fromRGB(muckneyColors[0], muckneyColors[1], muckneyColors[2]),
-				FlxColor.fromRGB(Std.int(colorPlayer[0]), Std.int(colorPlayer[1]), Std.int(colorPlayer[2])));
+			healthBar.createFilledBar(FlxColor.fromRGB(Std.int(colorOpponent[0]), Std.int(colorOpponent[1]), Std.int(colorOpponent[2])),
 				FlxColor.fromRGB(Std.int(colorPlayer[0]), Std.int(colorPlayer[1]), Std.int(colorPlayer[2])));
 	}
-
+	
 	public function beatHit(curBeat:Int)
 	{
 		if (!Init.trueSettings.get('Reduced Movements'))
-		{
-			if (curBeat % ((PlayState.SONG.song == 'Twisted Grins') ? 2 : 1) == 0)
 			{
 				if (iconP1.canBounce)
 					{
 						iconP1.scale.set(1.2, 1.2);
+						iconP1.updateHitbox();
+					}
+		
+					if (iconP2.canBounce)
+					{
+						iconP2.scale.set(1.2, 1.2);
+						iconP2.updateHitbox();
+					}
+
+		}
+	}
+
+	var scoreFlashFormat:FlxTextFormat;
+
+	override function add(Object:FlxSprite):FlxSprite
+	{
+		if (Std.isOfType(Object, FlxText))
+			cast(Object, FlxText).antialiasing = !Init.trueSettings.get('Disable Antialiasing');
+		if (Std.isOfType(Object, FlxSprite))
+			cast(Object, FlxSprite).antialiasing = !Init.trueSettings.get('Disable Antialiasing');
+		return super.add(Object);
 	}
 }

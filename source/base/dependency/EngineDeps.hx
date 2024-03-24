@@ -349,8 +349,6 @@ class EngineAssets
 			{
 				if (newNote.animation.getByName(Receptor.colors[noteData] + 'Scroll') != null)
 					newNote.animation.play(Receptor.colors[noteData] + 'Scroll');
-				if (newNote.noteData == 0 && PlayState.noteSkinType == 'MERCY')
-					newNote.noteVisualOffset = -10;
 			}
 
 			if (isSustainNote && prevNote != null)

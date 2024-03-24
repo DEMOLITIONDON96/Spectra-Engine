@@ -477,7 +477,6 @@ class PlayState extends MusicBeatState
 			strumHUD[i] = new FlxCamera();
 			strumHUD[i].bgColor.alpha = 0;
 
-			strumHUD[i].cameras = [camHUD];
 			allUIs.push(strumHUD[i]);
 			FlxG.cameras.add(strumHUD[i], false);
 			// set this strumline's camera to the designated camera
@@ -530,15 +529,15 @@ class PlayState extends MusicBeatState
 		add(psychHUD);
 		psychHUD.cameras = [camHUD];
 
-		demoHUD = new DemolitionHUD();
-		demoHUD.alpha = 0;
-		add(demoHUD);
-		demoHUD.cameras = [camHUD];
+		spectraHUD = new SpectraHUD();
+		spectraHUD.alpha = 0;
+		add(spectraHUD);
+		spectraHUD.cameras = [camHUD];
 
-		baseHUD = new VanillaHUD();
-		baseHUD.alpha = 0;
-		add(baseHUD);
-		baseHUD.cameras = [camHUD];
+		vanillaHUD = new VanillaHUD();
+		vanillaHUD.alpha = 0;
+		add(vanillaHUD);
+		vanillaHUD.cameras = [camHUD];
 
 		kadeHUD = new KadeHUD();
 		kadeHUD.alpha = 0;
@@ -764,14 +763,6 @@ class PlayState extends MusicBeatState
 
 	function checkCamPosition()
 	{
-		/*
-		 * Originally in the update function
-		 * was moved here as a separate function so certain
-		 * mechanics can alter the camera too, for example:
-		 * Cycled Sins with the shooting and dodging gimmick.
-		 *
-		 * -DEMOLITIONDON96
-		 */
 
 		var cameraPos = Init.trueSettings.get('Camera Position');
 		if (cameraPos != 'none')
@@ -1029,7 +1020,7 @@ class PlayState extends MusicBeatState
 					}
 					lastSection = Std.int(curStep / 16);
 				}
-				if (!shootin) checkCamPosition();
+				checkCamPosition();
 			}
 
 			Conductor.songPosition += elapsed * 1000;
@@ -1060,7 +1051,6 @@ class PlayState extends MusicBeatState
 
 			noteCalls();
 			parseEventColumn();
-		}
 
 		// the COOLER cam pos thing or whatever
 		// x, y, angle
@@ -1100,6 +1090,8 @@ class PlayState extends MusicBeatState
 		CamUtils.updateCamera(camOther, elapsed);*/
 
 		callFunc('postUpdate', [elapsed]);
+	}
+
 	public function setCameraPos(isDad, forcePos, ?camX, ?camY)
 	{
 		isCamForced = true;
@@ -1889,7 +1881,7 @@ class PlayState extends MusicBeatState
 				if (songSpeedTween != null)
 					songSpeedTween.cancel();
 				songSpeedTween = FlxTween.tween(this, {songSpeed: speed}, timer, {
-					ease: ForeverTools.returnTweenEase(params[2]),
+					ease: EngineTools.returnTweenEase(params[2]),
 					onComplete: function(twn:FlxTween)
 					{
 						songSpeedTween = null;
@@ -2007,7 +1999,6 @@ class PlayState extends MusicBeatState
 		}
 
 		if (boyfriend != null && curBeat % boyfriend.characterData.headBopSpeed == 0)
-		{
 			if (boyfriend.animation.curAnim.name.startsWith("idle") && !boyfriend.stunned || boyfriend.animation.curAnim.name.startsWith("dance") && !boyfriend.stunned)
 				boyfriend.dance();
 	}
@@ -2032,7 +2023,7 @@ class PlayState extends MusicBeatState
 
 		if (generatedMusic && PlayState.SONG.notes[Std.int(curSection)] != null)
 		{
-			if (!shootin) checkCamPosition();
+			checkCamPosition();
 		}
 
 		if (uiHUD != null && uiHUD.exists)
@@ -2471,7 +2462,7 @@ class PlayState extends MusicBeatState
 		var introSounds:Array<Sound> = [];
 
 		for (graphic in introGraphicNames)
-			introGraphics.push(Paths.image(ForeverTools.returnSkinAsset('$graphic', assetModifier, changeableSkin, 'UI')));
+			introGraphics.push(Paths.image(EngineTools.returnSkinAsset('$graphic', assetModifier, changeableSkin, 'UI')));
 
 		for (sound in introSoundNames)
 			introSounds.push(Paths.sound('$assetModifier/$sound'));
@@ -2634,15 +2625,6 @@ class PlayState extends MusicBeatState
 		{
 			logTrace(text, time, onConsole);
 		});
-
-		#if VIDEO_PLUGIN
-		// gonna be useful someday
-		setVar('playVideoCutscene', function(video:String, isEnd:Bool = false)
-		{
-			@:privateAccess
-			CutsceneState.playCutscene(video);
-		});
-		#end
 
 		setVar('inCutscene', inCutscene);
 

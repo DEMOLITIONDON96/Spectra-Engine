@@ -2,9 +2,9 @@ package base.song;
 
 import base.song.SongFormat.SwagSong;
 import base.song.SongFormat.TimedEvent;
-import flixel.util.FlxSort;
 import flixel.FlxG;
 import flixel.math.FlxMath;
+import flixel.util.FlxSort;
 import objects.ui.notes.Note;
 import states.PlayState;
 
@@ -31,14 +31,14 @@ class ChartParser
 	
 					// check the base section
 					var gottaHitNote:Bool = section.mustHitSection;
-					var isMomNote:Bool = section.isMomSection;
+					//var isMomNote:Bool = section.isMomSection;
 
 					// if the note is on the other side, flip the base section of the note
 					if (songNotes[1] > 3)
 						gottaHitNote = !section.mustHitSection;
 
-					if (songNotes[1] > 7)
-						isMomNote = !section.isMomSection;
+					//if (songNotes[1] > 7)
+						//isMomNote = !section.isMomSection;
 	
 					var oldNote:Note;
 					if (unspawnNotes.length > 0)
@@ -72,7 +72,7 @@ class ChartParser
 						swagNote.noteType = daNoteType;
 						swagNote.noteSpeed = songData.speed;
 						swagNote.mustPress = gottaHitNote;
-						swagNote.isMomNote = isMomNote;
+						//swagNote.isMomNote = isMomNote;
 		
 						// set animation parameters for notes!
 						swagNote.noteSuffix = songNotes[4];
@@ -100,7 +100,7 @@ class ChartParser
 							var sustainNote:Note = EngineAssets.generateArrow(null, PlayState.assetModifier,
 								daStrumTime + (Conductor.stepCrochet * susNote) + (Conductor.stepCrochet / FlxMath.roundDecimal(PlayState.main.songSpeed, 2)), daNoteData, daNoteType, true, oldNote);
 							sustainNote.mustPress = gottaHitNote;
-							sustainNote.isMomNote = isMomNote;
+							//sustainNote.isMomNote = isMomNote;
 							sustainNote.noteType = daNoteType;
 							sustainNote.scrollFactor.set();
 							swagNote.tail.push(sustainNote);
