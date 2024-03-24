@@ -28,6 +28,15 @@ class CoolUtil
 
 	public static var defaultDifficulty:String = 'NORMAL';
 
+	private var SONG = PlayState.SONG;
+
+	public function new()
+	{
+		staticAccess = this;
+	}
+
+	public static var staticAccess:CoolUtil;
+
 	inline public static function difficultyFromNumber(number:Int):String
 		return difficulties[number];
 

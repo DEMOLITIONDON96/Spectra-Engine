@@ -57,7 +57,7 @@ class OriginalChartingState extends MusicBeatState
 
 	var UI_box:FlxUITabMenu;
 
-	var curNoteType:String = 'default';
+	public static var curNoteType:String = 'default';
 
 	var events:Map<FlxSprite, Array<Dynamic>> = new Map();
 

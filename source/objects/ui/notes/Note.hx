@@ -14,6 +14,7 @@ class Note extends FNFSprite
 	public var noAnim:Bool = false;
 
 	public var mustPress:Bool = false;
+	public var isMomNote:Bool = false;
 	public var noteData:Int = 0;
 
 	public var noteType:String = 'default';
@@ -52,6 +53,7 @@ class Note extends FNFSprite
 	public var offsetX:Float = 0;
 	public var offsetY:Float = 0;
 
+	public var tail:Array<Note> = []; // for sustains
 	public var parentNote:Note;
 	public var childrenNotes:Array<Note> = [];
 
@@ -136,6 +138,14 @@ class Note extends FNFSprite
 		super.update(elapsed);
 
 		updateSustainScale();
+
+		if (isMomNote)
+		{
+			canBeHit = false;
+	
+			if (strumTime <= Conductor.songPosition)
+				wasGoodHit = true;
+		}
 
 		if (mustPress)
 		{

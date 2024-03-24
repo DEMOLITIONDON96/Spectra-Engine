@@ -490,7 +490,13 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Internal, the filters array to be applied to the camera.
 	 */
-	var _filters:Array<BitmapFilter>;
+	@:deprecated('_filters is deprecated. Use the filters array instead.')
+	var _filters(get, set):Null<Array<BitmapFilter>>;
+
+	 /**
+	 * The filters array to be applied to the camera.
+	 */
+	public var filters:Null<Array<BitmapFilter>>;
 
 	/**
 	 * Camera's initial zoom value. Used for camera's scale handling.
@@ -1196,7 +1202,7 @@ class FlxCamera extends FlxBasic
 		updateFlash(elapsed);
 		updateFade(elapsed);
 
-		flashSprite.filters = filtersEnabled ? _filters : null;
+		flashSprite.filters = (filtersEnabled && !Init.trueSettings.get('Disable Screen Shaders')) ? filters : null;
 
 		updateFlashSpritePosition();
 		updateShake(elapsed);
@@ -1630,9 +1636,10 @@ class FlxCamera extends FlxBasic
 	/**
 	 * Sets the filter array to be applied to the camera.
 	 */
+	 @:deprecated('setFilters is deprecated. Use the filters array instead.')
 	public function setFilters(filters:Array<BitmapFilter>):Void
 	{
-		_filters = filters;
+		this.filters = filters;
 	}
 
 	/**
@@ -2187,6 +2194,16 @@ class FlxCamera extends FlxBasic
 	inline function get_viewOffsetHeight():Float
 	{
 		return viewMarginBottom;
+	}
+
+	inline function set__filters(filter:Array<BitmapFilter>):Array<BitmapFilter>
+	{
+		return filters = filter;
+	}
+
+	inline function get__filters():Array<BitmapFilter>
+	{
+		return filters;
 	}
 	
 	/**

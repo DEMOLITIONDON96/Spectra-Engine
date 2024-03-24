@@ -150,7 +150,7 @@ class ScriptHandler extends SScript
 		set('FlxRuntimeShader', flixel.addons.display.FlxRuntimeShader);
 		set('GraphicsShader', openfl.display.GraphicsShader);
 		set('ShaderFilter', openfl.filters.ShaderFilter);
-		set('Shaders', base.dependency.FeatherDeps.EmbeddedShaders);
+		set('Shaders', base.dependency.Shaders);
 
 		// ENUMS AND TYPEDEFINES;
 		set('GameMode', states.PlayState.GameMode);

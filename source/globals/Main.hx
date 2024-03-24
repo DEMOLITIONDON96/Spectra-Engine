@@ -1,5 +1,6 @@
 package globals;
 
+import openfl.events.Event;
 import base.*;
 import base.Overlay.Console;
 import base.dependency.Discord;
@@ -13,6 +14,7 @@ import flixel.graphics.FlxGraphic;
 import flixel.tweens.*;
 import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
+import lime.graphics.Image.fromFile;
 import gamejolt.GameJolt;
 import haxe.CallStack;
 import haxe.Json;
@@ -182,15 +184,41 @@ class Main extends Sprite
 	public static function main():Void
 		Lib.current.addChild(new Main());
 
-	// calls a function to set the game up
 	public function new()
 	{
 		super();
 
+		if (stage != null)
+		{
+			init();
+		}
+		else
+		{
+			addEventListener(Event.ADDED_TO_STAGE, init);
+		}
+	}
+
+	private function init(?E:Event):Void
+	{
+		if (hasEventListener(Event.ADDED_TO_STAGE))
+		{
+			removeEventListener(Event.ADDED_TO_STAGE, init);
+		}
+
+		setupGame();
+	}
+
+	function setupGame()
+	{
 		Lib.current.loaderInfo.uncaughtErrorEvents.addEventListener(UncaughtErrorEvent.UNCAUGHT_ERROR, onCrash);
 
 		#if desktop
 		Gc.enable(true);
+		#end
+
+		#if linux
+		var icon = fromFile("icon.png");
+		Lib.current.stage.window.setIcon(icon);
 		#end
 
 		/**
@@ -204,9 +232,6 @@ class Main extends Sprite
 		// define the state bounds
 		var stageWidth:Int = Lib.current.stage.stageWidth;
 		var stageHeight:Int = Lib.current.stage.stageHeight;
-
-		var _width:Int;
-		var _height:Int;
 
 		if (game.zoom == -1.0)
 		{
@@ -225,15 +250,6 @@ class Main extends Sprite
 		FlxGraphic.defaultPersist = false;
 
 		FlxG.signals.gameResized.add(onResizeGame);
-		FlxG.signals.postStateSwitch.add(() ->
-		{
-			optimizeGame(true);
-		});
-		FlxG.signals.preStateSwitch.add(() ->
-		{
-			optimizeGame(false);
-		});
-		FlxG.signals.focusLost.add(() -> gc()); // they don't know
 
 		FlxGraphic.defaultPersist = false;
 
@@ -429,6 +445,7 @@ class Main extends Sprite
 		destroyGame();
 	}
 
+	// i fucking hate this bullshit it sucks ass but it rarely works :sob:
 	public static function optimizeGame(post:Bool = false)
 	{
 		if (!post)
@@ -475,7 +492,7 @@ class Main extends Sprite
 		for (cam in FlxG.cameras.list)
 		{
 			@:privateAccess
-			if (cam != null && (cam._filters != null || cam._filters != []))
+			if (cam != null && (cam.filters != null || cam.filters != []))
 				fixShaderSize(cam);
 		}
 	}

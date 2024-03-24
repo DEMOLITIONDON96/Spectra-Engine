@@ -4,6 +4,7 @@ import base.song.Conductor;
 import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.math.FlxMath;
 import flixel.math.FlxRect;
+import flixel.FlxSprite;
 import flixel.util.FlxSort;
 import objects.ui.notes.Strumline;
 import objects.ui.notes.Strumline.Receptor;
@@ -81,11 +82,35 @@ class Notefield extends FlxTypedGroup<Note>
 			// also set note rotation
 			daNote.angle = -daNote.noteDirection;
 
-			// shitty note hack I hate it so much
+			var center:Float = receptorPosY + daNote.offsetY + Note.swagWidth / 2;
+			if(daNote.isSustainNote)
+			{
+				var swagRect:FlxRect = daNote.clipRect;
+				if(swagRect == null) swagRect = new FlxRect(0, 0, daNote.frameWidth, daNote.frameHeight);
+
+				if (Init.trueSettings.get('Downscroll'))
+				{
+					daNote.flipY = true;
+					if(daNote.y - daNote.offsetY * daNote.scale.y + daNote.height >= center)
+					{
+						swagRect.width = daNote.frameWidth;
+						swagRect.height = (center - daNote.y) / daNote.scale.y;
+						swagRect.y = daNote.frameHeight - swagRect.height;
+					}
+				}
+				else if (daNote.y + daNote.offsetY * daNote.scale.y <= center)
+				{
+					swagRect.y = (center - daNote.y) / daNote.scale.y;
+					swagRect.width = daNote.width / daNote.scale.x;
+					swagRect.height = (daNote.height / daNote.scale.y) - swagRect.y;
+				}
+				daNote.clipRect = swagRect;
+			}
+			/*// shitty note hack I hate it so much
 			var center:Float = receptorPosY + Note.swagWidth / 2;
 			if (daNote.isSustainNote)
 			{
-				daNote.y -= ((daNote.height / 2) * downscrollMultiplier);
+				daNote.y -= ((daNote.height / 2) * downscrollMultiplier - 15);
 				if ((daNote.animation.curAnim.name.endsWith('holdend')) && (daNote.prevNote != null))
 				{
 					daNote.y -= ((daNote.prevNote.height / 2) * downscrollMultiplier);
@@ -130,7 +155,7 @@ class Notefield extends FlxTypedGroup<Note>
 						daNote.clipRect = swagRect;
 					}
 				}
-			}
+			}*/
 
 		daNote.updateHitbox();
 	}

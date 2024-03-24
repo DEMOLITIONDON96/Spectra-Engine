@@ -4,6 +4,7 @@ import base.song.SongFormat.SwagSong;
 import base.song.SongFormat.TimedEvent;
 import flixel.util.FlxSort;
 import flixel.FlxG;
+import flixel.math.FlxMath;
 import objects.ui.notes.Note;
 import states.PlayState;
 
@@ -21,82 +22,120 @@ class ChartParser
 		var unspawnNotes:Array<Note> = [];
 
 		for (section in songData.notes)
-		{
-			for (songNotes in section.sectionNotes)
 			{
-				var daStrumTime:Float = #if !neko songNotes[0] - Init.trueSettings['Offset'] /* - | late, + | early */ #else songNotes[0] #end;
-				var daNoteData:Int = Std.int(songNotes[1] % 4);
-				var daNoteType:String = 'default';
-
-				// check the base section
-				var gottaHitNote:Bool = section.mustHitSection;
-
-				// if the note is on the other side, flip the base section of the note
-				if (songNotes[1] > 3)
-					gottaHitNote = !section.mustHitSection;
-
-				// define the note that comes before (previous note)
-				var oldNote:Note;
-				if (unspawnNotes.length > 0)
-					oldNote = unspawnNotes[Std.int(unspawnNotes.length - 1)];
-				else
-					oldNote = null;
-
-				if (Std.isOfType(songNotes[3], String))
+				for (songNotes in section.sectionNotes)
 				{
-					// psych conversion;
-					switch (songNotes[3])
-					{
-						case "Hurt Note":
-							songNotes[3] = 'mine';
-						case "Hey!":
-							songNotes[3] = 'default';
-							songNotes[5] = 'hey'; // animation;
-						case 'Alt Animation':
-							songNotes[3] = 'default';
-							songNotes[4] = '-alt'; // animation string;
-						case "GF Sing":
-							songNotes[3] = 'default';
-					}
-					daNoteType = songNotes[3];
-				}
+					var daStrumTime:Float = songNotes[0];
+					var daNoteData:Int = Std.int(songNotes[1] % 4);
+					var daNoteType:String = "default";
+	
+					// check the base section
+					var gottaHitNote:Bool = section.mustHitSection;
+					var isMomNote:Bool = section.isMomSection;
 
-				// create the new note
-				var swagNote:Note = EngineAssets.generateArrow(null, PlayState.assetModifier, daStrumTime, daNoteData, daNoteType);
+					// if the note is on the other side, flip the base section of the note
+					if (songNotes[1] > 3)
+						gottaHitNote = !section.mustHitSection;
 
-				// define default note parameters
-				swagNote.noteType = daNoteType;
-				swagNote.noteSpeed = songData.speed;
-				swagNote.mustPress = gottaHitNote;
+					if (songNotes[1] > 7)
+						isMomNote = !section.isMomSection;
+	
+					var oldNote:Note;
+					if (unspawnNotes.length > 0)
+						oldNote = unspawnNotes[Std.int(unspawnNotes.length - 1)];
+					else
+						oldNote = null;
+	
+					if (Std.isOfType(songNotes[3], String))
+						{
+							// psych conversion;
+							switch (songNotes[3])
+							{
+								case "Hurt Note":
+									songNotes[3] = 'mine';
+								case "Hey!":
+									songNotes[3] = 'default';
+									songNotes[5] = 'hey'; // animation;
+								case 'Alt Animation':
+									songNotes[3] = 'default';
+									songNotes[4] = '-alt'; // animation string;
+								case "GF Sing":
+									songNotes[3] = 'default';
+							}
+							daNoteType = songNotes[3];
+						}
+		
+						// create the new note
+						var swagNote:Note = EngineAssets.generateArrow(null, PlayState.assetModifier, daStrumTime, daNoteData, daNoteType, false, oldNote);
+		
+						// define default note parameters
+						swagNote.noteType = daNoteType;
+						swagNote.noteSpeed = songData.speed;
+						swagNote.mustPress = gottaHitNote;
+						swagNote.isMomNote = isMomNote;
+		
+						// set animation parameters for notes!
+						swagNote.noteSuffix = songNotes[4];
+						swagNote.noteString = songNotes[5];
+						swagNote.noteTimer = songNotes[6];
+		
+						if (swagNote.noteData > -1) // don't push notes if they are an event??
+							unspawnNotes.push(swagNote);
 
-				// set animation parameters for notes!
-				swagNote.noteSuffix = songNotes[4];
-				swagNote.noteString = songNotes[5];
-				swagNote.noteTimer = songNotes[6];
+					swagNote.sustainLength = songNotes[2];
 
-				if (swagNote.noteData > -1) // don't push notes if they are an event??
+					swagNote.scrollFactor.set();
+	
+					var susLength:Float = swagNote.sustainLength;
+	
+					susLength = susLength / Conductor.stepCrochet;
 					unspawnNotes.push(swagNote);
-
-				// set the note's length (sustain note)
-				swagNote.sustainLength = songNotes[2];
-				if (swagNote.sustainLength > 0)
-					swagNote.sustainLength = Math.round(swagNote.sustainLength / Conductor.stepCrochet) * Conductor.stepCrochet;
-				swagNote.scrollFactor.set(0, 0);
-
-				var holdL = swagNote.sustainLength;
-
-				for (susNote in 0...Math.floor(holdL / Conductor.stepCrochet))
-				{
-					oldNote = unspawnNotes[Std.int(unspawnNotes.length - 1)];
-					var sustainNote:Note = EngineAssets.generateArrow(null, PlayState.assetModifier,
-								daStrumTime + (Conductor.stepCrochet * susNote) + Conductor.stepCrochet, daNoteData, daNoteType, true, oldNote);
-					sustainNote.scrollFactor.set();
-
-					unspawnNotes.push(sustainNote);
-					sustainNote.mustPress = gottaHitNote;
+	
+					var floorSus:Int = Math.floor(susLength);
+					if(floorSus > 0) {
+						for (susNote in 0...floorSus+1)
+						{
+							oldNote = unspawnNotes[Std.int(unspawnNotes.length - 1)];
+	
+							var sustainNote:Note = EngineAssets.generateArrow(null, PlayState.assetModifier,
+								daStrumTime + (Conductor.stepCrochet * susNote) + (Conductor.stepCrochet / FlxMath.roundDecimal(PlayState.main.songSpeed, 2)), daNoteData, daNoteType, true, oldNote);
+							sustainNote.mustPress = gottaHitNote;
+							sustainNote.isMomNote = isMomNote;
+							sustainNote.noteType = daNoteType;
+							sustainNote.scrollFactor.set();
+							swagNote.tail.push(sustainNote);
+							sustainNote.parentNote = swagNote;
+							unspawnNotes.push(sustainNote);
+	
+							if (sustainNote.mustPress)
+							{
+								sustainNote.x += FlxG.width / 2; // general offset
+							}
+							else if(Init.trueSettings.get("Centered Notefield"))
+							{
+								sustainNote.x += 310;
+								if(daNoteData > 1) //Up and Right
+								{
+									sustainNote.x += FlxG.width / 2 + 25;
+								}
+							}
+						}
+					}
+	
+					if (swagNote.mustPress)
+					{
+						swagNote.x += FlxG.width / 2; // general offset
+					}
+					else if(Init.trueSettings.get("Centered Notefield"))
+					{
+						swagNote.x += 310;
+						if(daNoteData > 1) //Up and Right
+						{
+							swagNote.x += FlxG.width / 2 + 25;
+						}
+					}
 				}
 			}
-		}
 
 		// sort notes before returning them;
 		unspawnNotes.sort(function(Obj1:Note, Obj2:Note):Int

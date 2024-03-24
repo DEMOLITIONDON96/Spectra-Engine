@@ -1524,6 +1524,7 @@ class FlxSprite extends FlxObject
 	 * It changes graphics' `useCount` also for better memory tracking.
 	 */
 	@:noCompletion
+	@:access(flixel.graphics.FlxGraphic) // "The field or identifier useCount is not accessible for writing" ???
 	function set_graphic(Value:FlxGraphic):FlxGraphic
 	{
 		var oldGraphic:FlxGraphic = graphic;

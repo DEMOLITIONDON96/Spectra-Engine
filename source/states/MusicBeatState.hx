@@ -1,5 +1,6 @@
 package states;
 
+import flixel.FlxSprite;
 import base.song.Conductor;
 import base.utils.FNFUtils.FNFTransition;
 import flixel.FlxCamera;
@@ -20,6 +21,8 @@ import flixel.util.FlxTimer;
  */
 class MusicBeatState extends FlxUIState
 {
+	public var stepsToDo:Int = 0;
+
 	public var lastStep:Int = 0;
 	public var lastBeat:Int = 0;
 	public var lastSection:Int = 0;
@@ -34,6 +37,8 @@ class MusicBeatState extends FlxUIState
 	// class create event
 	override function create()
 	{
+		FlxSprite.defaultAntialiasing = !Init.trueSettings.get("Disable Antialiasing");
+		
 		// dump
 		var clearPlayState = (PlayState.clearStored && !Std.isOfType(this, states.PlayState));
 		if ((clearPlayState))
@@ -86,6 +91,7 @@ class MusicBeatState extends FlxUIState
 	public function updateContents()
 	{
 		updateCurStep();
+		updateBeat();
 
 		curBeat = Math.floor(curStep / 4);
 		curSection = Math.floor(curStep / 16);
@@ -108,9 +114,19 @@ class MusicBeatState extends FlxUIState
 			skippedSteps = [];
 		curStep = trueStep;
 
-		//
-		if (oldStep != curStep && curStep > 0 && !storedSteps.contains(curStep))
-			stepHit();
+		if (oldStep != curStep && !storedSteps.contains(curStep))
+		{
+			if (curStep > 0)
+				stepHit();
+
+			if(PlayState.SONG != null)
+			{
+				if (oldStep < curStep)
+					updateSection();
+				else
+					rollbackSection();
+			}
+		}
 		oldStep = curStep;
 	}
 
@@ -132,6 +148,39 @@ class MusicBeatState extends FlxUIState
 		}
 
 		curStep = lastChange.stepTime + Math.floor((Conductor.songPosition - lastChange.songTime) / Conductor.stepCrochet);
+	}
+
+	public function updateBeat():Void
+	{
+		curBeat = Math.floor(curStep / 4);
+	}
+
+	public function updateSection():Void
+	{
+		if(stepsToDo < 1) stepsToDo = Math.round(getStepsOnSection());
+		while(curStep >= stepsToDo)
+		{
+			var beats:Float = getStepsOnSection() / 4;
+			stepsToDo += Math.round(beats * 4);
+			sectionHit();
+		}
+	}
+	
+	public function rollbackSection():Void
+	{
+		if(curStep < 0) return;
+
+		lastSection = curSection;
+		curSection = 0;
+		stepsToDo = 0;
+		for (i in 0...PlayState.SONG.notes.length)
+		{
+			if (PlayState.SONG.notes[i] != null)
+			{
+				stepsToDo += Math.round(getStepsOnSection());
+				if(stepsToDo > curStep) break;
+			}
+		}
 	}
 
 	public function stepHit():Void
@@ -165,6 +214,13 @@ class MusicBeatState extends FlxUIState
 
 		if (curSection != lastSection)
 			lastSection = curSection;
+	}
+
+	public function getStepsOnSection()
+	{
+		var val:Null<Float> = 16;
+		if(PlayState.SONG != null && PlayState.SONG.notes[curSection] != null) val = PlayState.SONG.notes[curSection].lengthInSteps;
+		return val == null ? 16 : val;
 	}
 
 	var textField:FlxText;
