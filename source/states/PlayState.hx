@@ -1311,7 +1311,7 @@ class PlayState extends MusicBeatState
 
 				for (myRating in 0...ScoreUtils.judges.length)
 				{
-					var myThreshold:Float = ScoreUtils.judges[myRating].timing;
+					var myThreshold:Float = (Conductor.safeZoneOffset / 50) + ScoreUtils.judges[myRating].timing;
 					if (noteDiff <= myThreshold && (myThreshold < lowestThreshold))
 					{
 						foundRating = myRating;
