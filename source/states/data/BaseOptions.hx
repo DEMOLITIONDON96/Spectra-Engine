@@ -114,7 +114,6 @@ class BaseOptions extends MusicBeatState
 	public function updateDiscord(?forcedPresence:String)
 	{
 		var myPresence:String = curCategory == 'main' ? 'Navigating through Categories' : 'Changing $curCategory';
-		Application.current.window.title = 'Funkin.avi - Settings: ' + myPresence;
 
 		#if DISCORD_RPC
 		// changes depending on your current category;
