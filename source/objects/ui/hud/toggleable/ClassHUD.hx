@@ -155,8 +155,8 @@ class ClassHUD extends FlxSpriteGroup
 		iconP1.updateAnim(healthBar.percent);
 		iconP2.updateAnim(100 - healthBar.percent);
 
-		iconP1.bop(0.15);
-		iconP2.bop(0.15);
+		iconP1.bop(elapsed);
+		iconP2.bop(elapsed);
 
 		if (autoplayMark.visible)
 		{
@@ -245,18 +245,17 @@ class ClassHUD extends FlxSpriteGroup
 		if (!Init.trueSettings.get('Reduced Movements'))
 			{
 				if (iconP1.canBounce)
-					{
-						iconP1.scale.set(1.2, 1.2);
-						iconP1.updateHitbox();
-					}
-		
-					if (iconP2.canBounce)
-					{
-						iconP2.scale.set(1.2, 1.2);
-						iconP2.updateHitbox();
-					}
-
-		}
+				{
+					iconP1.setGraphicSize(Std.int(iconP1.width + 30));
+					iconP1.updateHitbox();
+				}
+	
+				if (iconP2.canBounce)
+				{
+					iconP2.setGraphicSize(Std.int(iconP2.width + 30));
+					iconP2.updateHitbox();
+				}
+			}
 	}
 
 	var scoreFlashFormat:FlxTextFormat;

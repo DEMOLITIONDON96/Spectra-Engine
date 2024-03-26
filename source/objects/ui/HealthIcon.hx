@@ -49,7 +49,7 @@ class HealthIcon extends FlxSprite
 		if (!canBounce)
 			return;
 
-		var mult:Float = FlxMath.lerp(1, scale.x, FlxMath.bound(1 - (elapsed * 9), 0, 1));
+		var mult:Float = Init.trueSettings.get("HUD Style") == "spectra" ? FlxMath.lerp(0.78, scale.x, FlxMath.bound(1 - (elapsed * 9), 0, 0.78)) : FlxMath.lerp(1, scale.x, FlxMath.bound(1 - (elapsed * 9), 0, 1));
 		scale.set(mult, mult);
 		updateHitbox();
 	}

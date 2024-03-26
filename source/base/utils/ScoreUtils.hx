@@ -303,16 +303,19 @@ class ScoreUtils
 		// this updates the most so uh
 		switch (Init.trueSettings.get('HUD Style').toLowerCase())
 		{
-			case 'default':
-				PlayState.uiHUD.updateScoreText();
 			case 'spectra':
 				PlayState.spectraHUD.updateScoreText();
+				PlayState.spectraHUD.colorHighlight(curRating);
 			case 'psych':
 				PlayState.psychHUD.updateScoreText();
+			case 'kade':
+				PlayState.kadeHUD.updateScoreText();
+			case 'vanilla':
+				PlayState.vanillaHUD.updateScoreText();
 			default:
 				PlayState.uiHUD.updateScoreText();
+				PlayState.uiHUD.colorHighlight(curRating);
 		}
-		//PlayState.uiHUD.colorHighlight(curRating);
 	}
 
 	public static function setJudgeTiming(rating:Int, newTiming:Float)

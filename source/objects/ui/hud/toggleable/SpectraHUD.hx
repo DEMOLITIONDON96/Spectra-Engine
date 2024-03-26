@@ -90,7 +90,6 @@ class SpectraHUD extends FlxSpriteGroup
 			0).loadGraphic(Paths.image(EngineTools.returnSkinAsset('healthBar-Long', PlayState.assetModifier, PlayState.changeableSkin, 'UI')));
 		healthBarBG.y = FlxG.height * 0.95;
 		healthBarBG.x = 230;
-		//healthBarBG.scale.set(1.6, 1);
 		healthBarBG.scrollFactor.set();
 		add(healthBarBG);
 		if(Init.trueSettings.get('Downscroll')) healthBarBG.y = 0.05 * FlxG.height;
@@ -100,16 +99,14 @@ class SpectraHUD extends FlxSpriteGroup
 		reloadHealthBar();
 		add(healthBar);
 
-		//healthBarIcon = new FlxSprite();
-
 		iconP1 = new HealthIcon(PlayState.boyfriend.characterData.icon, true);
 		iconP1.scale.set(0.78, 0.78);
-		iconP1.y = healthBar.y - (iconP1.height / 2);
+		iconP1.y = (healthBar.y - (iconP1.height / 2)) + (Init.trueSettings.get('Downscroll') ? 15 : 0);
 		add(iconP1);
 
 		iconP2 = new HealthIcon(PlayState.opponent.characterData.icon, false);
 		iconP2.scale.set(0.78, 0.78);
-		iconP2.y = healthBar.y - (iconP2.height / 2);
+		iconP2.y = (healthBar.y - (iconP1.height / 2)) + (Init.trueSettings.get('Downscroll') ? 15 : 0);
 		add(iconP2);
 
 		scoreBar = new FlxText(healthBarBG.x + 300, (Init.trueSettings.get('Downscroll') ? Math.floor(healthBarBG.y + 35) : Math.floor(healthBarBG.y - 35)), 650, scoreDisplay);
@@ -119,8 +116,8 @@ class SpectraHUD extends FlxSpriteGroup
 		updateScoreText();
 		add(scoreBar);
 	
-		// F.AVI V2 Watermark
 		cornerMark = new FlxText(0, 0, 0, engineDisplay);
+		cornerMark.setFormat(Paths.font('VanillaExtractRegular'), 16, FlxColor.WHITE);
 		cornerMark.setBorderStyle(OUTLINE, FlxColor.BLACK, 2);
 		if (Init.trueSettings.get('Downscroll')) cornerMark.setPosition(0, 685); else cornerMark.setPosition(0, 8);
 		cornerMark.screenCenter(X);
@@ -145,17 +142,7 @@ class SpectraHUD extends FlxSpriteGroup
 		autoplayMark.text = '[${botTxtArray[FlxG.random.int(0, botTxtArray.length-1)]}]';
 		autoplayMark.setFormat(Paths.font("VanillaExtractRegular"), 14, FlxColor.WHITE, RIGHT);
 		autoplayMark.setBorderStyle(OUTLINE, FlxColor.BLACK, 2.3);
-		//autoplayMark.screenCenter(X);
 		autoplayMark.visible = PlayState.bfStrums.autoplay;
-
-		/*// repositioning for it to not be covered by the receptors
-		if (Init.trueSettings.get('Centered Notefield'))
-		{
-			if (Init.trueSettings.get('Downscroll'))
-				autoplayMark.y = autoplayMark.y - 125;
-			else
-				autoplayMark.y = autoplayMark.y + 125;
-		}*/
 		add(autoplayMark);
 
 		// counter
@@ -203,8 +190,14 @@ class SpectraHUD extends FlxSpriteGroup
 
 		var iconOffset:Int = 26;
 
-			iconP1.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01) - iconOffset);
-			iconP2.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01)) - (iconP2.width - iconOffset);
+		iconP1.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01) - iconOffset);
+		iconP2.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01)) - (iconP2.width - iconOffset);
+
+		iconP1.updateAnim(healthBar.percent);
+		iconP2.updateAnim(100 - healthBar.percent);
+
+		iconP1.bop(elapsed);
+		iconP2.bop(elapsed);
 
 		if (autoplayMark.visible)
 		{
@@ -310,18 +303,17 @@ class SpectraHUD extends FlxSpriteGroup
 		if (!Init.trueSettings.get('Reduced Movements'))
 			{
 				if (iconP1.canBounce)
-					{
-						iconP1.scale.set(1.2, 1.2);
-						iconP1.updateHitbox();
-					}
-		
-					if (iconP2.canBounce)
-					{
-						iconP2.scale.set(1.2, 1.2);
-						iconP2.updateHitbox();
-					}
-
-		}
+				{
+					iconP1.setGraphicSize(Std.int(iconP1.width + 30));
+					iconP1.updateHitbox();
+				}
+	
+				if (iconP2.canBounce)
+				{
+					iconP2.setGraphicSize(Std.int(iconP2.width + 30));
+					iconP2.updateHitbox();
+				}
+			}
 	}
 
 	var scoreFlashFormat:FlxTextFormat;
