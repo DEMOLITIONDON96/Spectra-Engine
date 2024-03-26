@@ -39,7 +39,7 @@ class ClassHUD extends FlxSpriteGroup
 	// display texts
 	public var infoDisplay:String = CoolUtil.dashToSpace(PlayState.SONG.song);
 	public var diffDisplay:String = '[${CoolUtil.difficultyString}]';
-	public var engineDisplay:String = 'Spectra Engine v0.2.0';
+	public var engineDisplay:String = 'Spectra Engine v' + Main.game.version;
 
 	// eep
 	public function new()

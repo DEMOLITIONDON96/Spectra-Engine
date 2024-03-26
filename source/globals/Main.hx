@@ -74,7 +74,7 @@ class Main extends Sprite
 		framerate: 60, // the game's default framerate
 		skipSplash: true, // whether to skip the flixel splash screen that appears on release mode
 		fullscreen: false, // whether the game starts at fullscreen mode
-		version: "0.1", // version of the engine
+		version: "0.2.1", // version of the engine
 	};
 
 	public static var baseGame:FNFGame;
@@ -399,7 +399,7 @@ class Main extends Sprite
 		dateNow = StringTools.replace(dateNow, " ", "_");
 		dateNow = StringTools.replace(dateNow, ":", "'");
 
-		path = "crash/" + "Feather_" + dateNow + ".txt";
+		path = "crash/" + "Spectra_" + dateNow + ".txt";
 
 		for (stackItem in callStack)
 		{
@@ -413,7 +413,7 @@ class Main extends Sprite
 			}
 		}
 
-		errMsg += "\nUncaught Error: " + e.error + " - Please report this error to the\nGitHub page https://github.com/BeastlyGhost/Forever-Engine-Feather";
+		errMsg += "\nUncaught Error: " + e.error + " - Please report this error to the\nGitHub page https://github.com/DEMOLITIONDON96/Spectra-Engine";
 
 		if (!FileSystem.exists("crash/"))
 			FileSystem.createDirectory("crash/");
@@ -423,7 +423,7 @@ class Main extends Sprite
 		Sys.println(errMsgPrint);
 		Sys.println("Crash dump saved in " + Path.normalize(path));
 
-		var crashDialoguePath:String = "FEF-CrashDialog";
+		var crashDialoguePath:String = "SE-CrashHandler";
 
 		#if windows
 		crashDialoguePath += ".exe";

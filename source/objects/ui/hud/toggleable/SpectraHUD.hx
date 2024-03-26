@@ -20,8 +20,6 @@ class SpectraHUD extends FlxSpriteGroup
 	public var songTime:FlxText;
 	public var healthBarBG:FlxSprite;
 	public var healthBar:FlxBar;
-	public var timeBarBG:FlxSprite;
-	public var timeBar:FlxBar;
 	public var songPercent:Float = 0;
 
 	// mark variables
@@ -72,7 +70,7 @@ class SpectraHUD extends FlxSpriteGroup
 	// display texts
 	public var infoDisplay:String = CoolUtil.dashToSpace(PlayState.SONG.song);
 	public var diffDisplay:String = '[${CoolUtil.difficultyString}]';
-	public var engineDisplay:String = "Spectra Engine v0.2.0";
+	public var engineDisplay:String = "Spectra Engine v" + Main.game.version;
 
 	// eep
 	public function new()
@@ -85,9 +83,6 @@ class SpectraHUD extends FlxSpriteGroup
 		if (!Init.trueSettings.get('Centered Notefield')) songTime.screenCenter(X);
 		songTime.scrollFactor.set();
 		songTime.borderSize = 2;
-	
-		/*add(timeBarBG);
-		add(timeBar);*/
 		add(songTime);
 
 		// le healthbar setup

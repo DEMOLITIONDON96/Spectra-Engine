@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <project>
-    <meta title="Feather Crash Dialog" package="com.gedehari.haxecrashlog" version="1.0.0" company="" />
-    <app main="Main" file="FEF-CrashDialog" path="export" />
+    <meta title="Spectra Crash Handler" package="com.gedehari.haxecrashlog" version="1.0.0" company="" />
+    <app main="Main" file="SE-CrashHandler" path="export" />
 
     <window background="#FFFFFF" fps="60" resizable="false" />
     <window width="500" height="440" if="desktop" />
@@ -11,6 +11,10 @@
 
     <haxelib name="openfl" />
     <haxelib name="actuate" />
+
+    <haxelib name="flixel" />
+	<haxelib name="flixel-addons" />
+	<haxelib name="flixel-ui" />
 
     <haxelib name="haxeui-core" />
     <haxelib name="haxeui-openfl" />

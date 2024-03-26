@@ -94,7 +94,7 @@ class PsychHUD extends FlxSpriteGroup
 
 		if(Init.trueSettings.get('Downscroll')) timeTxt.y = FlxG.height - 44;
 
-		timeBarBG = new AttachedSprite('UI/funkinAVI/timeBar');
+		timeBarBG = new AttachedSprite('UI/default/base/timeBar');
 		timeBarBG.x = timeTxt.x;
 		timeBarBG.y = timeTxt.y + (timeTxt.height / 4);
 		timeBarBG.scrollFactor.set();

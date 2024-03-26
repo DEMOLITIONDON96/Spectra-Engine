@@ -4,7 +4,8 @@ import haxe.ui.HaxeUIApp;
 import haxe.ui.components.Button;
 import haxe.ui.components.Label;
 import haxe.ui.core.Component;
-import haxe.ui.macros.ComponentMacros;
+import haxe.ui.ComponentBuilder;
+import flixel.FlxG;
 import sys.io.File;
 import sys.io.Process;
 
@@ -39,16 +40,18 @@ class Main
 			var path:String = args[0];
 			var contents:String = File.getContent(path);
 			var split:Array<String> = contents.split("\n");
+			var mainView:Component;
+			var numba:Int = FlxG.random.int(1, 2);
 
 			var app = new HaxeUIApp();
 
 			app.ready(function()
 			{
-				var mainView:Component = ComponentMacros.buildComponent("assets/main-view.xml");
+				mainView = numba == 1 ? ComponentBuilder.fromFile("assets/mainViews/main-view-1.xml") : ComponentBuilder.fromFile("assets/mainViews/main-view-2.xml");
 				app.addComponent(mainView);
 
 				var messageLabel:Label = mainView.findComponent("message-label", Label);
-				messageLabel.text = quotes[Std.random(quotes.length)] + "\nUnfortunately, Forever Engine Feather has crashed.";
+				messageLabel.text = quotes[Std.random(quotes.length)] + "\nOh No! Spectra Engine has crashed.";
 				messageLabel.percentWidth = 100;
 				messageLabel.textAlign = "center";
 
@@ -84,9 +87,9 @@ class Main
 				mainView.findComponent("restart-button", Button).onClick = function(_)
 				{
 					#if windows
-					new Process("FE-Feather.exe", []); // How did the original devs of this engine overlook something simple????
+					new Process("Spectra Engine.exe", []);
 					#elseif linux
-					new Process("./FE-Feather", []);
+					new Process("./Spectra Engine", []);
 					#end
 
 					Sys.exit(0);

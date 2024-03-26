@@ -51,7 +51,7 @@
 	<source path="source" />
 	<assets path="assets" />
 
-	<assets path="FEF-CrashDialog.exe" type="template" if="windows release" />
+	<assets path="SE-CrashHandler.exe" type="template" if="windows release" />
 	<assets path="FEF-CrashDialog" type="template" if="linux release" />
 
 	<!-- _______________________________ Libraries ______________________________ -->

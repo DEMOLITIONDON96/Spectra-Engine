@@ -43,7 +43,7 @@ class KadeHUD extends FlxSpriteGroup
 	// display texts
 	public var infoDisplay:String = "";
 	public var diffDisplay:String = "";
-	public var engineDisplay:String = 'Spectra Engine v0.2.0';
+	public var engineDisplay:String = 'Spectra Engine v' + Main.game.version;
 
 	public var timeTxt:FlxText;
 	public var timeBar:FlxBar;
