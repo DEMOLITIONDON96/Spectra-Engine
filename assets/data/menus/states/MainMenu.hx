@@ -76,7 +76,7 @@ function postCreate()
 
 	updateSelection();
 
-	var versionShit:FlxText = new FlxText(5, FlxG.height - 18, 0, "Forever Engine Feather v" + Main.featherVersion, 12);
+	var versionShit:FlxText = new FlxText(5, FlxG.height - 18, 0, "Spectra Engine v" + Main.game.version, 12);
 	versionShit.scrollFactor.set();
 	versionShit.setFormat(Paths.font("vcr"), 16, 0xFFFFFFFF, ForeverTools.setTextAlign('left'), FlxTextBorderStyle.OUTLINE, 0xFF000000);
 	add(versionShit);
