@@ -81,6 +81,9 @@ class ScriptHandler extends SScript
 		// here we set up the built-in imports
 		// these should work on *any* script;
 
+		// ASSET SHIT FOR CUSTOM MENU SCRIPTS
+		set('Assets', openfl.utils.Assets);
+
 		// VARIABLES
 		set('globalElapsed', globals.Main.globalElapsed);
 
@@ -95,22 +98,79 @@ class ScriptHandler extends SScript
 		set('FlxBasic', flixel.FlxBasic);
 		set('FlxObject', flixel.FlxObject);
 		set('FlxSprite', flixel.FlxSprite);
+		set('FlxGraphic', flixel.graphics.FlxGraphic);
+		set('FlxCamera', flixel.FlxCamera);
 		set('FlxSound', #if (flixel <= "5.2.2") flixel.system.FlxSound #else flixel.sound.FlxSound #end);
-		set('FlxSort', flixel.util.FlxSort);
-		set('FlxStringUtil', flixel.util.FlxStringUtil);
 		set('FlxState', flixel.FlxState);
 		set('FlxSubState', flixel.FlxSubState);
 		set('FlxText', flixel.text.FlxText);
 		set('FlxTimer', flixel.util.FlxTimer);
 		set('FlxTween', flixel.tweens.FlxTween);
-		set('FlxEase', flixel.tweens.FlxEase);
-		set('FlxTrail', flixel.addons.effects.FlxTrail);
-		set('FlxEmitter', flixel.effects.particles.FlxEmitter);
-		set('FlxParticle', flixel.effects.particles.FlxParticle);
 		set('FlxTypedGroup', flixel.group.FlxGroup.FlxTypedGroup);
 		set('FlxGroup', flixel.group.FlxGroup);
-		set('FlxGradient', flixel.util.FlxGradient);
+		set('FlxSpriteGroup', flixel.group.FlxSpriteGroup);
 		set('FlxMath', flixel.math.FlxMath);
+
+		// EFFECTS
+		set('FlxStrip', flixel.FlxStrip);
+		set('ColorTransform', openfl.geom.ColorTransform);
+		set('FlxGradient', flixel.util.FlxGradient);
+		set('FlxBackdrop', flixel.addons.display.FlxBackdrop);
+		set('FlxTrail', flixel.addons.effects.FlxTrail);
+		set('FlxTrailArea', flixel.addons.effects.FlxTrailArea);
+		set('FlxEmitter', flixel.effects.particles.FlxEmitter);
+		set('FlxEmitterMode', flixel.effects.particles.FlxEmitterMode);
+		set('FlxParticle', flixel.effects.particles.FlxParticle);
+		set('BaseScaleMode', flixel.system.scaleModes.BaseScaleMode);
+
+		// FLXTEXT EXTENSIONS
+		set('FlxTypeText', flixel.addons.text.FlxTypeText);
+		set('FlxTextField', flixel.addons.text.FlxTextField);
+		set('TypeSound', flixel.addons.text.TypeSound);
+		set('FlxTextAlign', flixel.text.FlxText.FlxTextAlign);
+		set('FlxTextBorderStyle', flixel.text.FlxText.FlxTextBorderStyle);
+		set('FlxTextFormat', flixel.text.FlxText.FlxTextFormat);
+		set('FlxTextFormatMarkerPair', flixel.text.FlxText.FlxTextFormatMarkerPair);
+
+		// FLXSPRITE EXTENSIONS
+		set('FlxSliceSprite', flixel.addons.display.FlxSliceSprite);
+		set('FlxTiledSprite', flixel.addons.display.FlxTiledSprite);
+		set('FlxSkewedSprite', flixel.addons.effects.FlxSkewedSprite);
+		set('FlxSpriteAniRot', flixel.addons.display.FlxSpriteAniRot);
+
+		// SCALE MODE EXTENSIONS
+		set('FixedScaleAdjustSizeScaleMode', flixel.system.scaleModes.FixedScaleAdjustSizeScaleMode);
+		set('RatioScaleMode', flixel.system.scaleModes.RatioScaleMode);
+		set('RelativeScaleMode', flixel.system.scaleModes.RelativeScaleMode);
+		set('PixelPerfectScaleMode', flixel.system.scaleMode.PixelPerfectScaleMode);
+
+		// MATH UTILS
+		set('FlxPoint', flixel.math.FlxPoint);
+		set('FlxRect', flixel.math.FlxRect);
+		set('FlxVelocity', flixel.math.FlxVelocity);
+		set('FlxAngle', flixel.math.FlxAngle);
+		set('FlxSinCos', flixel.math.FlxAngle.FlxSinCos);
+
+		// FLIXEL UTILS
+		set('FlxCollision', flixel.util.FlxCollision);
+		set('FlxAxes', flixel.util.FlxAxes);
+		set('FlxEase', flixel.tweens.FlxEase);
+		set('FlxSort', flixel.util.FlxSort);
+		set('FlxCameraFollowStyle', flixel.FlxCamera.FlxCameraFollowStyle);
+		set('FlxArrayUtil', flixel.util.FlxArrayUtil);
+		set('FlxStringUtil', flixel.util.FlxStringUtil);
+		set('FlxSpriteUtil', flixel.util.FlxSpriteUtil);
+		set('FlxColorTransformUtil', flixel.util.FlxColorTransformUtil);
+
+		// MISC UTILS
+		set('BlendMode', flash.display.BlendMode);
+		set('StageQuality', flash.display.StageQuality);
+		set('StageScaleMode', flash.display.StageScaleMode);
+		set('StringTools', StringTools);
+
+		// WINDOW ICON TOOLS
+		set('Image', lime.graphics.Image);
+		set('BitmapData', flash.display.BitmapData);
 
 		// WINDOW MODCHARTS
 		set('Application', lime.app.Application);
@@ -126,11 +186,11 @@ class ScriptHandler extends SScript
 		set('HealthIcon', objects.ui.HealthIcon);
 		set('Receptor', objects.ui.notes.Strumline.Receptor);
 		set('Strumline', objects.ui.notes.Strumline);
-		set('game', states.PlayState.main);
+		set('Game', states.PlayState.main);
 		set('PlayState', states.PlayState);
 		set('Paths', globals.Paths);
 
-		// CLASSES (FOREVER);
+		// CLASSES (SPECTRA);
 		set('Init', globals.Init);
 		set('Main', globals.Main);
 		set('Stage', objects.Stage);
