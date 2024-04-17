@@ -106,7 +106,6 @@ class ScriptableState extends MusicBeatState
 
 	function variableCalls()
 	{
-		scriptSet()
 		scriptSet('this', this);
 		scriptSet('add', add);
 		scriptSet('remove', remove);
