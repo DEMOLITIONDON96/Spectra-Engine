@@ -107,7 +107,7 @@ class ScriptableState extends MusicBeatState
 	function variableCalls()
 	{
 		// can you shut the fuck up about the "Assets" error now?
-		set('Assets', openfl.utils.Assets);
+		scriptCall('Assets', openfl.utils.Assets);
 		
 		scriptSet('this', this);
 		scriptSet('add', add);
