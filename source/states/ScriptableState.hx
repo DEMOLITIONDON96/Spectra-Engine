@@ -11,7 +11,7 @@ import flixel.FlxSubState;
 **/
 class ScriptableState extends MusicBeatState
 {
-	var stateScript:ScriptHandler;
+	public static var stateScript:ScriptHandler;
 	var errorCatch:String; // string containing error information;
 
 	override public function new(className:String):Void
@@ -21,7 +21,7 @@ class ScriptableState extends MusicBeatState
 		// here we actually create the main script
 		try
 		{
-			stateScript = new ScriptHandler(Paths.module('data/menus/states/$className'));
+			stateScript = new ScriptHandler(Paths.module(className, 'data/menus/states'));
 		}
 		catch (e)
 		{
@@ -106,6 +106,9 @@ class ScriptableState extends MusicBeatState
 
 	function variableCalls()
 	{
+		// can you shut the fuck up about the "Assets" error now?
+		scriptCall('Assets', openfl.utils.Assets);
+		
 		scriptSet('this', this);
 		scriptSet('add', add);
 		scriptSet('remove', remove);
@@ -138,7 +141,7 @@ class ScriptableState extends MusicBeatState
 
 class ScriptableSubstate extends MusicBeatSubstate
 {
-	var stateScript:ScriptHandler;
+	public static var substateScript:ScriptHandler;
 	var errorCatch:String; // string containing error information;
 
 	override public function new(className:String):Void
@@ -148,7 +151,7 @@ class ScriptableSubstate extends MusicBeatSubstate
 		// here we actually create the main script
 		try
 		{
-			stateScript = new ScriptHandler(Paths.module('data/menus/substates/$className'));
+			substateScript = new ScriptHandler(Paths.module(className, 'data/menus/substates'));
 		}
 		catch (e)
 		{
@@ -168,7 +171,7 @@ class ScriptableSubstate extends MusicBeatSubstate
 
 	override public function update(elapsed:Float)
 	{
-		if (stateScript == null)
+		if (substateScript == null)
 		{
 			Main.switchState(this, new states.menus.MainMenu('[SCRIPTABLE SUBSTATE]: $errorCatch'));
 			return;
@@ -235,13 +238,13 @@ class ScriptableSubstate extends MusicBeatSubstate
 
 	function scriptCall(funcName:String, params:Array<Dynamic>)
 	{
-		if (stateScript != null)
-			stateScript.call(funcName, params);
+		if (suvstateScript != null)
+			substateScript.call(funcName, params);
 	}
 
 	function scriptSet(varName:String, value:Dynamic)
 	{
-		if (stateScript != null)
-			stateScript.set(varName, value);
+		if (substateScript != null)
+			substateScript.set(varName, value);
 	}
 }
