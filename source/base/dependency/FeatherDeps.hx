@@ -126,7 +126,7 @@ class ScriptHandler extends SScript
 		// FLXTEXT EXTENSIONS
 		set('FlxTypeText', flixel.addons.text.FlxTypeText);
 		set('FlxTextField', flixel.addons.text.FlxTextField);
-		set('TypeSound', flixel.addons.text.TypeSound);
+		set('TypeSound', flixel.addons.text.FlxTypeText.TypeSound);
 		set('FlxTextAlign', flixel.text.FlxText.FlxTextAlign);
 		set('FlxTextBorderStyle', flixel.text.FlxText.FlxTextBorderStyle);
 		set('FlxTextFormat', flixel.text.FlxText.FlxTextFormat);
@@ -142,7 +142,7 @@ class ScriptHandler extends SScript
 		set('FixedScaleAdjustSizeScaleMode', flixel.system.scaleModes.FixedScaleAdjustSizeScaleMode);
 		set('RatioScaleMode', flixel.system.scaleModes.RatioScaleMode);
 		set('RelativeScaleMode', flixel.system.scaleModes.RelativeScaleMode);
-		set('PixelPerfectScaleMode', flixel.system.scaleMode.PixelPerfectScaleMode);
+		set('PixelPerfectScaleMode', flixel.system.scaleModes.PixelPerfectScaleMode);
 
 		// MATH UTILS
 		set('FlxPoint', flixel.math.FlxPoint);
