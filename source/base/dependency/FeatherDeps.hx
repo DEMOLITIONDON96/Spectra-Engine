@@ -119,7 +119,7 @@ class ScriptHandler extends SScript
 		set('FlxTrail', flixel.addons.effects.FlxTrail);
 		set('FlxTrailArea', flixel.addons.effects.FlxTrailArea);
 		set('FlxEmitter', flixel.effects.particles.FlxEmitter);
-		set('FlxEmitterMode', flixel.effects.particles.FlxEmitterMode);
+		set('FlxEmitterMode', flixel.effects.particles.FlxEmitter.FlxEmitterMode);
 		set('FlxParticle', flixel.effects.particles.FlxParticle);
 		set('BaseScaleMode', flixel.system.scaleModes.BaseScaleMode);
 
