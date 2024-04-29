@@ -107,7 +107,7 @@ class ScriptableState extends MusicBeatState
 	function variableCalls()
 	{
 		// can you shut the fuck up about the "Assets" error now?
-		scriptCall('Assets', openfl.utils.Assets);
+		scriptSet('Assets', openfl.utils.Assets);
 		
 		scriptSet('this', this);
 		scriptSet('add', add);
@@ -224,6 +224,7 @@ class ScriptableSubstate extends MusicBeatSubstate
 
 	function variableCalls()
 	{
+		scriptSet('Assets', openfl.utils.Assets);
 		scriptSet('this', this);
 		scriptSet('add', add);
 		scriptSet('remove', remove);
@@ -238,7 +239,7 @@ class ScriptableSubstate extends MusicBeatSubstate
 
 	function scriptCall(funcName:String, params:Array<Dynamic>)
 	{
-		if (suvstateScript != null)
+		if (substateScript != null)
 			substateScript.call(funcName, params);
 	}
 
